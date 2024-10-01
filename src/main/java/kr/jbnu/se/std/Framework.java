@@ -21,13 +21,8 @@ import javax.swing.*;
 
 public class Framework extends Canvas {
 
-    //login 변수
-    private JPanel loginPanel;
-    private JTextField idField;
-    private JPasswordField passwordField;
-    private JButton loginButton;
-    private JButton signupButton;
-    private JButton passButton;
+    private boolean isLoginSuccessful = false; // 로그인 성공 여부를 관리
+    private LoginClient loginClient;
     /**
      * Width of the frame.
      */
@@ -77,6 +72,8 @@ public class Framework extends Canvas {
 
     // The actual game
     private Game game;
+    private Thread gameThread;
+    private Window window;
 
 
     /**
@@ -85,24 +82,29 @@ public class Framework extends Canvas {
     private BufferedImage shootTheDuckMenuImg;
 
 
-    public Framework ()
+    public Framework (Window window)
     {
         super();
-
-        gameState = GameState.VISUALIZING;
-
-        //We start game in new thread.
-        Thread gameThread = new Thread() {
-            @Override
-            public void run(){
-                loginPanel = new JPanel();
-                GameLoop();
-            }
-        };
-        gameThread.start();
+        this.window = window;
+        gameState = GameState.LOGIN;
+        loginClient = new LoginClient(this);
+        loginClient.setVisible(true);
+        this.setVisible(false);
     }
 
-
+    public void onLoginSuccess() {
+        isLoginSuccessful = true;
+        gameState = GameState.VISUALIZING;
+        this.setVisible(true);
+        window.onLoginSuccess();
+        gameThread = new Thread() {
+            @Override
+            public void run(){
+                GameLoop();
+            }
+        };// 게임 창 표시
+        gameThread.start();
+    }
     /**
      * Set variables and objects.
      * This method is intended to set the variables and objects for this class, variables and objects for the actual game can be set in kr.jbnu.se.std.Game.java.
@@ -194,10 +196,10 @@ public class Framework extends Canvas {
                     //...
                     break;
                 case LOGIN:
-                    createLoginPanel();
-                    gameState = GameState.MAIN_MENU;
+                    if (isLoginSuccessful) {
+                        gameState = GameState.VISUALIZING;
+                    }
                     break;
-
                 case MAIN_MENU:
                     //...
                     break;
@@ -214,7 +216,7 @@ public class Framework extends Canvas {
                     LoadContent();
 
                     // When all things that are called above finished, we change game status to main menu.
-                    gameState = GameState.LOGIN;
+                    gameState = GameState.MAIN_MENU;
                     break;
                 case VISUALIZING:
                     // On Ubuntu OS (when I tested on my old computer) this.getWidth() method doesn't return the correct value immediately (eg. for frame that should be 800px width, returns 0 than 790 and at last 798px).
@@ -253,96 +255,8 @@ public class Framework extends Canvas {
         }
     }
 
-    private void createLoginPanel() {
-        if (loginPanel != null) {
-            return; // 이미 로그인 패널이 생성된 경우
-        }
-
-        loginPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.weighty = 500.0;
-
-        // ID 라벨 및 입력 필드
-        JLabel idLabel = new JLabel("ID:");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        loginPanel.add(idLabel, gbc);
-
-        idField = new JTextField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        loginPanel.add(idField, gbc);
-
-        // 비밀번호 라벨 및 입력 필드
-        JLabel passwordLabel = new JLabel("Password:");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        loginPanel.add(passwordLabel, gbc);
-
-        passwordField = new JPasswordField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        loginPanel.add(passwordField, gbc);
-
-        // 로그인 버튼
-        loginButton = new JButton("Login");
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        loginPanel.add(loginButton, gbc);
-
-        // 회원가입 버튼
-        signupButton = new JButton("Sign Up");
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        loginPanel.add(signupButton, gbc);
-
-        // 로그인 버튼 클릭 시 이벤트 처리
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String id = idField.getText();
-                String password = new String(passwordField.getPassword());
-                // 로그인 확인 로직 (임시로 id와 password가 비어있지 않으면 로그인 성공으로 간주)
-                if (!id.isEmpty() && !password.isEmpty()) {
-                    gameState = GameState.MAIN_MENU; // 게임 상태 변경
-                    loginPanel.setVisible(false); // 로그인 패널 비활성화
-                    repaint(); // 화면 갱신
-                } else {
-                    JOptionPane.showMessageDialog(null, "ID와 비밀번호를 입력하세요.");
-                }
-            }
-        });
-
-        // 회원가입 버튼 클릭 시 이벤트 처리
-        signupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // 회원가입 로직 추가 가능
-                JOptionPane.showMessageDialog(null, "회원가입 기능은 아직 구현되지 않았습니다.");
-            }
-        });
-
-        // 로그인 패널을 프레임에 추가
-        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        if (topFrame != null) {
-            topFrame.setMinimumSize(new Dimension(frameWidth, frameHeight));
-            topFrame.getContentPane().add(loginPanel, BorderLayout.SOUTH);
-
-            topFrame.pack();
-        }
-    }
-
     @Override
     public void Draw(Graphics2D g2d) {
-        // 로그인 패널이 보이는 경우
-        if (loginPanel.isVisible()) {
-            // 로그인 패널을 중앙에 배치합니다.
-            int x = (frameWidth - shootTheDuckMenuImg.getWidth()) / 2;
-            int y = (frameHeight - shootTheDuckMenuImg.getHeight()) / 2;
-            g2d.drawImage(shootTheDuckMenuImg, x, y, null);
-        }else {
             switch (gameState) {
                 case PLAYING:
                     game.Draw(g2d, mousePosition());
@@ -371,7 +285,6 @@ public class Framework extends Canvas {
                     g2d.drawString("GAME is LOADING", frameWidth / 2 - 50, frameHeight / 2);
                     break;
             }
-        }
     }
     /**
      * Starts new game.

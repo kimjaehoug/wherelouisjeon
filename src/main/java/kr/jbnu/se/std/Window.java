@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class Window extends JFrame {
-    private Window() {
+    Window() {
         // 화면 해상도를 가져옴
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenWidth = (int) screenSize.getWidth();
@@ -18,7 +18,11 @@ public class Window extends JFrame {
         this.setLocationRelativeTo((Component)null);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setContentPane(new Framework());
+        this.setContentPane(new Framework(this));
+        this.setVisible(false);
+    }
+
+    public void onLoginSuccess(){
         this.setVisible(true);
     }
 
