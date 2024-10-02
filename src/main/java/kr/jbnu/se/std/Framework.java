@@ -1,6 +1,7 @@
 package kr.jbnu.se.std;
 
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -9,6 +10,7 @@ import com.google.firebase.auth.UserRecord;
 import com.google.firebase.database.*;
 import com.google.firebase.database.core.AuthTokenProvider;
 import com.google.gson.JsonObject;
+import jdk.jfr.internal.tool.Main;
 import okhttp3.*;
 import org.json.JSONObject;
 
@@ -25,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * kr.jbnu.se.std.Framework that controls the game (kr.jbnu.se.std.Game.java) that created it, update it and draw it on the screen.
@@ -98,7 +100,8 @@ public class Framework extends Canvas {
     private String realemail;
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
-    private MainV2 MainV2;
+    private MainClient MainV2;
+    private DatabaseReference chatRef;
 
 
     /**
@@ -116,7 +119,7 @@ public class Framework extends Canvas {
         client = new OkHttpClient();
         loginClient = new LoginClient(this);
         loginClient.setVisible(true);
-        MainV2 = new MainV2();
+        MainV2 = new MainClient(this);
         MainV2.setVisible(false);
         this.setVisible(false);
 
@@ -138,7 +141,99 @@ public class Framework extends Canvas {
             System.err.println("Error refreshing ID Token: " + e.getMessage());
         }
     }
+    // Firebase에 메시지 전송
+    public void sendMessage(String message) {
+        try {
+            // 메시지를 JSON 형식으로 변환
+            JSONObject json = new JSONObject();
+            json.put("message", message);
+            json.put("nickname", nickname);
+            String timestamp = String.valueOf(System.currentTimeMillis());
 
+            // Firebase에 저장할 URL
+            String url = "https://shootthedock-default-rtdb.firebaseio.com/chat/"+ timestamp+".json"; // 채팅 메시지를 저장하는 경로
+
+            RequestBody body = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"),
+                    json.toString()
+            );
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .put(body) // POST 메소드 사용
+                    .build();
+
+            // 비동기 호출
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.err.println("메시지 저장 실패: " + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        System.err.println("메시지 저장 실패: " + response.code());
+                    } else {
+                        System.out.println("메시지 저장 성공: " + response.body().string());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    // Firebase에서 메시지 수신
+
+    public void receiveMessages() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://shootthedock-default-rtdb.firebaseio.com/chat.json?auth=\" + idToken"; // 채팅 메시지를 가져올 URL
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                SwingUtilities.invokeLater(() -> {
+                    System.err.println("채팅 메시지 가져오기 실패: " + e.getMessage());
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseBody);
+
+                    // JSON 객체가 비어있는지 확인
+                    if (jsonResponse.length() == 0) {
+                        SwingUtilities.invokeLater(() -> {
+                            System.out.println("채팅 내역이 존재하지 않습니다.");
+                        });
+                        return;
+                    }
+
+                    // 채팅 메시지 출력
+                    for (String key : jsonResponse.keySet()) {
+                        JSONObject messageData = jsonResponse.getJSONObject(key);
+                        String message = messageData.getString("message");
+                        String senderNickname = messageData.getString("nickname");
+
+                        SwingUtilities.invokeLater(() -> {
+                            MainV2.setChat(senderNickname + ": " + message + "\n"); // 채팅 영역에 메시지 추가
+                        });
+                    }
+                } else {
+                    SwingUtilities.invokeLater(() -> {
+                        System.err.println("채팅 메시지 가져오기 실패: " + response.message());
+                    });
+                }
+            }
+        });
+    }
 
 
     private void initializeFirebase() {
@@ -225,6 +320,7 @@ public class Framework extends Canvas {
                     if (jsonResponse.has("nickname")) {
                         nickname = jsonResponse.getString("nickname");
                         System.out.println("Nickname: " + nickname);
+                        MainV2.setNickname(nickname);
                     } else {
                         System.err.println("사용자 정보가 존재하지 않습니다.");
                     }
@@ -243,6 +339,18 @@ public class Framework extends Canvas {
         isLoginSuccessful = true;
         loginWithFirebase(realemail, password);
         MainV2.setVisible(true);
+    }
+
+    public void onGameStart(){
+        MainV2.dispose();
+        gameState = GameState.VISUALIZING;
+        gameThread = new Thread() {
+            @Override
+            public void run(){
+                GameLoop();
+            }
+        };
+        gameThread.start();
     }
     /**
      * Set variables and objects.
