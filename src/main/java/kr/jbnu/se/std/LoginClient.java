@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -27,11 +29,14 @@ public class LoginClient extends JFrame {
     private Framework framework;
     private String id, password;
     private FirebaseAuth auth;
+    private String realUserId;
+    private String email;
+    private String encodeemail1;
+    private String encodeemail2;
 
     public LoginClient(Framework framework) {
         this.framework = framework;
         setTitle("Login");
-        initializeFirebase();
         setSize(300, 150);
         setLocationRelativeTo(null); // 화면 중앙에 표시
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,6 +90,7 @@ public class LoginClient extends JFrame {
                 password = new String(passwordField.getPassword());
                 loginWithFirebase(id, password);
 
+
             }
         });
 
@@ -100,21 +106,6 @@ public class LoginClient extends JFrame {
         add(panel);
     }
     //파이어베이스 초기화
-    private void initializeFirebase() {
-        try {
-            FileInputStream serviceAccount = new FileInputStream("src/main/shootthedock-firebase-adminsdk-304qc-09167d3967.json");
-
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://shootthedock-default-rtdb.firebaseio.com")
-                    .build();
-
-            FirebaseApp.initializeApp(options);
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Firebase 초기화 실패: " + e.getMessage());
-        }
-    }
     // Firebase를 통한 로그인 처리 메소드
     private void loginWithFirebase(String email, String password) {
         OkHttpClient client = new OkHttpClient();
@@ -138,8 +129,24 @@ public class LoginClient extends JFrame {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     SwingUtilities.invokeLater(() -> {
+                        String responseBody = null;
+                        try {
+                            responseBody = response.body().string();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        JSONObject jsonResponse = new JSONObject(responseBody);
                         dispose(); // 로그인 창 닫기
+                        // ID 토큰 가져오기
+                        String idToken = jsonResponse.getString("idToken");
+                        System.out.println("ID 토큰: " + idToken);
+                        framework.getEmail(email);
+                        framework.getPassword(password);
+                        encodeemail1 = email.split("@")[0];
+                        framework.getIdtoken(idToken);
                         framework.onLoginSuccess();
+                        encodeemail2 = email.replace(".", "%2E");
+                        framework.getUserId(encodeemail1);
                     });
                 } else {
                     SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "로그인 실패: 잘못된 자격 증명"));
@@ -202,7 +209,7 @@ public class LoginClient extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String email = emailField.getText();
+                email = emailField.getText();
                 String password = new String(registerPasswordField.getPassword());
                 String nickname = nicknameField.getText();
                 signUpWithFirebase(email,password,nickname,registerFrame);
@@ -248,17 +255,30 @@ public class LoginClient extends JFrame {
             }
         });
     }
+    public static String encodeEmail(String email) {
+        try {
+            System.err.println("이메일 변환성공");
+            return URLEncoder.encode(email, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            System.err.println("이메일변환실패");
+            return email; // 인코딩 실패 시 원본 이메일을 그대로 반환
+        }
+    }
+
     // 닉네임 저장
     private void saveUserNickname(String userId, String nickname) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject(userId);
-        String realUserId = json.getString("localId");
+        realUserId = json.getString("localId");
+        encodeemail1 = email.split("@")[0];
+        System.err.println(encodeemail1);
         json.put("nickname", nickname);
         // 사용자 ID를 키로 사용하여 닉네임 저장
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
         Request request = new Request.Builder()
-                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + realUserId + ".json")
-                .post(body) // POST 메소드 사용
+                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + encodeemail1 + "/"+ "userinfo"+".json")
+                .put(body) // POST 메소드 사용
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -271,6 +291,8 @@ public class LoginClient extends JFrame {
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     System.err.println("닉네임 저장 실패: " + response.code());
+                    System.err.println(userId);
+                }else{
                     System.err.println(userId);
                 }
             }
