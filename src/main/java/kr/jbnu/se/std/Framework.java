@@ -23,6 +23,11 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -82,6 +87,9 @@ public class Framework extends Canvas {
     /**
      * Elapsed game time in nanoseconds.
      */
+
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
     private long gameTime;
     // It is used for calculating elapsed time.
     private long lastTime;
@@ -102,6 +110,8 @@ public class Framework extends Canvas {
     private DatabaseReference databaseReference;
     private MainClient MainV2;
     private DatabaseReference chatRef;
+    private final Set<String> receivedMessageKeys = new HashSet<>(); // 이미 받은 메시지의 키를 저장할 Set
+
 
 
     /**
@@ -185,9 +195,14 @@ public class Framework extends Canvas {
     }
     // Firebase에서 메시지 수신
 
+    public void startReceivingMessages() {
+        // 0초 후에 시작하고, 5초마다 receiveMessages 메소드를 호출
+        scheduler.scheduleAtFixedRate(this::receiveMessages, 0, 1, TimeUnit.SECONDS);
+    }
+
     public void receiveMessages() {
         OkHttpClient client = new OkHttpClient();
-        String url = "https://shootthedock-default-rtdb.firebaseio.com/chat.json?auth=\" + idToken"; // 채팅 메시지를 가져올 URL
+        String url = "https://shootthedock-default-rtdb.firebaseio.com/chat.json?auth=" + idToken; // 채팅 메시지를 가져올 URL
 
         Request request = new Request.Builder()
                 .url(url)
@@ -222,9 +237,14 @@ public class Framework extends Canvas {
                         String message = messageData.getString("message");
                         String senderNickname = messageData.getString("nickname");
 
-                        SwingUtilities.invokeLater(() -> {
-                            MainV2.setChat(senderNickname + ": " + message + "\n"); // 채팅 영역에 메시지 추가
-                        });
+                        // 이미 받은 메시지인지 확인 (타임스탬프 키 사용)
+                        if (!receivedMessageKeys.contains(key)) {
+                            receivedMessageKeys.add(key); // 새 메시지 키 추가
+                            String uniqueMessage = senderNickname + ": " + message; // 고유 메시지 생성
+                            SwingUtilities.invokeLater(() -> {
+                                MainV2.setChat(uniqueMessage + "\n"); // 채팅 영역에 메시지 추가
+                            });
+                        }
                     }
                 } else {
                     SwingUtilities.invokeLater(() -> {

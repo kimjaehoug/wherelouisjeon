@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.TimerTask;
 
 public class MainClient extends JFrame {
     private String nickname;
@@ -11,6 +12,7 @@ public class MainClient extends JFrame {
     private JTextField messageField;
     private Framework framework;
     private JLabel nameLabel;
+    private Timer timer;
 
     public MainClient(Framework framework) {
         // 기본 프레임 설정
@@ -21,7 +23,8 @@ public class MainClient extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(new BorderLayout());
-        framework.receiveMessages();
+        framework.startReceivingMessages();
+
 
         // 상단 패널
         JPanel topPanel = new JPanel();
@@ -92,8 +95,8 @@ public class MainClient extends JFrame {
 
         // 입력 패널을 프레임 하단에 추가
         add(inputPanel, BorderLayout.SOUTH);
-
         // 전송 버튼 클릭 이벤트
+
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
