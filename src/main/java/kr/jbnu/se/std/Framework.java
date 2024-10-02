@@ -71,7 +71,7 @@ public class Framework extends Canvas {
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, DESTROYED}
+    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MainPage, DESTROYED}
     /**
      * Current state of the game
      */
@@ -98,6 +98,7 @@ public class Framework extends Canvas {
     private String realemail;
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
+    private MainV2 MainV2;
 
 
     /**
@@ -115,6 +116,8 @@ public class Framework extends Canvas {
         client = new OkHttpClient();
         loginClient = new LoginClient(this);
         loginClient.setVisible(true);
+        MainV2 = new MainV2();
+        MainV2.setVisible(false);
         this.setVisible(false);
 
 
@@ -238,17 +241,8 @@ public class Framework extends Canvas {
 
     public void onLoginSuccess() {
         isLoginSuccessful = true;
-        gameState = GameState.VISUALIZING;
-        this.setVisible(true);
-        window.onLoginSuccess();
         loginWithFirebase(realemail, password);
-        gameThread = new Thread() {
-            @Override
-            public void run(){
-                GameLoop();
-            }
-        };// 게임 창 표시
-        gameThread.start();
+        MainV2.setVisible(true);
     }
     /**
      * Set variables and objects.
@@ -343,6 +337,9 @@ public class Framework extends Canvas {
 
             switch (gameState)
             {
+                case MainPage:
+                    gameState = GameState.VISUALIZING;
+                    break;
                 case PLAYING:
                     gameTime += System.nanoTime() - lastTime;
 
@@ -355,7 +352,7 @@ public class Framework extends Canvas {
                     break;
                 case LOGIN:
                     if (isLoginSuccessful) {
-                        gameState = GameState.VISUALIZING;
+                        gameState = GameState.MainPage;
                     }
                     break;
                 case MAIN_MENU:
