@@ -37,7 +37,7 @@ public class LoginClient extends JFrame {
     public LoginClient(Framework framework) {
         this.framework = framework;
         setTitle("Login");
-        setSize(300, 150);
+        setSize(1280, 720);
         setLocationRelativeTo(null); // 화면 중앙에 표시
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         auth = FirebaseAuth.getInstance();
