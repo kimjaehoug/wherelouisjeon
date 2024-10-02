@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="kr.jbnu.se.std.MainClient">
-  <grid id="27dc6" row-count="1" column-count="1" layout-manager="GridLayoutManager">
-    <margin top="0" left="0" bottom="0" right="0"/>
+  <grid id="27dc6" binding="mainpanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+      <xy x="20" y="20" width="671" height="435"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-3599"/>
+      <preferredSize width="1280" height="720"/>
+    </properties>
     <border type="none"/>
-    <children/>
+    <children>
+      <hspacer id="ef16c">
+        <constraints/>
+      </hspacer>
+      <component id="f3042" class="javax.swing.JButton" binding="button1" default-binding="true">
+        <constraints/>
+        <properties>
+          <text value="Button"/>
+        </properties>
+      </component>
+      <hspacer id="36303">
+        <constraints/>
+      </hspacer>
+    </children>
   </grid>
 </form>
