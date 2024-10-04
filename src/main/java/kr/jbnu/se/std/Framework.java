@@ -12,6 +12,8 @@ import com.google.firebase.database.core.AuthTokenProvider;
 import com.google.gson.JsonObject;
 import jdk.jfr.internal.tool.Main;
 import okhttp3.*;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -89,6 +91,8 @@ public class Framework extends Canvas {
      */
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
+    private final Set<String> existingFriends = new HashSet<>(); // 중복 방지를 위한 Set
 
     private long gameTime;
     // It is used for calculating elapsed time.
@@ -109,9 +113,12 @@ public class Framework extends Canvas {
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
     private MainClient MainV2;
+    private AddFriends addFriends;
     private DatabaseReference chatRef;
-    private final Set<String> receivedMessageKeys = new HashSet<>(); // 이미 받은 메시지의 키를 저장할 Set
-
+    private final Set<String> receivedMessageKeys = new HashSet<>();
+    private final Set<String> receivedMessageKeysF = new HashSet<>(); // 이미 받은 메시지의 키를 저장할 Set
+    private ChatwithFriends chatwithFriends;
+    private String selectnickname;
 
 
     /**
@@ -130,6 +137,7 @@ public class Framework extends Canvas {
         loginClient = new LoginClient(this);
         loginClient.setVisible(true);
         MainV2 = new MainClient(this);
+
         MainV2.setVisible(false);
         this.setVisible(false);
 
@@ -151,6 +159,90 @@ public class Framework extends Canvas {
             System.err.println("Error refreshing ID Token: " + e.getMessage());
         }
     }
+    public void ChatFriendswindow(String nickname){
+        chatwithFriends = new ChatwithFriends(this);
+        chatwithFriends.setFriends(nickname);
+        selectnickname = chatwithFriends.getFriends();
+        startRecevingFriendschat();
+        if(chatwithFriends == null){
+            stopReceivingFriendschat();
+        }
+    }
+
+    public void frendsAddwindows(){
+        addFriends = new AddFriends(this);
+    }
+
+    public void friendsAdder(String nickname) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+        System.err.println(nickname);
+        json.put("nickname", nickname);
+        // 사용자 ID를 키로 사용하여 닉네임 저장
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
+        Request request = new Request.Builder()
+                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/"+ "userinfo/friends"+".json")
+                .put(body) // POST 메소드 사용
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("닉네임 저장 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    System.err.println("닉네임 저장 실패: " + response.code());
+                }else{
+                }
+            }
+        });
+    }
+    // Firebase에 메시지 전송
+    public void sendMessageFriend(String selectednick,String message) {
+        try {
+            // 메시지를 JSON 형식으로 변환
+            JSONObject json = new JSONObject();
+            json.put("message", message);
+            json.put("nickname", nickname);
+            String timestamp = String.valueOf(System.currentTimeMillis());
+
+            // Firebase에 저장할 URL
+            String url = "https://shootthedock-default-rtdb.firebaseio.com/chatfriend/"+ selectednick+nickname+"/"+timestamp+".json"; // 채팅 메시지를 저장하는 경로
+
+            RequestBody body = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"),
+                    json.toString()
+            );
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .put(body) // POST 메소드 사용
+                    .build();
+
+            // 비동기 호출
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.err.println("메시지 저장 실패: " + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        System.err.println("메시지 저장 실패: " + response.code());
+                    } else {
+                        System.out.println("메시지 저장 성공: " + response.body().string());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // Firebase에 메시지 전송
     public void sendMessage(String message) {
         try {
@@ -198,6 +290,70 @@ public class Framework extends Canvas {
     public void startReceivingMessages() {
         // 0초 후에 시작하고, 5초마다 receiveMessages 메소드를 호출
         scheduler.scheduleAtFixedRate(this::receiveMessages, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::receiveFriends, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public void startRecevingFriendschat() {
+        scheduler1.scheduleAtFixedRate(this::receiveMessagesFriends, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public void stopReceivingFriendschat() {
+        scheduler1.shutdownNow();
+    }
+
+    public void receiveMessagesFriends() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://shootthedock-default-rtdb.firebaseio.com/chatfriend/"+ selectnickname+nickname+".json?auth=" + idToken; // 채팅 메시지를 가져올 URL
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                SwingUtilities.invokeLater(() -> {
+                    System.err.println("채팅 메시지 가져오기 실패: " + e.getMessage());
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseBody);
+
+                    // JSON 객체가 비어있는지 확인
+                    if (jsonResponse.length() == 0) {
+                        SwingUtilities.invokeLater(() -> {
+                            System.out.println("채팅 내역이 존재하지 않습니다.");
+                        });
+                        return;
+                    }
+
+                    // 채팅 메시지 출력
+                    for (String key : jsonResponse.keySet()) {
+                        JSONObject messageData = jsonResponse.getJSONObject(key);
+                        String message = messageData.getString("message");
+                        String senderNickname = messageData.getString("nickname");
+
+                        // 이미 받은 메시지인지 확인 (타임스탬프 키 사용)
+                        if (!receivedMessageKeysF.contains(key)) {
+                            receivedMessageKeysF.add(key); // 새 메시지 키 추가
+                            String uniqueMessage = senderNickname + ": " + message; // 고유 메시지 생성
+                            SwingUtilities.invokeLater(() -> {
+                                chatwithFriends.setChat(uniqueMessage + "\n"); // 채팅 영역에 메시지 추가
+                            });
+                        }
+                    }
+                } else {
+                    SwingUtilities.invokeLater(() -> {
+                        System.err.println("채팅 메시지 가져오기 실패: " + response.message());
+                    });
+                }
+            }
+        });
     }
 
     public void receiveMessages() {
@@ -254,6 +410,65 @@ public class Framework extends Canvas {
             }
         });
     }
+    public void receiveFriends() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/friends.json?auth=" + idToken;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                SwingUtilities.invokeLater(() -> {
+                    System.err.println("친구 목록 가져오기 실패: " + e.getMessage());
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseBody);
+
+                        // JSON 객체가 비어있는지 확인
+                        if (jsonObject.length() == 0) {
+                            SwingUtilities.invokeLater(() -> {
+                                System.out.println("친구가 없습니다.");
+                            });
+                            return;
+                        }
+
+                        // 친구 목록 출력
+                        for (String key : jsonObject.keySet()) {
+                            String nickname = jsonObject.getString(key); // 친구의 닉네임
+
+                            // 중복된 친구가 아닌 경우에만 추가
+                            if (!existingFriends.contains(nickname)) {
+                                existingFriends.add(nickname); // 새로운 친구 추가
+                                SwingUtilities.invokeLater(() -> {
+                                    MainV2.setFriends(nickname + "\n"); // 친구 목록에 추가
+                                });
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        SwingUtilities.invokeLater(() -> {
+                            System.err.println("친구 목록 처리 중 오류 발생: " + e.getMessage());
+                        });
+                    }
+                } else {
+                    SwingUtilities.invokeLater(() -> {
+                        System.err.println("친구 목록 가져오기 실패: " + response.message());
+                    });
+                }
+            }
+        });
+    }
+
 
 
     private void initializeFirebase() {

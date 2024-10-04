@@ -4,7 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.TimerTask;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainClient extends JFrame {
     private String nickname;
@@ -12,7 +13,7 @@ public class MainClient extends JFrame {
     private JTextField messageField;
     private Framework framework;
     private JLabel nameLabel;
-    private Timer timer;
+    private DefaultListModel<String> friendsModel;
 
     public MainClient(Framework framework) {
         // 기본 프레임 설정
@@ -24,7 +25,6 @@ public class MainClient extends JFrame {
         setResizable(false);
         setLayout(new BorderLayout());
         framework.startReceivingMessages();
-
 
         // 상단 패널
         JPanel topPanel = new JPanel();
@@ -70,10 +70,7 @@ public class MainClient extends JFrame {
         centerPanel.add(chatScroll, BorderLayout.CENTER); // 중앙에 추가
 
         // 친구 목록
-        DefaultListModel<String> friendsModel = new DefaultListModel<>();
-        friendsModel.addElement("친구1");
-        friendsModel.addElement("친구2");
-        friendsModel.addElement("친구3");
+        friendsModel = new DefaultListModel<>();
         JList<String> friendsList = new JList<>(friendsModel);
         JScrollPane friendsScroll = new JScrollPane(friendsList); // 스크롤 패널 추가
         friendsScroll.setPreferredSize(new Dimension(200, 0)); // 폭 설정
@@ -89,20 +86,54 @@ public class MainClient extends JFrame {
         messageField = new JTextField();
         inputPanel.add(messageField, BorderLayout.CENTER); // 중앙에 추가
 
+        // 버튼 패널 (전송 버튼과 친구 추가 버튼을 포함)
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
         // 전송 버튼
         JButton sendButton = new JButton("전송");
-        inputPanel.add(sendButton, BorderLayout.EAST); // 동쪽에 추가
+        buttonPanel.add(sendButton); // 버튼 패널에 전송 버튼 추가
+
+        // 친구 추가 버튼
+        JButton addFriendButton = new JButton("친구 추가");
+        buttonPanel.add(addFriendButton); // 버튼 패널에 친구 추가 버튼 추가
+
+        // 버튼 패널을 입력 패널의 동쪽에 추가
+        inputPanel.add(buttonPanel, BorderLayout.EAST);
 
         // 입력 패널을 프레임 하단에 추가
         add(inputPanel, BorderLayout.SOUTH);
-        // 전송 버튼 클릭 이벤트
 
+
+        // 전송 버튼 클릭 이벤트
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String message = messageField.getText();
                 if (!message.isEmpty()) {
                     framework.sendMessage(message);
+                    messageField.setText(""); // 입력 필드 초기화
+                }
+            }
+        });
+
+        // 친구 추가 버튼 클릭 이벤트
+        addFriendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                framework.frendsAddwindows();
+            }
+        });
+
+        // 친구 목록에서 클릭하면 새로운 채팅 창 띄우기
+        friendsList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // 더블 클릭 이벤트 처리
+                    String selectedFriend = friendsList.getSelectedValue();
+                    if (selectedFriend != null) {
+                        framework.ChatFriendswindow(selectedFriend);
+                    }
                 }
             }
         });
@@ -110,6 +141,7 @@ public class MainClient extends JFrame {
         // 프레임을 화면에 표시
         setVisible(true);
     }
+
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
@@ -119,5 +151,8 @@ public class MainClient extends JFrame {
     public void setChat(String message) {
         messageField.setText(""); // 입력 필드 초기화
         this.chatArea.append(message);
+    }
+    public void setFriends(String friends) {
+        this.friendsModel.addElement(friends);
     }
 }
