@@ -301,4 +301,8 @@ public class Game {
         g2d.drawString("kr.jbnu.se.std.Game Over", Framework.frameWidth / 2 - 40, (int)(Framework.frameHeight * 0.65));
         g2d.drawString("Press space or enter to restart.", Framework.frameWidth / 2 - 150, (int)(Framework.frameHeight * 0.70));
     }
+
+    public int getScore(){
+        return score;
+    }
 }

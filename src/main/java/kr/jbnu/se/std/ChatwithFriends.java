@@ -75,7 +75,7 @@ public class ChatwithFriends extends JFrame {
         return selectnickname;
     }
     public void setChat(String message) {
-        inputField.setText(""); // 입력 필드 초기화
+        // 입력 필드 초기화
         this.chatArea3.append(message);
     }
 }

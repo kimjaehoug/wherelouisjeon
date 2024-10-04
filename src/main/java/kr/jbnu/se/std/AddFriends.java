@@ -33,6 +33,7 @@ public class AddFriends extends JFrame {
                 String nickname = nicknameField.getText();
                 // 여기서 닉네임 처리 로직 추가 가능
                 framework.friendsAdder(nickname);
+                framework.friendsAdderother(nickname);
                 System.out.println("추가할 친구: " + nickname);
             }
         });

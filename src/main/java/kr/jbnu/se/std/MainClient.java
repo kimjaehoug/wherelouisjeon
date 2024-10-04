@@ -14,6 +14,13 @@ public class MainClient extends JFrame {
     private Framework framework;
     private JLabel nameLabel;
     private DefaultListModel<String> friendsModel;
+    private int money;
+    private JLabel moneyLabel;
+    // 원본 이미지 아이콘 생성
+    ImageIcon originalIcon = new ImageIcon("src/main/resources/images/start_btn.png");
+
+    // 눌릴 때 이미지 아이콘 생성
+    ImageIcon pressedIcon = new ImageIcon("src/main/resources/images/press_start_btn.png");
 
     public MainClient(Framework framework) {
         // 기본 프레임 설정
@@ -24,18 +31,95 @@ public class MainClient extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(new BorderLayout());
-        framework.startReceivingMessages();
 
         // 상단 패널
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
 
         // 게임 시작 버튼
-        JButton startButton = new JButton("게임 시작");
-        startButton.setPreferredSize(new Dimension(200, 50)); // 버튼 크기 설정
-        startButton.setFont(new Font("Arial", Font.BOLD, 18)); // 폰트 설정
+        JButton startButton = new JButton();
+        startButton.setPreferredSize(new Dimension(300, 100)); // 버튼 크기 설정
         startButton.setFocusable(false); // 포커스 비활성화
-        startButton.setBackground(Color.LIGHT_GRAY); // 배경색 설정
+        startButton.setBackground(Color.LIGHT_GRAY); // 배경색 설정 (이미지 외의 영역에 적용)
+        startButton.setBorderPainted(false); // 테두리 제거
+        startButton.setContentAreaFilled(false); // 버튼 내용 영역 비움 (이미지만 표시)
+        // 원본 이미지 크기
+        int originalWidth = originalIcon.getIconWidth();
+        int originalHeight = originalIcon.getIconHeight();
+
+        // 버튼 크기
+        int buttonWidth = startButton.getPreferredSize().width;
+        int buttonHeight = startButton.getPreferredSize().height;
+
+        // 이미지 비율을 유지하면서 버튼 크기에 맞게 조정
+        double widthRatio = (double) buttonWidth / originalWidth;
+        double heightRatio = (double) buttonHeight / originalHeight;
+        double scaleFactor = Math.min(widthRatio, heightRatio); // 비율 유지하며 맞춤
+
+        int scaledWidth = (int) (originalWidth * scaleFactor);
+        int scaledHeight = (int) (originalHeight * scaleFactor);
+
+        // 이미지 크기 조정
+        Image scaledImage = originalIcon.getImage().getScaledInstance(
+                scaledWidth,
+                scaledHeight,
+                Image.SCALE_SMOOTH
+        );
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+        // 버튼에 조정된 이미지 아이콘 설정
+        startButton.setIcon(scaledIcon);
+
+        // 버튼에 액션 리스너 추가 (버튼을 눌렀을 때 동작 수행)
+        startButton.addActionListener(e -> {
+            // 버튼 클릭 시 원하는 동작을 정의
+            System.out.println("게임이 시작됩니다!");
+        });
+
+// 버튼 눌림 효과를 위한 마우스 리스너 추가
+        startButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                startButton.setIcon(new ImageIcon(pressedIcon.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH)));
+                startButton.setBackground(Color.GRAY); // 눌릴 때 색상 변경
+
+                // 1초 후에 원래 아이콘으로 복원
+                Timer timer = new Timer(500, event -> {
+                    startButton.setIcon(scaledIcon); // 원래 아이콘으로 복원
+                    startButton.setBackground(Color.LIGHT_GRAY); // 원래 색상으로 복원
+                });
+                timer.setRepeats(false); // 1회만 실행
+                timer.start();
+                framework.onGameStart();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // 마우스 릴리즈 시에는 아무 동작도 하지 않도록 설정
+            }
+        });
+
+// 버튼을 패널에 추가
+        topPanel.add(startButton, BorderLayout.CENTER);
+        // 상점 버튼 생성
+        JButton shopButton = new JButton("상점");
+        shopButton.setPreferredSize(new Dimension(300, 100)); // 버튼 크기 설정
+        shopButton.setFocusable(false); // 포커스 비활성화
+        shopButton.setBackground(Color.LIGHT_GRAY); // 배경색 설정
+        shopButton.setBorderPainted(false); // 테두리 제거
+        shopButton.setContentAreaFilled(false); // 버튼 내용 영역 비움 (이미지만 표시)
+
+        // 상점 버튼 클릭 시 동작 정의
+        shopButton.addActionListener(e -> {
+            // 상점 창 열기
+            framework.Shopwindowopen();
+            System.out.println("상점이 열립니다!");
+            // framework.openShopWindow(); // 예시: 상점 창 열기
+        });
+
+        // 버튼을 상단 패널에 추가
+        topPanel.add(shopButton, BorderLayout.SOUTH); // 상단 패널의 남쪽에 추가
+
 
         // 프로필 패널
         JPanel profilePanel = new JPanel();
@@ -50,11 +134,12 @@ public class MainClient extends JFrame {
         namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS)); // 세로로 정렬
         nameLabel = new JLabel("이름: " + nickname); // 이름 레이블
         JLabel introLabel = new JLabel("자기소개 한줄");
+        moneyLabel = new JLabel("DP : ");
         namePanel.add(nameLabel);
         namePanel.add(introLabel);
+        namePanel.add(moneyLabel);
         profilePanel.add(namePanel); // 프로필 패널에 추가
 
-        topPanel.add(startButton, BorderLayout.CENTER); // 중앙에 추가
         topPanel.add(profilePanel, BorderLayout.EAST); // 오른쪽에 추가
         add(topPanel, BorderLayout.NORTH); // 상단에 추가
 
@@ -75,6 +160,20 @@ public class MainClient extends JFrame {
         JScrollPane friendsScroll = new JScrollPane(friendsList); // 스크롤 패널 추가
         friendsScroll.setPreferredSize(new Dimension(200, 0)); // 폭 설정
         centerPanel.add(friendsScroll, BorderLayout.EAST); // 오른쪽에 추가
+        JButton friendRequestsButton = new JButton("친구 신청 목록");
+        friendRequestsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                framework.Invitewindow(); // 친구 신청 목록 창 호출
+            }
+        });
+
+        // 친구 목록 패널과 버튼을 함께 추가
+        JPanel friendsPanel = new JPanel(new BorderLayout());
+        friendsPanel.add(friendsScroll, BorderLayout.CENTER); // 친구 목록 추가
+        friendsPanel.add(friendRequestsButton, BorderLayout.SOUTH); // 친구 신청 목록 버튼 추가
+
+        centerPanel.add(friendsPanel, BorderLayout.EAST); // 오른쪽에 추가
 
         add(centerPanel, BorderLayout.CENTER); // 중앙 패널 추가
 
@@ -149,10 +248,15 @@ public class MainClient extends JFrame {
     }
 
     public void setChat(String message) {
-        messageField.setText(""); // 입력 필드 초기화
+        // 입력 필드 초기화
         this.chatArea.append(message);
     }
     public void setFriends(String friends) {
         this.friendsModel.addElement(friends);
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+        moneyLabel.setText("DP: " + money);
     }
 }
