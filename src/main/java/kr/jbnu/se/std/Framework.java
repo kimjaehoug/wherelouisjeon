@@ -295,10 +295,66 @@ public class Framework extends Canvas {
 
     public void startRecevingFriendschat() {
         scheduler1.scheduleAtFixedRate(this::receiveMessagesFriends, 0, 1, TimeUnit.SECONDS);
+        scheduler1.scheduleAtFixedRate(this::receiveMessagesFriends2, 0, 1, TimeUnit.SECONDS);
     }
 
     public void stopReceivingFriendschat() {
         scheduler1.shutdownNow();
+    }
+
+    public void receiveMessagesFriends2() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://shootthedock-default-rtdb.firebaseio.com/chatfriend/"+ nickname+selectnickname+".json?auth=" + idToken; // 채팅 메시지를 가져올 URL
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                SwingUtilities.invokeLater(() -> {
+                    System.err.println("채팅 메시지 가져오기 실패: " + e.getMessage());
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseBody);
+
+                    // JSON 객체가 비어있는지 확인
+                    if (jsonResponse.length() == 0) {
+                        SwingUtilities.invokeLater(() -> {
+                            System.out.println("채팅 내역이 존재하지 않습니다.");
+                        });
+                        return;
+                    }
+
+                    // 채팅 메시지 출력
+                    for (String key : jsonResponse.keySet()) {
+                        JSONObject messageData = jsonResponse.getJSONObject(key);
+                        String message = messageData.getString("message");
+                        String senderNickname = messageData.getString("nickname");
+
+                        // 이미 받은 메시지인지 확인 (타임스탬프 키 사용)
+                        if (!receivedMessageKeysF.contains(key)) {
+                            receivedMessageKeysF.add(key); // 새 메시지 키 추가
+                            String uniqueMessage = senderNickname + ": " + message; // 고유 메시지 생성
+                            SwingUtilities.invokeLater(() -> {
+                                chatwithFriends.setChat(uniqueMessage + "\n"); // 채팅 영역에 메시지 추가
+                            });
+                        }
+                    }
+                } else {
+                    SwingUtilities.invokeLater(() -> {
+                        System.err.println("채팅 메시지 가져오기 실패: " + response.message());
+                    });
+                }
+            }
+        });
     }
 
     public void receiveMessagesFriends() {
