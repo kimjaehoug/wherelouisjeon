@@ -124,7 +124,7 @@ public class MainV2 extends JFrame {
         chatArea.setOpaque(false); // 배경을 투명하게 설정
         chatArea.setBackground(new Color(0, 0, 0, 0)); // 배경색을 투명으로 설정
         chatArea.setForeground(Color.BLACK); // 글자색을 흰색으로 설정 (배경과 대비되게)
-        chatArea.setFont(new Font("Gothic", Font.PLAIN, 16)); // 폰트 설정
+        chatArea.setFont(new Font("Gothic", Font.PLAIN, 20)); // 폰트 설정
 
         // 채팅 영역을 스크롤 패널에 추가
         JScrollPane chatScroll = new JScrollPane(chatArea);
@@ -147,9 +147,30 @@ public class MainV2 extends JFrame {
         friendsModel.addElement("친구2");
         friendsModel.addElement("친구3");
         JList<String> friendsList = new JList<>(friendsModel);
-        JScrollPane friendsScroll = new JScrollPane(friendsList); // 스크롤 패널 추가
-        friendsScroll.setPreferredSize(new Dimension(195, 468)); // 친구 목록 크기 설정
-        centerPanel.add(friendsScroll, BorderLayout.EAST); // 오른쪽에 추가
+
+        // 친구 목록 투명하게 설정
+        friendsList.setOpaque(false);  // 리스트 배경 투명하게 설정
+        friendsList.setBackground(new Color(0, 0, 0, 0));  // 투명 배경
+        friendsList.setForeground(Color.BLACK);  // 글자 색상 흰색으로 설정 (배경 대비)
+        friendsList.setFont(new Font("Gothic", Font.PLAIN, 20)); // 폰트 설정
+
+        // 친구 목록 스크롤 패널
+        JScrollPane friendsScroll = new JScrollPane(friendsList);
+        friendsScroll.setOpaque(false);  // 스크롤 패널도 투명하게
+        friendsScroll.getViewport().setOpaque(false);  // 뷰포트도 투명하게
+        friendsScroll.setPreferredSize(new Dimension(195, 468));  // 친구 목록 크기 설정
+
+        // 친구 목록 배경 이미지 설정
+        ImageIcon friendBackgroundIcon = new ImageIcon("src/main/resources/images/background_friend.png");
+        JLabel friendsBackgroundLabel = new JLabel(friendBackgroundIcon);
+        friendsBackgroundLabel.setLayout(new BorderLayout());
+        friendsBackgroundLabel.setPreferredSize(new Dimension(195, 468));
+
+        // 친구 목록 스크롤 패널을 배경 레이블에 추가
+        friendsBackgroundLabel.add(friendsScroll, BorderLayout.CENTER);
+
+        // 중앙 패널에 배경이 있는 친구 목록 추가
+        centerPanel.add(friendsBackgroundLabel, BorderLayout.EAST);
 
         add(centerPanel, BorderLayout.CENTER); // 중앙 패널 추가
 
@@ -160,6 +181,7 @@ public class MainV2 extends JFrame {
         // 입력 필드
         JTextField messageField = new JTextField();
         inputPanel.add(messageField, BorderLayout.CENTER); // 중앙에 추가
+        messageField.setFont(new Font("Gothic", Font.PLAIN, 20)); // 폰트 설정
 
         // 전송 버튼
         JButton sendButton = new JButton();
@@ -177,9 +199,13 @@ public class MainV2 extends JFrame {
         int sendOriginalWidth = sendIcon.getIconWidth();
         int sendOriginalHeight = sendIcon.getIconHeight();
 
-        // 버튼 크기에 맞게 이미지 크기 조정
-        double sendWidthRatio = (double) sendButton.getPreferredSize().width / sendOriginalWidth;
-        double sendHeightRatio = (double) sendButton.getPreferredSize().height / sendOriginalHeight;
+        // 버튼 크기
+        int sendButtonWidth = sendButton.getPreferredSize().width;
+        int sendButtonHeight = sendButton.getPreferredSize().height;
+
+        // 이미지 비율을 유지하면서 버튼 크기에 맞게 조정
+        double sendWidthRatio = (double) sendButtonWidth / sendOriginalWidth;
+        double sendHeightRatio = (double) sendButtonHeight / sendOriginalHeight;
         double sendScaleFactor = Math.min(sendWidthRatio, sendHeightRatio); // 비율 유지하며 맞춤
 
         int sendScaledWidth = (int) (sendOriginalWidth * sendScaleFactor);
@@ -201,20 +227,27 @@ public class MainV2 extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 sendButton.setIcon(new ImageIcon(sendPressedIcon.getImage().getScaledInstance(sendScaledWidth, sendScaledHeight, Image.SCALE_SMOOTH)));
+                sendButton.setBackground(Color.GRAY); // 눌릴 때 색상 변경
+
+                // 1초 후에 원래 아이콘으로 복원
+                Timer timer = new Timer(500, event -> {
+                    sendButton.setIcon(sendScaledIcon); // 원래 아이콘으로 복원
+                    sendButton.setBackground(Color.LIGHT_GRAY); // 원래 색상으로 복원
+                });
+                timer.setRepeats(false); // 1회만 실행
+                timer.start();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                sendButton.setIcon(sendScaledIcon); // 원래 아이콘으로 복원
+                // 마우스 릴리즈 시에는 아무 동작도 하지 않도록 설정
             }
         });
 
-        // 입력 패널에 전송 버튼 추가
-        inputPanel.add(sendButton, BorderLayout.EAST); // 동쪽에 추가
+        // 전송 버튼을 입력 패널에 추가
+        inputPanel.add(sendButton, BorderLayout.EAST); // 오른쪽에 추가
 
-        // 입력 패널을 프레임 하단에 추가
-        add(inputPanel, BorderLayout.SOUTH);
-
+        add(inputPanel, BorderLayout.SOUTH); // 하단에 추가
 
         // 버튼 클릭 시 메시지 전송
         sendButton.addActionListener(new ActionListener() {
@@ -236,7 +269,12 @@ public class MainV2 extends JFrame {
         setVisible(true); // 프레임 보이기
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(MainV2::new);
+
+
+public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            MainV2 main = new MainV2();
+            main.setVisible(true);
+        });
     }
 }
