@@ -142,7 +142,7 @@ public class Game {
     {
         try
         {
-            URL backgroundImgUrl = this.getClass().getResource("/images/background.jpg");
+            URL backgroundImgUrl = this.getClass().getResource("/images/background.png");
             backgroundImg = ImageIO.read(backgroundImgUrl);
             
             URL grassImgUrl = this.getClass().getResource("/images/grass.png");
