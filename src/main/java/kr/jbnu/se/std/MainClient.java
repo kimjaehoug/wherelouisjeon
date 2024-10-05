@@ -42,7 +42,7 @@ public class MainClient extends JFrame {
         profilePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         // 프로필 사진
-        JLabel profileImage = new JLabel(new ImageIcon("src/main/resources/images/duck.png")); // 프로필 이미지
+        JLabel profileImage = new JLabel(new ImageIcon("src/main/resources/images/profile.png")); // 프로필 이미지
         profilePanel.add(profileImage); // 프로필 사진 추가
 
         // 이름과 자기소개 패널

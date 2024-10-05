@@ -141,18 +141,61 @@ public class MainV2 extends JFrame {
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new BorderLayout());
 
-        // 입력 필드
+// 입력 필드
         JTextField messageField = new JTextField();
         inputPanel.add(messageField, BorderLayout.CENTER); // 중앙에 추가
 
-        // 전송 버튼
-        JButton sendButton = new JButton("Send");
+// 전송 버튼
+        JButton sendButton = new JButton();
+        sendButton.setPreferredSize(new Dimension(100, 50)); // 버튼 크기 설정
+        sendButton.setFocusable(false); // 포커스 비활성화
+        sendButton.setBackground(Color.LIGHT_GRAY); // 배경색 설정 (이미지 외의 영역에 적용)
+        sendButton.setBorderPainted(false); // 테두리 제거
+        sendButton.setContentAreaFilled(false); // 버튼 내용 영역 비움 (이미지만 표시)
+
+// 원본 이미지 아이콘 생성
+        ImageIcon sendIcon = new ImageIcon("src/main/resources/images/send_btn.png");
+        ImageIcon sendPressedIcon = new ImageIcon("src/main/resources/images/send_btn_press.png");
+
+// 원본 이미지 크기
+        int sendOriginalWidth = sendIcon.getIconWidth();
+        int sendOriginalHeight = sendIcon.getIconHeight();
+
+// 버튼 크기에 맞게 이미지 크기 조정
+        double sendWidthRatio = (double) sendButton.getPreferredSize().width / sendOriginalWidth;
+        double sendHeightRatio = (double) sendButton.getPreferredSize().height / sendOriginalHeight;
+        double sendScaleFactor = Math.min(sendWidthRatio, sendHeightRatio); // 비율 유지하며 맞춤
+
+        int sendScaledWidth = (int) (sendOriginalWidth * sendScaleFactor);
+        int sendScaledHeight = (int) (sendOriginalHeight * sendScaleFactor);
+
+// 이미지 크기 조정
+        Image sendScaledImage = sendIcon.getImage().getScaledInstance(sendScaledWidth, sendScaledHeight, Image.SCALE_SMOOTH);
+        ImageIcon sendScaledIcon = new ImageIcon(sendScaledImage);
+
+// 버튼에 조정된 이미지 아이콘 설정
+        sendButton.setIcon(sendScaledIcon);
+
+// 버튼 눌림 효과를 위한 마우스 리스너 추가
+        sendButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                sendButton.setIcon(new ImageIcon(sendPressedIcon.getImage().getScaledInstance(sendScaledWidth, sendScaledHeight, Image.SCALE_SMOOTH)));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                sendButton.setIcon(sendScaledIcon); // 원래 아이콘으로 복원
+            }
+        });
+
+// 입력 패널에 전송 버튼 추가
         inputPanel.add(sendButton, BorderLayout.EAST); // 동쪽에 추가
 
-        // 입력 패널을 프레임 하단에 추가
+// 입력 패널을 프레임 하단에 추가
         add(inputPanel, BorderLayout.SOUTH);
 
-        // 전송 버튼 클릭 이벤트
+// 전송 버튼 클릭 이벤트
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -163,6 +206,7 @@ public class MainV2 extends JFrame {
                 }
             }
         });
+
 
         // 프레임을 화면에 표시
         setVisible(true);
