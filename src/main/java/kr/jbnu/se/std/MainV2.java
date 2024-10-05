@@ -13,8 +13,8 @@ public class MainV2 extends JFrame {
         setTitle("Shoot the Duck");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 720);
-        setLocationRelativeTo(null); //창이 항상 가운데로 오도록
-        setResizable(false); //창 크기 못 늘리게 false
+        setLocationRelativeTo(null); // 창이 항상 가운데로 오도록
+        setResizable(false); // 창 크기 못 늘리게 false
         setLayout(new BorderLayout());
 
         // 상단 패널
@@ -68,7 +68,7 @@ public class MainV2 extends JFrame {
             System.out.println("게임이 시작됩니다!");
         });
 
-// 버튼 눌림 효과를 위한 마우스 리스너 추가
+        // 버튼 눌림 효과를 위한 마우스 리스너 추가
         startButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -90,9 +90,8 @@ public class MainV2 extends JFrame {
             }
         });
 
-// 버튼을 패널에 추가
+        // 버튼을 패널에 추가
         topPanel.add(startButton, BorderLayout.CENTER);
-
 
         // 프로필 패널
         JPanel profilePanel = new JPanel();
@@ -122,8 +121,25 @@ public class MainV2 extends JFrame {
         JTextArea chatArea = new JTextArea();
         chatArea.setEditable(false); // 읽기 전용
         chatArea.setLineWrap(true); // 줄 바꿈 설정
-        JScrollPane chatScroll = new JScrollPane(chatArea); // 스크롤 패널 추가
-        centerPanel.add(chatScroll, BorderLayout.CENTER); // 중앙에 추가
+        chatArea.setOpaque(false); // 배경을 투명하게 설정
+        chatArea.setBackground(new Color(0, 0, 0, 0)); // 배경색을 투명으로 설정
+        chatArea.setForeground(Color.BLACK); // 글자색을 흰색으로 설정 (배경과 대비되게)
+        chatArea.setFont(new Font("Gothic", Font.PLAIN, 16)); // 폰트 설정
+
+        // 채팅 영역을 스크롤 패널에 추가
+        JScrollPane chatScroll = new JScrollPane(chatArea);
+        chatScroll.setPreferredSize(new Dimension(1047, 468)); // 채팅 영역 크기 설정
+        chatScroll.setOpaque(false); // 스크롤 패널 배경을 투명하게 설정
+        chatScroll.getViewport().setOpaque(false); // 뷰포트 배경을 투명하게 설정
+
+        // 채팅창 배경 이미지 설정
+        ImageIcon chatBackgroundIcon = new ImageIcon("src/main/resources/images/background_chat.png");
+        JLabel chatBackgroundLabel = new JLabel(chatBackgroundIcon);
+        chatBackgroundLabel.setLayout(new BorderLayout());
+        chatBackgroundLabel.setPreferredSize(new Dimension(1047, 468));
+        chatBackgroundLabel.add(chatScroll, BorderLayout.CENTER); // 중앙에 추가
+
+        centerPanel.add(chatBackgroundLabel, BorderLayout.CENTER); // 중앙에 추가
 
         // 친구 목록
         DefaultListModel<String> friendsModel = new DefaultListModel<>();
@@ -132,7 +148,7 @@ public class MainV2 extends JFrame {
         friendsModel.addElement("친구3");
         JList<String> friendsList = new JList<>(friendsModel);
         JScrollPane friendsScroll = new JScrollPane(friendsList); // 스크롤 패널 추가
-        friendsScroll.setPreferredSize(new Dimension(200, 0)); // 폭 설정
+        friendsScroll.setPreferredSize(new Dimension(195, 468)); // 친구 목록 크기 설정
         centerPanel.add(friendsScroll, BorderLayout.EAST); // 오른쪽에 추가
 
         add(centerPanel, BorderLayout.CENTER); // 중앙 패널 추가
@@ -141,11 +157,11 @@ public class MainV2 extends JFrame {
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new BorderLayout());
 
-// 입력 필드
+        // 입력 필드
         JTextField messageField = new JTextField();
         inputPanel.add(messageField, BorderLayout.CENTER); // 중앙에 추가
 
-// 전송 버튼
+        // 전송 버튼
         JButton sendButton = new JButton();
         sendButton.setPreferredSize(new Dimension(100, 50)); // 버튼 크기 설정
         sendButton.setFocusable(false); // 포커스 비활성화
@@ -153,15 +169,15 @@ public class MainV2 extends JFrame {
         sendButton.setBorderPainted(false); // 테두리 제거
         sendButton.setContentAreaFilled(false); // 버튼 내용 영역 비움 (이미지만 표시)
 
-// 원본 이미지 아이콘 생성
+        // 원본 이미지 아이콘 생성
         ImageIcon sendIcon = new ImageIcon("src/main/resources/images/send_btn.png");
         ImageIcon sendPressedIcon = new ImageIcon("src/main/resources/images/send_btn_press.png");
 
-// 원본 이미지 크기
+        // 원본 이미지 크기
         int sendOriginalWidth = sendIcon.getIconWidth();
         int sendOriginalHeight = sendIcon.getIconHeight();
 
-// 버튼 크기에 맞게 이미지 크기 조정
+        // 버튼 크기에 맞게 이미지 크기 조정
         double sendWidthRatio = (double) sendButton.getPreferredSize().width / sendOriginalWidth;
         double sendHeightRatio = (double) sendButton.getPreferredSize().height / sendOriginalHeight;
         double sendScaleFactor = Math.min(sendWidthRatio, sendHeightRatio); // 비율 유지하며 맞춤
@@ -169,14 +185,18 @@ public class MainV2 extends JFrame {
         int sendScaledWidth = (int) (sendOriginalWidth * sendScaleFactor);
         int sendScaledHeight = (int) (sendOriginalHeight * sendScaleFactor);
 
-// 이미지 크기 조정
-        Image sendScaledImage = sendIcon.getImage().getScaledInstance(sendScaledWidth, sendScaledHeight, Image.SCALE_SMOOTH);
+        // 이미지 크기 조정
+        Image sendScaledImage = sendIcon.getImage().getScaledInstance(
+                sendScaledWidth,
+                sendScaledHeight,
+                Image.SCALE_SMOOTH
+        );
         ImageIcon sendScaledIcon = new ImageIcon(sendScaledImage);
 
-// 버튼에 조정된 이미지 아이콘 설정
+        // 버튼에 조정된 이미지 아이콘 설정
         sendButton.setIcon(sendScaledIcon);
 
-// 버튼 눌림 효과를 위한 마우스 리스너 추가
+        // 버튼 눌림 효과를 위한 마우스 리스너 추가
         sendButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -189,30 +209,34 @@ public class MainV2 extends JFrame {
             }
         });
 
-// 입력 패널에 전송 버튼 추가
+        // 입력 패널에 전송 버튼 추가
         inputPanel.add(sendButton, BorderLayout.EAST); // 동쪽에 추가
 
-// 입력 패널을 프레임 하단에 추가
+        // 입력 패널을 프레임 하단에 추가
         add(inputPanel, BorderLayout.SOUTH);
 
-// 전송 버튼 클릭 이벤트
+
+        // 버튼 클릭 시 메시지 전송
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String message = messageField.getText();
                 if (!message.isEmpty()) {
-                    chatArea.append("You: " + message + "\n"); // 채팅 영역에 메시지 추가
-                    messageField.setText(""); // 입력 필드 초기화
+                    chatArea.append("   You: " + message + "\n"); // 채팅 메시지 추가
+                    messageField.setText(""); // 입력 필드 비우기
                 }
             }
         });
 
+        // 입력 패널에 버튼 추가
+        inputPanel.add(sendButton, BorderLayout.EAST); // 오른쪽에 추가
 
-        // 프레임을 화면에 표시
-        setVisible(true);
+        add(inputPanel, BorderLayout.SOUTH); // 하단 패널 추가
+
+        setVisible(true); // 프레임 보이기
     }
 
     public static void main(String[] args) {
-        new MainV2();
+        SwingUtilities.invokeLater(MainV2::new);
     }
 }
