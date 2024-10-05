@@ -99,7 +99,7 @@ public class MainV2 extends JFrame {
         profilePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         // 프로필 사진
-        JLabel profileImage = new JLabel(new ImageIcon("src/main/resources/images/duck.png")); // 프로필 이미지
+        JLabel profileImage = new JLabel(new ImageIcon("src/main/resources/images/profile.png")); // 프로필 이미지
         profilePanel.add(profileImage); // 프로필 사진 추가
 
         // 이름과 자기소개 패널
@@ -111,7 +111,6 @@ public class MainV2 extends JFrame {
         namePanel.add(introLabel);
         profilePanel.add(namePanel); // 프로필 패널에 추가
 
-        topPanel.add(startButton, BorderLayout.CENTER); // 중앙에 추가
         topPanel.add(profilePanel, BorderLayout.EAST); // 오른쪽에 추가
         add(topPanel, BorderLayout.NORTH); // 상단에 추가
 
