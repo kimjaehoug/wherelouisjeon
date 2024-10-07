@@ -8,8 +8,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class MainV2 extends JFrame {
-    public MainV2() {
+    private Framework framework;
+    public MainV2(Framework framework) {
         // 기본 프레임 설정
+        this.framework = framework;
         setTitle("Shoot the Duck");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 720);
@@ -143,9 +145,6 @@ public class MainV2 extends JFrame {
 
         // 친구 목록
         DefaultListModel<String> friendsModel = new DefaultListModel<>();
-        friendsModel.addElement("친구1");
-        friendsModel.addElement("친구2");
-        friendsModel.addElement("친구3");
         JList<String> friendsList = new JList<>(friendsModel);
 
         // 친구 목록 투명하게 설정
@@ -228,7 +227,7 @@ public class MainV2 extends JFrame {
             public void mousePressed(MouseEvent e) {
                 sendButton.setIcon(new ImageIcon(sendPressedIcon.getImage().getScaledInstance(sendScaledWidth, sendScaledHeight, Image.SCALE_SMOOTH)));
                 sendButton.setBackground(Color.GRAY); // 눌릴 때 색상 변경
-
+                String message = messageField.getText();
                 // 1초 후에 원래 아이콘으로 복원
                 Timer timer = new Timer(500, event -> {
                     sendButton.setIcon(sendScaledIcon); // 원래 아이콘으로 복원
@@ -236,6 +235,10 @@ public class MainV2 extends JFrame {
                 });
                 timer.setRepeats(false); // 1회만 실행
                 timer.start();
+                if (!message.isEmpty()) {
+                    framework.sendMessage(message);
+                    messageField.setText(""); // 입력 필드 초기화
+                }
             }
 
             @Override
@@ -270,11 +273,4 @@ public class MainV2 extends JFrame {
     }
 
 
-
-public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MainV2 main = new MainV2();
-            main.setVisible(true);
-        });
-    }
 }
