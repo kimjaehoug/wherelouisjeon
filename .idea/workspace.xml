@@ -4,32 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="131313">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainV2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainV2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$10.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$16.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$17.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$17.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$18.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$18.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$9.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2.class" afterDir="false" />
-    </list>
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="131313" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -213,7 +188,7 @@
       <workItem from="1727689816044" duration="15230000" />
       <workItem from="1727776036881" duration="31242000" />
       <workItem from="1727875707906" duration="28902000" />
-      <workItem from="1728066880239" duration="7799000" />
+      <workItem from="1728066880239" duration="8135000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -335,7 +310,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728277380099</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="131313">
+      <option name="closed" value="true" />
+      <created>1728279465226</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1728279465226</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
