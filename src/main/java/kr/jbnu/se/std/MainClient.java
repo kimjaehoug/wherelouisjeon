@@ -151,15 +151,30 @@ public class MainClient extends JFrame {
         chatArea = new JTextArea();
         chatArea.setEditable(false); // 읽기 전용
         chatArea.setLineWrap(true); // 줄 바꿈 설정
-        JScrollPane chatScroll = new JScrollPane(chatArea); // 스크롤 패널 추가
-        centerPanel.add(chatScroll, BorderLayout.CENTER); // 중앙에 추가
+        chatArea.setOpaque(false); // 배경을 투명하게 설정
+        chatArea.setBackground(new Color(0, 0, 0, 0)); // 배경색을 투명으로 설정
+        chatArea.setForeground(Color.BLACK); // 글자색을 흰색으로 설정 (배경과 대비되게)
+        chatArea.setFont(new Font("Gothic", Font.PLAIN, 20));// 폰트 설정
+        // 채팅 영역을 스크롤 패널에 추가
+        JScrollPane chatScroll = new JScrollPane(chatArea);
+        chatScroll.setPreferredSize(new Dimension(1047, 468)); // 채팅 영역 크기 설정
+        chatScroll.setOpaque(false); // 스크롤 패널 배경을 투명하게 설정
+        chatScroll.getViewport().setOpaque(false); // 뷰포트 배경을 투명하게 설정
+
+        // 채팅창 배경 이미지 설정
+        ImageIcon chatBackgroundIcon = new ImageIcon("src/main/resources/images/background_chat.png");
+        JLabel chatBackgroundLabel = new JLabel(chatBackgroundIcon);
+        chatBackgroundLabel.setLayout(new BorderLayout());
+        chatBackgroundLabel.setPreferredSize(new Dimension(1047, 468));
+        chatBackgroundLabel.add(chatScroll, BorderLayout.CENTER); // 중앙에 추가
+
+        centerPanel.add(chatBackgroundLabel, BorderLayout.CENTER); // 중앙에 추가
 
         // 친구 목록
         friendsModel = new DefaultListModel<>();
         JList<String> friendsList = new JList<>(friendsModel);
         JScrollPane friendsScroll = new JScrollPane(friendsList); // 스크롤 패널 추가
         friendsScroll.setPreferredSize(new Dimension(200, 0)); // 폭 설정
-        centerPanel.add(friendsScroll, BorderLayout.EAST); // 오른쪽에 추가
         JButton friendRequestsButton = new JButton("친구 신청 목록");
         friendRequestsButton.addActionListener(new ActionListener() {
             @Override
@@ -168,13 +183,31 @@ public class MainClient extends JFrame {
             }
         });
 
+        // 친구 목록 투명하게 설정
+        friendsList.setOpaque(false);  // 리스트 배경 투명하게 설정
+        friendsList.setBackground(new Color(0, 0, 0, 0));  // 투명 배경
+        friendsList.setForeground(Color.BLACK);  // 글자 색상 흰색으로 설정 (배경 대비)
+        friendsList.setFont(new Font("Gothic", Font.PLAIN, 20)); // 폰트 설정
+
+        // 친구 목록 배경 이미지 설정
+        ImageIcon friendBackgroundIcon = new ImageIcon("src/main/resources/images/background_friend.png");
+        JLabel friendsBackgroundLabel = new JLabel(friendBackgroundIcon);
+        friendsBackgroundLabel.setLayout(new BorderLayout());
+        friendsBackgroundLabel.setPreferredSize(new Dimension(195, 468));
+
+        // 친구 목록 스크롤 패널
+        friendsScroll.setOpaque(false);  // 스크롤 패널도 투명하게
+        friendsScroll.getViewport().setOpaque(false);  // 뷰포트도 투명하게
+        friendsScroll.setPreferredSize(new Dimension(195, 468));  // 친구 목록 크기 설정
+
         // 친구 목록 패널과 버튼을 함께 추가
         JPanel friendsPanel = new JPanel(new BorderLayout());
         friendsPanel.add(friendsScroll, BorderLayout.CENTER); // 친구 목록 추가
-        friendsPanel.add(friendRequestsButton, BorderLayout.SOUTH); // 친구 신청 목록 버튼 추가
-
+        friendsBackgroundLabel.add(friendRequestsButton, BorderLayout.SOUTH); // 친구 신청 목록 버튼 추가
+        // 친구 목록 스크롤 패널을 배경 레이블에 추가
+        friendsBackgroundLabel.add(friendsScroll, BorderLayout.CENTER);
         centerPanel.add(friendsPanel, BorderLayout.EAST); // 오른쪽에 추가
-
+        centerPanel.add(friendsBackgroundLabel, BorderLayout.EAST);
         add(centerPanel, BorderLayout.CENTER); // 중앙 패널 추가
 
         // 입력 필드와 전송 버튼이 들어갈 패널
@@ -184,37 +217,86 @@ public class MainClient extends JFrame {
         // 입력 필드
         messageField = new JTextField();
         inputPanel.add(messageField, BorderLayout.CENTER); // 중앙에 추가
-
+        messageField.setFont(new Font("Gothic", Font.PLAIN, 20)); // 폰트 설정
         // 버튼 패널 (전송 버튼과 친구 추가 버튼을 포함)
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
         // 전송 버튼
-        JButton sendButton = new JButton("전송");
+        JButton sendButton = new JButton();
+        sendButton.setPreferredSize(new Dimension(100, 50)); // 버튼 크기 설정
+        sendButton.setFocusable(false); // 포커스 비활성화
+        sendButton.setBackground(Color.LIGHT_GRAY); // 배경색 설정 (이미지 외의 영역에 적용)
+        sendButton.setBorderPainted(false); // 테두리 제거
+        sendButton.setContentAreaFilled(false); // 버튼 내용 영역 비움 (이미지만 표시)
         buttonPanel.add(sendButton); // 버튼 패널에 전송 버튼 추가
+        // 원본 이미지 아이콘 생성
+        ImageIcon sendIcon = new ImageIcon("src/main/resources/images/send_btn.png");
+        ImageIcon sendPressedIcon = new ImageIcon("src/main/resources/images/send_btn_press.png");
 
+        // 원본 이미지 크기
+        int sendOriginalWidth = sendIcon.getIconWidth();
+        int sendOriginalHeight = sendIcon.getIconHeight();
+
+        // 버튼 크기
+        int sendButtonWidth = sendButton.getPreferredSize().width;
+        int sendButtonHeight = sendButton.getPreferredSize().height;
+
+        // 이미지 비율을 유지하면서 버튼 크기에 맞게 조정
+        double sendWidthRatio = (double) sendButtonWidth / sendOriginalWidth;
+        double sendHeightRatio = (double) sendButtonHeight / sendOriginalHeight;
+        double sendScaleFactor = Math.min(sendWidthRatio, sendHeightRatio); // 비율 유지하며 맞춤
+
+        int sendScaledWidth = (int) (sendOriginalWidth * sendScaleFactor);
+        int sendScaledHeight = (int) (sendOriginalHeight * sendScaleFactor);
+
+        // 이미지 크기 조정
+        Image sendScaledImage = sendIcon.getImage().getScaledInstance(
+                sendScaledWidth,
+                sendScaledHeight,
+                Image.SCALE_SMOOTH
+        );
+        ImageIcon sendScaledIcon = new ImageIcon(sendScaledImage);
+
+        // 버튼에 조정된 이미지 아이콘 설정
+        sendButton.setIcon(sendScaledIcon);
         // 친구 추가 버튼
         JButton addFriendButton = new JButton("친구 추가");
         buttonPanel.add(addFriendButton); // 버튼 패널에 친구 추가 버튼 추가
+
+
+
+        // 버튼 눌림 효과를 위한 마우스 리스너 추가
+        sendButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                sendButton.setIcon(new ImageIcon(sendPressedIcon.getImage().getScaledInstance(sendScaledWidth, sendScaledHeight, Image.SCALE_SMOOTH)));
+                sendButton.setBackground(Color.GRAY); // 눌릴 때 색상 변경
+                String message = messageField.getText();
+                // 1초 후에 원래 아이콘으로 복원
+                Timer timer = new Timer(500, event -> {
+                    sendButton.setIcon(sendScaledIcon); // 원래 아이콘으로 복원
+                    sendButton.setBackground(Color.LIGHT_GRAY); // 원래 색상으로 복원
+                });
+                timer.setRepeats(false); // 1회만 실행
+                timer.start();
+                if (!message.isEmpty()) {
+                    framework.sendMessage(message);
+                    messageField.setText(""); // 입력 필드 초기화
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // 마우스 릴리즈 시에는 아무 동작도 하지 않도록 설정
+            }
+        });
 
         // 버튼 패널을 입력 패널의 동쪽에 추가
         inputPanel.add(buttonPanel, BorderLayout.EAST);
 
         // 입력 패널을 프레임 하단에 추가
         add(inputPanel, BorderLayout.SOUTH);
-
-
-        // 전송 버튼 클릭 이벤트
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String message = messageField.getText();
-                if (!message.isEmpty()) {
-                    framework.sendMessage(message);
-                    messageField.setText(""); // 입력 필드 초기화
-                }
-            }
-        });
 
         // 친구 추가 버튼 클릭 이벤트
         addFriendButton.addActionListener(new ActionListener() {
