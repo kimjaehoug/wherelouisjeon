@@ -4,21 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.*;
-import com.google.gson.JsonObject;
 import okhttp3.*;
 import org.json.JSONObject;
-
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class LoginClient extends JFrame {
 
@@ -37,50 +31,165 @@ public class LoginClient extends JFrame {
     public LoginClient(Framework framework) {
         this.framework = framework;
         setTitle("Login");
-        setSize(760, 480);
+        setSize(840, 630);
         setLocationRelativeTo(null); // 화면 중앙에 표시
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         auth = FirebaseAuth.getInstance();
 
         JPanel panel = new JPanel(new GridBagLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        // 오른쪽 화면
+        ImageIcon imageIcon = new ImageIcon("src/main/resources/images/login_duck.png");
+        Image backgroundImage = imageIcon.getImage();
+        JPanel rightPanel = new ImagePanel(backgroundImage);
+        rightPanel.setLayout(new GridBagLayout());
+        rightPanel.setPreferredSize(new Dimension(560, 630));
+        mainPanel.add(rightPanel, BorderLayout.CENTER);
+
+        // 왼쪽 화면
+        JPanel leftPanel = new JPanel(new GridBagLayout());
+        leftPanel.setBackground(Color.WHITE);
+        leftPanel.setPreferredSize(new Dimension(280, 630));
+        mainPanel.add(leftPanel, BorderLayout.WEST);
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(2, 5, 2, 5);
+
+        gbc.weighty = 0.7;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        leftPanel.add(new JLabel(), gbc);
+
+        // "로그인" 텍스트 추가
+        JLabel loginLabel = new JLabel("LOGIN");
+        loginLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        loginLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.weighty = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(10, 0, 30, 0);
+        leftPanel.add(loginLabel, gbc);
 
         // ID 라벨 및 입력 필드
-        JLabel idLabel = new JLabel("ID:");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(idLabel, gbc);
+        JPanel idPanel = new JPanel();
+        idPanel.setBackground(new Color(233, 233, 233));
+        idPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 여백 추가
+        idPanel.setPreferredSize(new Dimension(230, 50)); // 너비 250, 높이 50
+        idPanel.setLayout(new BorderLayout());
 
-        idField = new JTextField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        panel.add(idField, gbc);
+        // 텍스트 필드 생성
+        JTextField idField = new JTextField("ID", 30); // 기본 텍스트로 "ID" 설정
+        idField.setForeground(Color.GRAY);
+        idField.setOpaque(false);
+        idField.setBorder(BorderFactory.createEmptyBorder());
 
-        // 비밀번호 라벨 및 입력 필드
-        JLabel passwordLabel = new JLabel("Password:");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(passwordLabel, gbc);
+        idField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if ("ID".equals(idField.getText())) {
+                    idField.setText("");
+                    idField.setForeground(Color.BLACK);
+                }
+            }
 
-        passwordField = new JPasswordField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        panel.add(passwordField, gbc);
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (idField.getText().isEmpty()) {
+                    idField.setText("ID");
+                    idField.setForeground(Color.GRAY);
+                }
+            }
+        });
 
-        // 로그인 버튼
-        loginButton = new JButton("Login");
+        idPanel.add(idField, BorderLayout.CENTER);
+        gbc.weighty = 0;
         gbc.gridx = 0;
         gbc.gridy = 2;
-        panel.add(loginButton, gbc);
+        gbc.insets = new Insets(5, 0, 5, 0);
+        leftPanel.add(idPanel, gbc);
+
+        // 비밀번호 라벨 및 입력 필드
+        JPanel passwordPanel = new JPanel();
+        passwordPanel.setBackground(new Color(233, 233, 233));
+        passwordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        passwordPanel.setPreferredSize(new Dimension(230, 50));
+        passwordPanel.setLayout(new BorderLayout());
+
+        // 비밀번호 텍스트 필드 생성
+        JPasswordField passwordField = new JPasswordField("Password", 15);
+        passwordField.setForeground(Color.GRAY);
+        passwordField.setEchoChar((char) 0);
+        passwordField.setOpaque(false);
+        passwordField.setBorder(BorderFactory.createEmptyBorder());
+
+        passwordField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if ("Password".equals(passwordField.getText())) {
+                    passwordField.setText("");
+                    passwordField.setForeground(Color.BLACK);
+                    passwordField.setEchoChar('●');
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (passwordField.getText().isEmpty()) {
+                    passwordField.setText("Password");
+                    passwordField.setForeground(Color.GRAY);
+                    passwordField.setEchoChar((char) 0);
+                }
+            }
+        });
+
+        passwordPanel.add(passwordField, BorderLayout.CENTER);
+        gbc.weighty = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.insets = new Insets(10, 0, 5, 0);
+        leftPanel.add(passwordPanel, gbc);
+
+        // 로그인 버튼
+        ImageIcon originalIcon = new ImageIcon("src/main/resources/images/grass.png");
+        Image originalImage = originalIcon.getImage();
+        Image scaledImage = originalImage.getScaledInstance(230, 50, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        loginButton = new JButton(scaledIcon);
+        loginButton.setPreferredSize(new Dimension(230, 50));
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.insets = new Insets(10, 0, 0, 0);
+        gbc.fill = GridBagConstraints.NONE;
+        loginButton.setBorderPainted(false);
+
+        loginButton.setText("Login");
+        loginButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        loginButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+        leftPanel.add(loginButton, gbc);
+
+        gbc.weighty = 0.8;
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        leftPanel.add(new JLabel(), gbc);
 
         // 회원가입 버튼
         signupButton = new JButton("Sign Up");
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        panel.add(signupButton, gbc);
+        gbc.weightx = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.fill = GridBagConstraints.NONE;
+        signupButton.setBorderPainted(false);
+        signupButton.setContentAreaFilled(false);
+        leftPanel.add(signupButton, gbc);
 
+        add(mainPanel);
+        pack();
+        setVisible(true);
+
+        leftPanel.requestFocusInWindow();
 
         // 로그인 버튼 클릭 시 이벤트 처리
         loginButton.addActionListener(new ActionListener() {
@@ -89,11 +198,8 @@ public class LoginClient extends JFrame {
                 id = idField.getText();
                 password = new String(passwordField.getPassword());
                 loginWithFirebase(id, password);
-
-
             }
         });
-
 
         // 회원가입 버튼 클릭 시 이벤트 처리
         signupButton.addActionListener(new ActionListener() {
@@ -105,6 +211,22 @@ public class LoginClient extends JFrame {
 
         add(panel);
     }
+
+    public class ImagePanel extends JPanel{
+        private Image backgroundImage;
+        public ImagePanel(Image backgroundImage) {
+            this.backgroundImage = backgroundImage;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (backgroundImage != null) {
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        }
+    }
+
     //파이어베이스 초기화
     // Firebase를 통한 로그인 처리 메소드
     private void loginWithFirebase(String email, String password) {
@@ -158,17 +280,19 @@ public class LoginClient extends JFrame {
     // 회원가입 창 표시
     private void showRegisterWindow() {
         JFrame registerFrame = new JFrame("Sign Up");
-        registerFrame.setSize(300, 200);
+        registerFrame.setSize(350, 250);
         registerFrame.setLocationRelativeTo(null);
         registerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel registerPanel = new JPanel(new GridBagLayout());
+        registerPanel.setBackground(Color.WHITE);
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
         // 이메일 라벨 및 입력 필드
-        JLabel emailLabel = new JLabel("Email:");
+        /*JLabel emailLabel = new JLabel("Email:");
         gbc.gridx = 0;
         gbc.gridy = 0;
         registerPanel.add(emailLabel, gbc);
@@ -176,47 +300,173 @@ public class LoginClient extends JFrame {
         JTextField emailField = new JTextField(15);
         gbc.gridx = 1;
         gbc.gridy = 0;
-        registerPanel.add(emailField, gbc);
+        registerPanel.add(emailField, gbc);*/
+
+        // new ID 라벨 및 입력 필드
+        JPanel newidpanel = new JPanel();
+        newidpanel.setBackground(new Color(233, 233, 233));
+        newidpanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        newidpanel.setLayout(new BorderLayout());
+
+        // new ID 텍스트 필드 생성
+        JTextField newidField = new JTextField("email", 30);
+        newidField.setForeground(Color.GRAY);
+        newidField.setOpaque(false);
+        newidField.setBorder(BorderFactory.createEmptyBorder());
+
+        newidField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if ("ID".equals(newidField.getText())) {
+                    newidField.setText("");
+                    newidField.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (newidField.getText().isEmpty()) {
+                    newidField.setText("email");
+                    newidField.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        newidpanel.add(newidField, BorderLayout.CENTER);
+        gbc.weightx = 1.0;
+        gbc.weighty = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(5, 15, 5, 15);
+        registerPanel.add(newidpanel, gbc);
 
         // 비밀번호 라벨 및 입력 필드
-        JLabel passwordLabel = new JLabel("Password:");
+        /*JLabel passwordLabel = new JLabel("Password:");
         gbc.gridx = 0;
         gbc.gridy = 1;
         registerPanel.add(passwordLabel, gbc);
 
         JPasswordField registerPasswordField = new JPasswordField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        registerPanel.add(registerPasswordField, gbc);
-
-        JLabel nicknameLabel = new JLabel("Nickname:");
         gbc.gridx = 0;
-        gbc.gridy = 2; // 비밀번호 아래에 배치
+        gbc.gridy = 2;
+        registerPanel.add(registerPasswordField, gbc);*/
+
+        // new password 라벨 및 입력 필드
+        JPanel newpasswordpanel = new JPanel();
+        newpasswordpanel.setBackground(new Color(233, 233, 233)); //색을 바꾸든 이미지를 설정하든 바꿀것!!!
+        newpasswordpanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        newpasswordpanel.setLayout(new BorderLayout());
+
+        // new password 텍스트 필드
+        JPasswordField newpasswordField = new JPasswordField("password", 30);
+        newpasswordField.setForeground(Color.GRAY);
+        newpasswordField.setOpaque(false);
+        newpasswordField.setBorder(BorderFactory.createEmptyBorder());
+        newpasswordField.setEchoChar((char) 0);
+
+        newpasswordField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if ("password".equals(new String(newpasswordField.getPassword()))) {
+                    newpasswordField.setText("");
+                    newpasswordField.setForeground(Color.BLACK);
+                    newpasswordField.setEchoChar('●');
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (newpasswordField.getPassword().length == 0) {
+                    newpasswordField.setText("password");
+                    newpasswordField.setForeground(Color.GRAY);
+                    newpasswordField.setEchoChar((char) 0);
+                }
+            }
+        });
+
+        newpasswordpanel.add(newpasswordField, BorderLayout.CENTER);
+        gbc.weightx = 1.0;
+        gbc.weighty = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.insets = new Insets(5, 15, 5, 15);
+
+        registerPanel.add(newpasswordpanel, gbc);
+
+
+        /*JLabel nicknameLabel = new JLabel("Nickname:");
+        gbc.gridx = 0;
+        gbc.gridy = 3; // 비밀번호 아래에 배치
         registerPanel.add(nicknameLabel, gbc);
 
         JTextField nicknameField = new JTextField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 2; // 비밀번호 아래에 배치
-        registerPanel.add(nicknameField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4; // 비밀번호 아래에 배치
+        registerPanel.add(nicknameField, gbc);*/
+
+        // Nickname 라벨 및 입력 필드
+        JPanel nicknamepanel = new JPanel();
+        nicknamepanel.setBackground(new Color(233, 233, 233)); //색을 바꾸든 이미지를 설정하든 바꿀것!!!
+        nicknamepanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        nicknamepanel.setLayout(new BorderLayout());
+
+        // Nickname 텍스트 필드 생성
+        JTextField nicknameField = new JTextField("nickname", 30);
+        nicknameField.setForeground(Color.GRAY);
+        nicknameField.setOpaque(false);
+        nicknameField.setBorder(BorderFactory.createEmptyBorder());
+
+        nicknameField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if ("nickname".equals(nicknameField.getText())) {
+                    nicknameField.setText("");
+                    nicknameField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (nicknameField.getText().isEmpty()) {
+                    nicknameField.setText("nickname");
+                    nicknameField.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        nicknamepanel.add(nicknameField, BorderLayout.CENTER);
+        gbc.weightx = 1.0;
+        gbc.weighty = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.insets = new Insets(5, 15, 5, 15);
+        registerPanel.add(nicknamepanel, gbc);
 
         // 회원가입 버튼
         JButton submitButton = new JButton("Sign Up");
-        gbc.gridx = 1;
+        submitButton.setBackground(Color.GRAY);//색을 바꾸든 이미지를 설정하든 바꿀것!!!
+        submitButton.setForeground(Color.BLACK);
+        submitButton.setBorderPainted(false);
+        submitButton.setFocusPainted(false);
+
+        gbc.weightx = 1.0;
+        gbc.weighty = 0;
+        gbc.gridx = 0;
         gbc.gridy = 3;
+        gbc.insets = new Insets(5, 15, 5, 15);
         registerPanel.add(submitButton, gbc);
 
         // 회원가입 버튼 클릭 시 Firebase에 사용자 등록
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                email = emailField.getText();
-                String password = new String(registerPasswordField.getPassword());
+                email = newidField.getText();
+                String password = new String(newpasswordField.getPassword());
                 String nickname = nicknameField.getText();
                 signUpWithFirebase(email,password,nickname,registerFrame);
             }
         });
 
         registerFrame.add(registerPanel);
+
         registerFrame.setVisible(true);
     }
 
@@ -298,5 +548,7 @@ public class LoginClient extends JFrame {
             }
         });
     }
+
+
 
 }
