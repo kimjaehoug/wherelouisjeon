@@ -92,7 +92,9 @@ public class Framework extends Canvas {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
     private final Set<String> existingFriends = new HashSet<>(); // 중복 방지를 위한 Set
+    private final Set<String> existingFriendsinvite = new HashSet<>(); // 중복 방지를 위한 Set
 
     private long gameTime;
     // It is used for calculating elapsed time.
@@ -119,6 +121,9 @@ public class Framework extends Canvas {
     private final Set<String> receivedMessageKeysF = new HashSet<>(); // 이미 받은 메시지의 키를 저장할 Set
     private ChatwithFriends chatwithFriends;
     private String selectnickname;
+    private int money;
+    private InviteFriends inviteFriends;
+    private ShopWindow shopWindow;
 
 
     /**
@@ -159,6 +164,36 @@ public class Framework extends Canvas {
             System.err.println("Error refreshing ID Token: " + e.getMessage());
         }
     }
+    public void Invitewindow(){
+            inviteFriends = new InviteFriends(this);
+            startRecevingFriendInvite();
+            if(inviteFriends == null){
+                stopReceivingFriendInvite();
+            }
+    }
+    public void stopfriendadd(){
+        addFriends = null;
+    }
+
+    public void stopfriends(){
+        inviteFriends = null;
+    }
+    public void stoploginClinet(){
+        loginClient = null;
+    }
+
+    public void stopshop(){
+        shopWindow = null;
+    }
+
+    public void stopmain(){
+        MainV2 = null;
+    }
+
+
+    public void Shopwindowopen(){
+        shopWindow = new ShopWindow(this);
+    }
     public void ChatFriendswindow(String nickname){
         chatwithFriends = new ChatwithFriends(this);
         chatwithFriends.setFriends(nickname);
@@ -169,9 +204,70 @@ public class Framework extends Canvas {
         }
     }
 
+
+
     public void frendsAddwindows(){
         addFriends = new AddFriends(this);
     }
+
+    public void buySomeThing(int sell) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+        if(sell < money) {
+            int money = this.money - sell;
+            json.put("money", money);
+            // 사용자 ID를 키로 사용하여 닉네임 저장
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
+            Request request = new Request.Builder()
+                    .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/" + "userinfo.json")
+                    .patch(body)// POST 메소드 사용
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.err.println("인벤토리 저장 실패: " + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        System.err.println("인벤토리 저장 성공: " + response.code());
+                    } else {
+                    }
+                }
+            });
+        }else{
+
+        }
+    }
+    public void InventoryAdder_Gun(String item) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+        json.put("item", item);
+        // 사용자 ID를 키로 사용하여 닉네임 저장
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
+        Request request = new Request.Builder()
+                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/"+ "userinfo/inventory/Gun/"+item+".json")
+                .patch(body)// POST 메소드 사용
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("인벤토리 저장 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    System.err.println("인벤토리 저장 성공: " + response.code());
+                }else{
+                }
+            }
+        });
+    }
+
 
     public void friendsAdder(String nickname) {
         OkHttpClient client = new OkHttpClient();
@@ -181,8 +277,8 @@ public class Framework extends Canvas {
         // 사용자 ID를 키로 사용하여 닉네임 저장
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
         Request request = new Request.Builder()
-                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/"+ "userinfo/friends"+".json")
-                .put(body) // POST 메소드 사용
+                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/"+ "userinfo/friends/"+nickname+".json")
+                .patch(body)// POST 메소드 사용
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -194,7 +290,35 @@ public class Framework extends Canvas {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    System.err.println("닉네임 저장 실패: " + response.code());
+                    System.err.println("닉네임 저장 성공: " + response.code());
+                }else{
+                }
+            }
+        });
+    }
+
+    public void friendsAdderother(String nickname) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+        System.err.println(nickname);
+        json.put("nickname", this.nickname);
+        // 사용자 ID를 키로 사용하여 닉네임 저장
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
+        Request request = new Request.Builder()
+                .url("https://shootthedock-default-rtdb.firebaseio.com/friend/" + nickname + "/"+ "userinfo/friendswant/"+this.nickname+".json")
+                .patch(body) // POST 메소드 사용
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("친구추가 저장 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    System.err.println("친구추가 저장 실패: " + response.code());
                 }else{
                 }
             }
@@ -300,6 +424,14 @@ public class Framework extends Canvas {
 
     public void stopReceivingFriendschat() {
         scheduler1.shutdownNow();
+    }
+
+    public void startRecevingFriendInvite(){
+        scheduler2.scheduleAtFixedRate(this::receiveFriendsInvite, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public void stopReceivingFriendInvite() {
+        scheduler2.shutdownNow();
     }
 
     public void receiveMessagesFriends2() {
@@ -466,6 +598,103 @@ public class Framework extends Canvas {
             }
         });
     }
+    public void deleteFriendInvite(String nicknameToDelete) {
+        OkHttpClient client = new OkHttpClient();
+        // "nickname" 키를 사용하여 friendswant 밑의 데이터를 삭제하는 URL
+        String url = "https://shootthedock-default-rtdb.firebaseio.com/friend/" + nickname + "/userinfo/friendswant/" + nicknameToDelete + "/nickname.json?auth=" + idToken;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                SwingUtilities.invokeLater(() -> {
+                    System.err.println("친구 삭제 실패: " + e.getMessage());
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    SwingUtilities.invokeLater(() -> {
+                        System.out.println("친구 삭제 성공: " + nicknameToDelete);
+                        // 여기서 UI 업데이트 등 추가 작업 가능
+                    });
+                } else {
+                    SwingUtilities.invokeLater(() -> {
+                        System.err.println("친구 삭제 실패: " + response.message());
+                    });
+                }
+            }
+        });
+    }
+
+
+    public void receiveFriendsInvite() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://shootthedock-default-rtdb.firebaseio.com/friend/" + nickname + "/userinfo/friendswant.json?auth=" + idToken;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                SwingUtilities.invokeLater(() -> {
+                    System.err.println("친구 목록 가져오기 실패: " + e.getMessage());
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseBody);
+
+                        // JSON 객체가 비어있는지 확인
+                        if (jsonObject.length() == 0) {
+                            SwingUtilities.invokeLater(() -> {
+                                System.out.println("친구 신청이 없습니다.");
+                            });
+                            return;
+                        }
+
+                        // 친구 신청 목록 출력
+                        for (String key : jsonObject.keySet()) {
+                            JSONObject inviteObject = jsonObject.getJSONObject(key); // 친구 신청 객체
+                            String friendNickname = inviteObject.getString("nickname"); // 친구의 닉네임
+
+                            // 중복된 친구 신청이 아닌 경우에만 추가
+                            if (!existingFriendsinvite.contains(friendNickname)) {
+                                existingFriendsinvite.add(friendNickname); // 새로운 친구 신청 추가
+                                SwingUtilities.invokeLater(() -> {
+                                    inviteFriends.setFriends(friendNickname + "\n"); // 친구 목록에 추가
+                                });
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        SwingUtilities.invokeLater(() -> {
+                            System.err.println("친구 신청 목록 처리 중 오류 발생: " + e.getMessage());
+                            stopReceivingFriendInvite();
+                        });
+                    }
+                } else {
+                    SwingUtilities.invokeLater(() -> {
+                        System.err.println("친구 목록 가져오기 실패: " + response.message());
+                    });
+                }
+            }
+        });
+    }
+
+
     public void receiveFriends() {
         OkHttpClient client = new OkHttpClient();
         String url = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/friends.json?auth=" + idToken;
@@ -500,7 +729,8 @@ public class Framework extends Canvas {
 
                         // 친구 목록 출력
                         for (String key : jsonObject.keySet()) {
-                            String nickname = jsonObject.getString(key); // 친구의 닉네임
+                            JSONObject friendObject = jsonObject.getJSONObject(key); // 친구 객체
+                            String nickname = friendObject.getString("nickname"); // 친구의 닉네임
 
                             // 중복된 친구가 아닌 경우에만 추가
                             if (!existingFriends.contains(nickname)) {
@@ -524,6 +754,7 @@ public class Framework extends Canvas {
             }
         });
     }
+
 
 
 
@@ -573,6 +804,7 @@ public class Framework extends Canvas {
                             System.out.println("ID 토큰: " + idToken);
                             // 사용자의 닉네임을 가져옵니다.
                             getNickname(idToken);
+                            getMoney();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -583,6 +815,74 @@ public class Framework extends Canvas {
             }
         });
     }
+    public void getMoney() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo.json?auth=" + idToken;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                SwingUtilities.invokeLater(() -> {
+                    System.err.println("데이터 가져오기 실패: " + e.getMessage());
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseBody);
+
+                    if (jsonResponse.has("money")) {
+                        money = jsonResponse.getInt("money");
+                        System.out.println("money: " + money);
+                        MainV2.setMoney(money);
+                    } else {
+                        System.err.println("사용자 정보가 존재하지 않습니다.");
+                    }
+                } else {
+                    SwingUtilities.invokeLater(() -> {
+                        System.err.println("데이터 가져오기 실패: " + response.message());
+                    });
+                }
+            }
+        });
+    }
+
+    public void saveScore(int score) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+        json.put("nickname", this.nickname);
+        json.put("score", score);
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
+        Request request = new Request.Builder()
+                .url("https://shootthedock-default-rtdb.firebaseio.com/leaderboard/"+nickname+".json")
+                .put(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("점수 저장 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    System.out.println("점수 저장 성공: " + response.body().string());
+                } else {
+                    System.err.println("점수 저장 실패: " + response.code());
+                }
+            }
+        });
+    }
+
 
 
     public void getNickname(String idToken) {
@@ -630,11 +930,21 @@ public class Framework extends Canvas {
         isLoginSuccessful = true;
         loginWithFirebase(realemail, password);
         MainV2.setVisible(true);
+        stoploginClinet();
+        startReceivingMessages();
     }
 
     public void onGameStart(){
         MainV2.dispose();
+        window.onLoginSuccess();
+        stopmain();
+        stopshop();
+        stopfriendadd();
+        stopfriends();
+        stopReceivingFriendschat();
+        stopReceivingFriendInvite();
         gameState = GameState.VISUALIZING;
+        this.setVisible(true);
         gameThread = new Thread() {
             @Override
             public void run(){
@@ -737,7 +1047,7 @@ public class Framework extends Canvas {
             switch (gameState)
             {
                 case MainPage:
-                    gameState = GameState.VISUALIZING;
+                    gameState = GameState.STARTING;
                     break;
                 case PLAYING:
                     gameTime += System.nanoTime() - lastTime;
@@ -747,7 +1057,6 @@ public class Framework extends Canvas {
                     lastTime = System.nanoTime();
                     break;
                 case GAMEOVER:
-                    //...
                     break;
                 case LOGIN:
                     if (isLoginSuccessful) {
@@ -849,7 +1158,7 @@ public class Framework extends Canvas {
         gameTime = 0;
         lastTime = System.nanoTime();
 
-        game = new Game();
+        game = new Game(this);
     }
 
     /**

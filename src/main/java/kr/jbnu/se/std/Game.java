@@ -1,10 +1,6 @@
 package kr.jbnu.se.std;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -42,6 +38,7 @@ public class Game {
      * How many ducks leave the screen alive?
      */
     private int runawayDucks;
+    private Framework framework;
     
    /**
      * How many ducks the player killed?
@@ -57,7 +54,7 @@ public class Game {
      * How many times a player is shot?
      */
     private int shoots;
-    
+    private boolean leaderboardSaved;
     /**
      * Last time of the shoot.
      */
@@ -97,10 +94,10 @@ public class Game {
     private int sightImgMiddleHeight;
     
 
-    public Game()
+    public Game(Framework framework)
     {
         Framework.gameState = Framework.GameState.GAME_CONTENT_LOADING;
-        
+        this.framework = framework;
         Thread threadForInitGame = new Thread() {
             @Override
             public void run(){
@@ -142,7 +139,7 @@ public class Game {
     {
         try
         {
-            URL backgroundImgUrl = this.getClass().getResource("/images/background.jpg");
+            URL backgroundImgUrl = this.getClass().getResource("/images/background.png");
             backgroundImg = ImageIO.read(backgroundImgUrl);
             
             URL grassImgUrl = this.getClass().getResource("/images/grass.png");
@@ -249,8 +246,12 @@ public class Game {
         }
         
         // When 200 ducks runaway, the game ends.
-        if(runawayDucks >= 200)
+        if(runawayDucks >= 5)
             Framework.gameState = Framework.GameState.GAMEOVER;
+        if (Framework.gameState == Framework.GameState.GAMEOVER && !leaderboardSaved) {
+            framework.saveScore(score);
+            leaderboardSaved = true;  // 리더보드 저장 완료
+        }
     }
     
     /**
@@ -300,5 +301,9 @@ public class Game {
         g2d.setColor(Color.red);
         g2d.drawString("kr.jbnu.se.std.Game Over", Framework.frameWidth / 2 - 40, (int)(Framework.frameHeight * 0.65));
         g2d.drawString("Press space or enter to restart.", Framework.frameWidth / 2 - 150, (int)(Framework.frameHeight * 0.70));
+    }
+
+    public int getScore(){
+        return score;
     }
 }
