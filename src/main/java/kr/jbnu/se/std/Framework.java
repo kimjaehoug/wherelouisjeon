@@ -862,8 +862,8 @@ public class Framework extends Canvas {
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
         Request request = new Request.Builder()
-                .url("https://your-database-url/leaderboard.json")
-                .post(body)
+                .url("https://shootthedock-default-rtdb.firebaseio.com/leaderboard/"+nickname+".json")
+                .put(body)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -882,6 +882,7 @@ public class Framework extends Canvas {
             }
         });
     }
+
 
 
     public void getNickname(String idToken) {
@@ -935,13 +936,15 @@ public class Framework extends Canvas {
 
     public void onGameStart(){
         MainV2.dispose();
-        this.setVisible(true);
         window.onLoginSuccess();
         stopmain();
         stopshop();
         stopfriendadd();
         stopfriends();
+        stopReceivingFriendschat();
+        stopReceivingFriendInvite();
         gameState = GameState.VISUALIZING;
+        this.setVisible(true);
         gameThread = new Thread() {
             @Override
             public void run(){
@@ -1044,7 +1047,7 @@ public class Framework extends Canvas {
             switch (gameState)
             {
                 case MainPage:
-                    gameState = GameState.VISUALIZING;
+                    gameState = GameState.STARTING;
                     break;
                 case PLAYING:
                     gameTime += System.nanoTime() - lastTime;
@@ -1054,7 +1057,6 @@ public class Framework extends Canvas {
                     lastTime = System.nanoTime();
                     break;
                 case GAMEOVER:
-                    saveScore(game.getScore());
                     break;
                 case LOGIN:
                     if (isLoginSuccessful) {
@@ -1077,7 +1079,7 @@ public class Framework extends Canvas {
                     LoadContent();
 
                     // When all things that are called above finished, we change game status to main menu.
-                    gameState = GameState.MainPage;
+                    gameState = GameState.MAIN_MENU;
                     break;
                 case VISUALIZING:
                     // On Ubuntu OS (when I tested on my old computer) this.getWidth() method doesn't return the correct value immediately (eg. for frame that should be 800px width, returns 0 than 790 and at last 798px).
@@ -1156,7 +1158,7 @@ public class Framework extends Canvas {
         gameTime = 0;
         lastTime = System.nanoTime();
 
-        game = new Game();
+        game = new Game(this);
     }
 
     /**
