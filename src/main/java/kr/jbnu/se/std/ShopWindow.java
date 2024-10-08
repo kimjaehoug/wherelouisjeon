@@ -72,7 +72,6 @@ public class ShopWindow extends JFrame {
 
         setVisible(true);
     }
-
     private void addItemsToPanel(JPanel panel) {
         for (int i = 0; i < ITEMS_PER_PAGE; i++) {
             int index = currentPage * ITEMS_PER_PAGE + i;

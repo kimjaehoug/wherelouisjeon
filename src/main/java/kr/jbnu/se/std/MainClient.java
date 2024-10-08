@@ -101,6 +101,16 @@ public class MainClient extends JFrame {
 
 // 버튼을 패널에 추가
         topPanel.add(startButton, BorderLayout.CENTER);
+        JButton inventoryButton = new JButton("inventory");
+        inventoryButton.setPreferredSize(new Dimension(300, 100));
+        inventoryButton.setFocusable(false);
+        inventoryButton.setBackground(Color.LIGHT_GRAY);
+        inventoryButton.setBorderPainted(false);
+        inventoryButton.setContentAreaFilled(false);
+
+        inventoryButton.addActionListener(e -> {
+            framework.inventoryWindow();
+        });
         // 상점 버튼 생성
         JButton shopButton = new JButton("상점");
         shopButton.setPreferredSize(new Dimension(300, 100)); // 버튼 크기 설정
@@ -118,7 +128,8 @@ public class MainClient extends JFrame {
         });
 
         // 버튼을 상단 패널에 추가
-        topPanel.add(shopButton, BorderLayout.SOUTH); // 상단 패널의 남쪽에 추가
+        topPanel.add(shopButton, BorderLayout.SOUTH);
+        topPanel.add(inventoryButton, BorderLayout.NORTH);// 상단 패널의 남쪽에 추가
 
 
         // 프로필 패널

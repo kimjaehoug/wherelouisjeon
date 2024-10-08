@@ -18,39 +18,46 @@ import javax.imageio.ImageIO;
  */
 
 public class Game {
-    
+
     /**
      * We use this to generate a random number.
      */
     private Random random;
-    
+    private boolean isPause = false;
+    private int Round;
+    private boolean isBossAlive;
+
     /**
      * Font that we will use to write statistic to the screen.
      */
     private Font font;
-    
+
+    private BufferedImage bossImg;
+
     /**
      * Array list of the ducks.
      */
     private ArrayList<Duck> ducks;
-    
+    private ArrayList<boss1> boss;
+
     /**
      * How many ducks leave the screen alive?
      */
     private int runawayDucks;
     private Framework framework;
-    
-   /**
+
+    /**
      * How many ducks the player killed?
      */
     private int killedDucks;
-    
+
     /**
      * For each killed duck, the player gets points.
      */
     private int score;
-    
-   /**
+    private int money;
+
+    /**
      * How many times a player is shot?
      */
     private int shoots;
@@ -58,7 +65,7 @@ public class Game {
     /**
      * Last time of the shoot.
      */
-    private long lastTimeShoot;    
+    private long lastTimeShoot;
     /**
      * The time which must elapse between shots.
      */
@@ -68,22 +75,22 @@ public class Game {
      * kr.jbnu.se.std.Game background image.
      */
     private BufferedImage backgroundImg;
-    
+
     /**
      * Bottom grass.
      */
     private BufferedImage grassImg;
-    
+
     /**
      * kr.jbnu.se.std.Duck image.
      */
     private BufferedImage duckImg;
-    
+
     /**
      * Shotgun sight image.
      */
     private BufferedImage sightImg;
-    
+
     /**
      * Middle width of the sight image.
      */
@@ -92,167 +99,220 @@ public class Game {
      * Middle height of the sight image.
      */
     private int sightImgMiddleHeight;
-    
+    private String gun;
 
-    public Game(Framework framework)
-    {
+
+    public Game(Framework framework) {
         Framework.gameState = Framework.GameState.GAME_CONTENT_LOADING;
         this.framework = framework;
         Thread threadForInitGame = new Thread() {
             @Override
-            public void run(){
+            public void run() {
                 // Sets variables and objects for the game.
                 Initialize();
                 // Load game files (images, sounds, ...)
                 LoadContent();
-                
+
                 Framework.gameState = Framework.GameState.PLAYING;
+                framework.startReceivingInventory();
             }
         };
         threadForInitGame.start();
     }
-    
-    
-   /**
+
+
+    /**
      * Set variables and objects for the game.
      */
-    private void Initialize()
-    {
-        random = new Random();        
+    private void Initialize() {
+        random = new Random();
         font = new Font("monospaced", Font.BOLD, 18);
-        
+
         ducks = new ArrayList<Duck>();
-        
+        boss = new ArrayList<boss1>();
+
         runawayDucks = 0;
         killedDucks = 0;
         score = 0;
         shoots = 0;
-        
+        Round = 0;
+        isBossAlive = false;
+
         lastTimeShoot = 0;
         timeBetweenShots = Framework.secInNanosec / 3;
     }
-    
+
     /**
      * Load game files - images, sounds, ...
      */
-    private void LoadContent()
-    {
-        try
-        {
+    private void LoadContent() {
+        try {
             URL backgroundImgUrl = this.getClass().getResource("/images/background.png");
             backgroundImg = ImageIO.read(backgroundImgUrl);
-            
+
+            URL bossImgUrl = this.getClass().getResource("/images/boss.png");
+            bossImg = ImageIO.read(bossImgUrl);
+
             URL grassImgUrl = this.getClass().getResource("/images/grass.png");
             grassImg = ImageIO.read(grassImgUrl);
-            
+
             URL duckImgUrl = this.getClass().getResource("/images/duck.png");
             duckImg = ImageIO.read(duckImgUrl);
-            
+
             URL sightImgUrl = this.getClass().getResource("/images/sight.png");
             sightImg = ImageIO.read(sightImgUrl);
             sightImgMiddleWidth = sightImg.getWidth() / 2;
             sightImgMiddleHeight = sightImg.getHeight() / 2;
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
+
     /**
      * Restart game - reset some variables.
      */
-    public void RestartGame()
-    {
+    public void RestartGame() {
         // Removes all of the ducks from this list.
         ducks.clear();
-        
+
         // We set last duckt time to zero.
         Duck.lastDuckTime = 0;
-        
+
         runawayDucks = 0;
         killedDucks = 0;
         score = 0;
         shoots = 0;
-        
+
         lastTimeShoot = 0;
     }
-    
-    
+
+    public void Pause() {
+        ducks.clear();
+        isPause = true;
+        Framework.gameState = Framework.GameState.Pause;
+    }
+
+
+    public void NextRound() {
+        isPause = false;
+        Framework.gameState = Framework.GameState.PLAYING;
+        Duck.lastDuckTime = 0; // 오리 타이머 초기화
+        killedDucks = 0; // 죽인 오리 수 초기화
+        runawayDucks = 0; // 도망간 오리 수 초기화
+        Round += 1;
+        isBossAlive = false;
+
+    }
+
+
     /**
      * Update game logic.
-     * 
-     * @param gameTime gameTime of the game.
+     *
+     * @param gameTime      gameTime of the game.
      * @param mousePosition current mouse position.
      */
-    public void UpdateGame(long gameTime, Point mousePosition)
-    {
+    public void UpdateGame(long gameTime, Point mousePosition) {
+        if(!isPause) {
         // Creates a new duck, if it's the time, and add it to the array list.
-        if(System.nanoTime() - Duck.lastDuckTime >= Duck.timeBetweenDucks)
-        {
+        if (System.nanoTime() - Duck.lastDuckTime >= Duck.timeBetweenDucks) {
             // Here we create new duck and add it to the array list.
             ducks.add(new Duck(Duck.duckLines[Duck.nextDuckLines][0] + random.nextInt(200), Duck.duckLines[Duck.nextDuckLines][1], Duck.duckLines[Duck.nextDuckLines][2], Duck.duckLines[Duck.nextDuckLines][3], duckImg));
-            
+
             // Here we increase nextDuckLines so that next duck will be created in next line.
             Duck.nextDuckLines++;
-            if(Duck.nextDuckLines >= Duck.duckLines.length)
+            if (Duck.nextDuckLines >= Duck.duckLines.length)
                 Duck.nextDuckLines = 0;
-            
+
             Duck.lastDuckTime = System.nanoTime();
+            if (killedDucks >= 20 && !isBossAlive) {
+                // 보스 생성
+                boss.add(new boss1(1100, 500,0,3000, bossImg));
+                isBossAlive = true; // 보스가 등장했음을 표시
+                System.out.println("boss activity");
+                ducks.clear();
+            }
         }
-        
+
+        if(!isBossAlive){
         // Update all of the ducks.
-        for(int i = 0; i < ducks.size(); i++)
-        {
+        for (int i = 0; i < ducks.size(); i++) {
             // Move the duck.
             ducks.get(i).Update();
-            
+
             // Checks if the duck leaves the screen and remove it if it does.
-            if(ducks.get(i).x < 0 - duckImg.getWidth())
-            {
+            if (ducks.get(i).x < 0 - duckImg.getWidth()) {
                 ducks.remove(i);
                 runawayDucks++;
             }
         }
-        
         // Does player shoots?
-        if(Canvas.mouseButtonState(MouseEvent.BUTTON1))
-        {
+        if (Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
             // Checks if it can shoot again.
-            if(System.nanoTime() - lastTimeShoot >= timeBetweenShots)
-            {
+            if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
                 shoots++;
-                
+
                 // We go over all the ducks and we look if any of them was shoot.
-                for(int i = 0; i < ducks.size(); i++)
-                {
+                for (int i = 0; i < ducks.size(); i++) {
                     // We check, if the mouse was over ducks head or body, when player has shot.
-                    if(new Rectangle(ducks.get(i).x + 18, ducks.get(i).y     , 27, 30).contains(mousePosition) ||
-                       new Rectangle(ducks.get(i).x + 30, ducks.get(i).y + 30, 88, 25).contains(mousePosition))
-                    {
+                    if (new Rectangle(ducks.get(i).x + 18, ducks.get(i).y, 27, 30).contains(mousePosition) ||
+                            new Rectangle(ducks.get(i).x + 30, ducks.get(i).y + 30, 88, 25).contains(mousePosition)) {
                         killedDucks++;
+                        money += 10;
                         score += ducks.get(i).score;
-                        
+
                         // Remove the duck from the array list.
                         ducks.remove(i);
-                        
+
                         // We found the duck that player shoot so we can leave the for loop.
                         break;
                     }
                 }
-                
+            }
+                // We go over all the bosses and we look if any of them was shoot.
+                // We go over all the bosses and we look if any of them was shoot.
+
+
                 lastTimeShoot = System.nanoTime();
             }
+        }else{
+            if(Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
+                if(isBossAlive) {
+                    for (int i = 0; i < boss.size(); i++) {
+                        // Define the boss hitbox (for exampl, a larger area for the boss).
+                        if (new Rectangle(boss.get(i).x, boss.get(i).y, 100 , 100).contains(mousePosition)) {
+                            // Reduce boss health
+                            boss.get(i).health -= 20; // Reduce boss health by 20 on each hit.
+                            System.out.println("attack boss");
+                            // If the boss is dead, update score, money, etc.
+                            if (boss.get(i).health <= 0) {
+                                money += 100; // Bosses give more money
+                                score += boss.get(i).score; // Boss-specific score
+                                Pause();
+                                // Remove the boss from the array list.
+                                boss.remove(i);
+                            }
+
+                            // Since a boss was hit, we can leave the loop.
+                            break;
+                        }
+                    }
+                }
+            }
         }
-        
+
+
         // When 200 ducks runaway, the game ends.
-        if(runawayDucks >= 5)
+        if (runawayDucks >= 10)
             Framework.gameState = Framework.GameState.GAMEOVER;
         if (Framework.gameState == Framework.GameState.GAMEOVER && !leaderboardSaved) {
             framework.saveScore(score);
             leaderboardSaved = true;  // 리더보드 저장 완료
         }
-    }
+    }else{
+            return;
+        }
+}
     
     /**
      * Draw the game to the screen.
@@ -269,11 +329,23 @@ public class Game {
         {
             ducks.get(i).Draw(g2d);
         }
+
+        // 보스 그리기
+        if (!boss.isEmpty()) {
+            for (int i = 0; i < boss.size(); i++) {
+                boss.get(i).Draw(g2d);
+            }
+        }
+
         
         g2d.drawImage(grassImg, 0, Framework.frameHeight - grassImg.getHeight(), Framework.frameWidth, grassImg.getHeight(), null);
         
         g2d.drawImage(sightImg, mousePosition.x - sightImgMiddleWidth, mousePosition.y - sightImgMiddleHeight, null);
-        
+        if(gun.equals("더블배럴샷건")){
+            g2d.drawImage(sightImg,mousePosition.x + sightImgMiddleHeight, mousePosition.y - sightImgMiddleHeight, null);
+            g2d.drawImage(sightImg,mousePosition.x - sightImgMiddleHeight*2, mousePosition.y - sightImgMiddleHeight, null);
+        }
+
         g2d.setFont(font);
         g2d.setColor(Color.darkGray);
         
@@ -281,6 +353,9 @@ public class Game {
         g2d.drawString("KILLS: " + killedDucks, 160, 21);
         g2d.drawString("SHOOTS: " + shoots, 299, 21);
         g2d.drawString("SCORE: " + score, 440, 21);
+        g2d.drawString("Round: " + Round, 570, 21);
+        g2d.drawString("Money: " + money, 700, 21);
+
     }
     
     
@@ -305,5 +380,9 @@ public class Game {
 
     public int getScore(){
         return score;
+    }
+
+    public void setgun(String gun){
+        this.gun = gun;
     }
 }
