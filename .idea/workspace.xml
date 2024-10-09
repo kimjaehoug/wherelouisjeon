@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="131313">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/duck_boss1.png" afterDir="false" />
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="hp">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$10.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$11.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$9.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,7 +192,7 @@
       <workItem from="1727776036881" duration="31242000" />
       <workItem from="1727875707906" duration="28902000" />
       <workItem from="1728066880239" duration="8135000" />
-      <workItem from="1728462602954" duration="1549000" />
+      <workItem from="1728462602954" duration="2881000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -335,7 +330,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728280412095</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="hp">
+      <option name="closed" value="true" />
+      <created>1728466392718</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1728466392718</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -368,6 +371,7 @@
     <MESSAGE value="loginfunction" />
     <MESSAGE value="yw" />
     <MESSAGE value="131313" />
-    <option name="LAST_COMMIT_MESSAGE" value="131313" />
+    <MESSAGE value="hp" />
+    <option name="LAST_COMMIT_MESSAGE" value="hp" />
   </component>
 </project>
