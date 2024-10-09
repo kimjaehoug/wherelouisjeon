@@ -127,6 +127,7 @@ public class Framework extends Canvas {
     private ShopWindow shopWindow;
     private InventoryWindow inventoryWindow;
     private String inventoryimage;
+    private String whatgun;
 
 
     /**
@@ -481,6 +482,7 @@ public class Framework extends Canvas {
                     for (String key : jsonResponse.keySet()) {
                         JSONObject inventoryData = jsonResponse.getJSONObject(key);
                         String inventory = inventoryData.getString("item");
+                        inventoryimage = "" ;
                         if(inventory.equals("더블배럴샷건")){
                             inventoryimage = "src/main/resources/images/duck.png";
                         }
@@ -502,9 +504,11 @@ public class Framework extends Canvas {
             }
         });
     }
-
-    public void getGun(String gun){
-        game.setgun(gun);
+    public void setGun(String gun){
+        whatgun = gun;
+    }
+    public String getGun(){
+        return whatgun;
     }
     public void receiveMessagesFriends2() {
         OkHttpClient client = new OkHttpClient();

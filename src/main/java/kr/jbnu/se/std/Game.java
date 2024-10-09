@@ -26,6 +26,9 @@ public class Game {
     private boolean isPause = false;
     private int Round;
     private boolean isBossAlive;
+    private Duck selectedDuck1 = null;
+    private Duck selectedDuck2 = null;
+
 
     /**
      * Font that we will use to write statistic to the screen.
@@ -168,6 +171,36 @@ public class Game {
         }
     }
 
+    // 더블배럴샷건 모드에서 두 마리 오리를 선택하는 메소드
+    private void selectTwoDucks() {
+        // 선택된 오리들이 이미 있으면 리턴
+        if (selectedDuck1 != null) {
+            return;
+        }
+
+        // 오리들이 충분히 있을 때 두 마리 오리를 무작위로 선택
+        if (ducks.size() >= 1) {
+            Random random = new Random();
+            int index1 = random.nextInt(ducks.size());
+
+
+            selectedDuck1 = ducks.get(index1);
+        }
+    }
+
+    // 오리들이 죽으면 선택된 오리를 null로 설정
+    private void updateSelectedDucks() {
+        if (selectedDuck1 != null && !ducks.contains(selectedDuck1)) {
+            selectedDuck1 = null;
+        }
+    }
+
+    // 더블배럴샷건 모드에서 두 마리 오리에게 sightImg를 그리기
+    private void drawSightOnSelectedDucks(Graphics2D g2d) {
+        if (selectedDuck1 != null) {
+            g2d.drawImage(sightImg, selectedDuck1.x, selectedDuck1.y, null);
+        }
+    }
 
     /**
      * Restart game - reset some variables.
@@ -216,6 +249,13 @@ public class Game {
         if(!isPause) {
         // Creates a new duck, if it's the time, and add it to the array list.
         if (System.nanoTime() - Duck.lastDuckTime >= Duck.timeBetweenDucks) {
+
+            if (framework.getGun().equals("더블배럴샷건")) {
+                selectTwoDucks();
+            }
+
+            // 선택된 오리들이 죽었는지 확인하고, 죽으면 다시 선택
+            updateSelectedDucks();
             // Here we create new duck and add it to the array list.
             ducks.add(new Duck(Duck.duckLines[Duck.nextDuckLines][0] + random.nextInt(200), Duck.duckLines[Duck.nextDuckLines][1], Duck.duckLines[Duck.nextDuckLines][2], Duck.duckLines[Duck.nextDuckLines][3], duckImg));
 
@@ -234,72 +274,84 @@ public class Game {
             }
         }
 
-        if(!isBossAlive){
-        // Update all of the ducks.
-        for (int i = 0; i < ducks.size(); i++) {
-            // Move the duck.
-            ducks.get(i).Update();
+        if(!isBossAlive) {
+            // Update all of the ducks.
+            for (int i = 0; i < ducks.size(); i++) {
+                // Move the duck.
+                ducks.get(i).Update();
 
-            // Checks if the duck leaves the screen and remove it if it does.
-            if (ducks.get(i).x < 0 - duckImg.getWidth()) {
-                ducks.remove(i);
-                runawayDucks++;
-            }
-        }
-        // Does player shoots?
-        if (Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
-            // Checks if it can shoot again.
-            if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
-                shoots++;
-
-                // We go over all the ducks and we look if any of them was shoot.
-                for (int i = 0; i < ducks.size(); i++) {
-                    // We check, if the mouse was over ducks head or body, when player has shot.
-                    if (new Rectangle(ducks.get(i).x + 18, ducks.get(i).y, 27, 30).contains(mousePosition) ||
-                            new Rectangle(ducks.get(i).x + 30, ducks.get(i).y + 30, 88, 25).contains(mousePosition)) {
-                        killedDucks++;
-                        money += 10;
-                        score += ducks.get(i).score;
-
-                        // Remove the duck from the array list.
-                        ducks.remove(i);
-
-                        // We found the duck that player shoot so we can leave the for loop.
-                        break;
-                    }
+                // Checks if the duck leaves the screen and remove it if it does.
+                if (ducks.get(i).x < 0 - duckImg.getWidth()) {
+                    ducks.remove(i);
+                    runawayDucks++;
                 }
             }
-                // We go over all the bosses and we look if any of them was shoot.
-                // We go over all the bosses and we look if any of them was shoot.
+            // Does player shoots?
+            if (Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
+                if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
+                    shoots++;
 
+                    // 선택된 두 마리 오리를 제거하는 로직 추가
+                    if (selectedDuck1 != null) {
 
-                lastTimeShoot = System.nanoTime();
-            }
-        }else{
-            if(Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
-                if(isBossAlive) {
-                    for (int i = 0; i < boss.size(); i++) {
-                        // Define the boss hitbox (for exampl, a larger area for the boss).
-                        if (new Rectangle(boss.get(i).x, boss.get(i).y, 100 , 100).contains(mousePosition)) {
-                            // Reduce boss health
-                            boss.get(i).health -= 20; // Reduce boss health by 20 on each hit.
-                            System.out.println("attack boss");
-                            // If the boss is dead, update score, money, etc.
-                            if (boss.get(i).health <= 0) {
-                                money += 100; // Bosses give more money
-                                score += boss.get(i).score; // Boss-specific score
-                                Pause();
-                                // Remove the boss from the array list.
-                                boss.remove(i);
-                            }
+                        // 선택된 오리 제거 및 점수 업데이트
+                        if (selectedDuck1 != null) {
+                            killedDucks++;
+                            money += 10;
+                            score += selectedDuck1.score;
+                            ducks.remove(selectedDuck1);
+                            selectedDuck1 = null; // 선택된 오리 초기화
+                        }
 
-                            // Since a boss was hit, we can leave the loop.
+                    }
+                    // We go over all the ducks and we look if any of them was shoot.
+                    for (int i = 0; i < ducks.size(); i++) {
+                        // We check, if the mouse was over ducks head or body, when player has shot.
+                        if (new Rectangle(ducks.get(i).x + 18, ducks.get(i).y, 27, 30).contains(mousePosition) ||
+                                new Rectangle(ducks.get(i).x + 30, ducks.get(i).y + 30, 88, 25).contains(mousePosition)) {
+                            killedDucks++;
+                            money += 10;
+                            score += ducks.get(i).score;
+
+                            // Remove the duck from the array list.
+                            ducks.remove(i);
+
+                            // We found the duck that player shoot so we can leave the for loop.
                             break;
+                        }
+                    }
+                    // We go over all the bosses and we look if any of them was shoot.
+                    // We go over all the bosses and we look if any of them was shoot.
+
+
+                    lastTimeShoot = System.nanoTime();
+                }
+            }
+        }else {
+                if (Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
+                    if (isBossAlive) {
+                        for (int i = 0; i < boss.size(); i++) {
+                            // Define the boss hitbox (for exampl, a larger area for the boss).
+                            if (new Rectangle(boss.get(i).x, boss.get(i).y, 100, 100).contains(mousePosition)) {
+                                // Reduce boss health
+                                boss.get(i).health -= 20; // Reduce boss health by 20 on each hit.
+                                System.out.println("attack boss");
+                                // If the boss is dead, update score, money, etc.
+                                if (boss.get(i).health <= 0) {
+                                    money += 100; // Bosses give more money
+                                    score += boss.get(i).score; // Boss-specific score
+                                    Pause();
+                                    // Remove the boss from the array list.
+                                    boss.remove(i);
+                                }
+
+                                // Since a boss was hit, we can leave the loop.
+                                break;
+                            }
                         }
                     }
                 }
             }
-        }
 
 
         // When 200 ducks runaway, the game ends.
@@ -341,9 +393,9 @@ public class Game {
         g2d.drawImage(grassImg, 0, Framework.frameHeight - grassImg.getHeight(), Framework.frameWidth, grassImg.getHeight(), null);
         
         g2d.drawImage(sightImg, mousePosition.x - sightImgMiddleWidth, mousePosition.y - sightImgMiddleHeight, null);
-        if(gun.equals("더블배럴샷건")){
-            g2d.drawImage(sightImg,mousePosition.x + sightImgMiddleHeight, mousePosition.y - sightImgMiddleHeight, null);
-            g2d.drawImage(sightImg,mousePosition.x - sightImgMiddleHeight*2, mousePosition.y - sightImgMiddleHeight, null);
+        // 더블배럴샷건일 때 랜덤 오리 2마리 지정
+        if (framework.getGun().equals("더블배럴샷건")) {
+            drawSightOnSelectedDucks(g2d);
         }
 
         g2d.setFont(font);
