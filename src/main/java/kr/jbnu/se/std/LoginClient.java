@@ -13,6 +13,9 @@ import okhttp3.*;
 import org.json.JSONObject;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 
 public class LoginClient extends JFrame {
 
@@ -27,12 +30,14 @@ public class LoginClient extends JFrame {
     private String email;
     private String encodeemail1;
     private String encodeemail2;
+    private static final String FIREBASE_API_KEY = "YOUR_API_KEY_HERE";
+
 
     public LoginClient(Framework framework) {
         this.framework = framework;
         setTitle("Login");
         setSize(840, 630);
-        setLocationRelativeTo(null); // 화면 중앙에 표시
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         auth = FirebaseAuth.getInstance();
 
@@ -40,7 +45,7 @@ public class LoginClient extends JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // 오른쪽 화면
-        ImageIcon imageIcon = new ImageIcon("src/main/resources/images/login_duck.png");
+        ImageIcon imageIcon = new ImageIcon("src/main/resources/images/login.png");
         Image backgroundImage = imageIcon.getImage();
         JPanel rightPanel = new ImagePanel(backgroundImage);
         rightPanel.setLayout(new GridBagLayout());
@@ -75,12 +80,12 @@ public class LoginClient extends JFrame {
         // ID 라벨 및 입력 필드
         JPanel idPanel = new JPanel();
         idPanel.setBackground(new Color(233, 233, 233));
-        idPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 여백 추가
-        idPanel.setPreferredSize(new Dimension(230, 50)); // 너비 250, 높이 50
+        idPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        idPanel.setPreferredSize(new Dimension(230, 50));
         idPanel.setLayout(new BorderLayout());
 
         // 텍스트 필드 생성
-        JTextField idField = new JTextField("ID", 30); // 기본 텍스트로 "ID" 설정
+        this.idField = new JTextField("ID", 30);
         idField.setForeground(Color.GRAY);
         idField.setOpaque(false);
         idField.setBorder(BorderFactory.createEmptyBorder());
@@ -103,6 +108,23 @@ public class LoginClient extends JFrame {
             }
         });
 
+        idField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateLoginButtonImage();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateLoginButtonImage();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateLoginButtonImage();
+            }
+        });
+
         idPanel.add(idField, BorderLayout.CENTER);
         gbc.weighty = 0;
         gbc.gridx = 0;
@@ -118,7 +140,7 @@ public class LoginClient extends JFrame {
         passwordPanel.setLayout(new BorderLayout());
 
         // 비밀번호 텍스트 필드 생성
-        JPasswordField passwordField = new JPasswordField("Password", 15);
+        this.passwordField = new JPasswordField("Password", 15);
         passwordField.setForeground(Color.GRAY);
         passwordField.setEchoChar((char) 0);
         passwordField.setOpaque(false);
@@ -143,6 +165,23 @@ public class LoginClient extends JFrame {
             }
         });
 
+        passwordField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateLoginButtonImage();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateLoginButtonImage();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateLoginButtonImage();
+            }
+        });
+
         passwordPanel.add(passwordField, BorderLayout.CENTER);
         gbc.weighty = 0;
         gbc.gridx = 0;
@@ -150,36 +189,39 @@ public class LoginClient extends JFrame {
         gbc.insets = new Insets(10, 0, 5, 0);
         leftPanel.add(passwordPanel, gbc);
 
+        gbc.weighty = 0.8;
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        leftPanel.add(new JLabel(), gbc);
+
         // 로그인 버튼
-        ImageIcon originalIcon = new ImageIcon("src/main/resources/images/grass.png");
+        ImageIcon originalIcon = new ImageIcon("src/main/resources/images/login_btn.png");
         Image originalImage = originalIcon.getImage();
-        Image scaledImage = originalImage.getScaledInstance(230, 50, Image.SCALE_SMOOTH);
+        Image scaledImage = originalImage.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
         loginButton = new JButton(scaledIcon);
-        loginButton.setPreferredSize(new Dimension(230, 50));
+        loginButton.setPreferredSize(new Dimension(70, 70));
+        loginButton.setContentAreaFilled(false);
+        loginButton.setOpaque(false);
         gbc.weightx = 0;
         gbc.weighty = 0;
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.insets = new Insets(10, 0, 0, 0);
         gbc.fill = GridBagConstraints.NONE;
         loginButton.setBorderPainted(false);
-
-        loginButton.setText("Login");
-        loginButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        loginButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         leftPanel.add(loginButton, gbc);
 
         gbc.weighty = 0.8;
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         leftPanel.add(new JLabel(), gbc);
 
         // 회원가입 버튼
         signupButton = new JButton("Sign Up");
         gbc.weightx = 0;
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.fill = GridBagConstraints.NONE;
         signupButton.setBorderPainted(false);
         signupButton.setContentAreaFilled(false);
@@ -197,6 +239,7 @@ public class LoginClient extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 id = idField.getText();
                 password = new String(passwordField.getPassword());
+                //updateLoginButtonImage();
                 loginWithFirebase(id, password);
             }
         });
@@ -210,6 +253,27 @@ public class LoginClient extends JFrame {
         });
 
         add(panel);
+    }
+
+    private void updateLoginButtonImage() {
+        String idText = idField.getText();
+        String passwordText = new String(passwordField.getPassword());
+
+        ImageIcon newIcon;
+
+        if (!"ID".equals(idText) && idText.length() > 0 &&
+                !"Password".equals(passwordText) && passwordText.length() > 0) {
+            ImageIcon originalIcon = new ImageIcon("src/main/resources/images/login_btn_press.png");
+            Image originalImage = originalIcon.getImage();
+            Image scaledImage = originalImage.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+            newIcon = new ImageIcon(scaledImage);
+        } else {
+            ImageIcon originalIcon = new ImageIcon("src/main/resources/images/login_btn.png");
+            Image originalImage = originalIcon.getImage();
+            Image scaledImage = originalImage.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+            newIcon = new ImageIcon(scaledImage);
+        }
+        loginButton.setIcon(newIcon);
     }
 
     public class ImagePanel extends JPanel{
@@ -230,6 +294,10 @@ public class LoginClient extends JFrame {
     //파이어베이스 초기화
     // Firebase를 통한 로그인 처리 메소드
     private void loginWithFirebase(String email, String password) {
+        if (email == null || !email.contains("@") || password.length() < 6) {
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "이메일 또는 비밀번호가 유효하지 않습니다."));
+            return;
+        }
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
         json.put ("email", email);
@@ -275,7 +343,10 @@ public class LoginClient extends JFrame {
                 }
             }
         });
-
+        request = new Request.Builder()
+                .url("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + FIREBASE_API_KEY)
+                .post(body)
+                .build();
     }
     // 회원가입 창 표시
     private void showRegisterWindow() {
@@ -390,7 +461,6 @@ public class LoginClient extends JFrame {
         gbc.insets = new Insets(5, 15, 5, 15);
 
         registerPanel.add(newpasswordpanel, gbc);
-
 
         /*JLabel nicknameLabel = new JLabel("Nickname:");
         gbc.gridx = 0;
