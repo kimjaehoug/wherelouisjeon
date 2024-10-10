@@ -1,0 +1,29 @@
+<changelist name="Uncommitted_changes_before_Update_at_2024__10__9__오후_6_34_[Changes]" date="1728466487423" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__10__9__오후_6_34_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 2024. 10. 9. 오후 6:34 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$11.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$11.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__10__9__오후_6_34_[Changes]/LoginClient$11.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$9.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$9.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__10__9__오후_6_34_[Changes]/LoginClient$9.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Game$1.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/Game$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__10__9__오후_6_34_[Changes]/Game$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Game.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/Game.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__10__9__오후_6_34_[Changes]/Game.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$10.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$10.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__10__9__오후_6_34_[Changes]/LoginClient$10.class" />
+  </binary>
+</changelist>

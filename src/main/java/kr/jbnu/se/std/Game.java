@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +29,12 @@ public class Game {
     private boolean isBossAlive;
     private Duck selectedDuck1 = null;
     private Duck selectedDuck2 = null;
+    private int ammo;          // 현재 사용 가능한 총알
+    private int maxAmmo;       // 한 번에 장전할 수 있는 최대 탄약 수
+    private boolean isReloading; // 장전 중인지 여부
+    private long reloadStartTime; // 장전이 시작된 시간
+    private long reloadDuration;  // 장전 시간 (예: 2초)
+    private URL hpUrl;
 
 
     /**
@@ -36,6 +43,7 @@ public class Game {
     private Font font;
 
     private BufferedImage bossImg;
+    private BufferedImage[] hpImages = new BufferedImage[12]; // HP 이미지를 저장할 배열
 
     /**
      * Array list of the ducks.
@@ -142,7 +150,12 @@ public class Game {
         isBossAlive = false;
 
         lastTimeShoot = 0;
-        timeBetweenShots = Framework.secInNanosec / 3;
+        timeBetweenShots = 500_000_000L;
+
+        ammo = 6;              // 기본 탄약 수
+        maxAmmo = 6;           // 최대 장전할 수 있는 탄약 수
+        isReloading = false;   // 초기에는 장전 중이 아님
+        reloadDuration = 2000000000L; // 장전 시간 2초 (나노초 단위)
     }
 
     /**
@@ -150,6 +163,23 @@ public class Game {
      */
     private void LoadContent() {
         try {
+            for (int i = 0; i < 12; i++) { // 0부터 11까지 반복
+                try {
+                    // 이미지 경로를 생성
+                    URL hpUrl = this.getClass().getResource("/images/hp_" + i + ".png");
+
+                    // URL이 null이 아닐 경우에만 이미지 읽기
+                    if (hpUrl != null) {
+                        hpImages[i] = ImageIO.read(hpUrl);
+                    } else {
+                        System.out.println("Image not found: /images/hp_" + i + ".png");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace(); // IOException 처리
+                }
+            }
+
+
             URL backgroundImgUrl = this.getClass().getResource("/images/background.png");
             backgroundImg = ImageIO.read(backgroundImgUrl);
 
@@ -246,9 +276,24 @@ public class Game {
      * @param mousePosition current mouse position.
      */
     public void UpdateGame(long gameTime, Point mousePosition) {
+        if(isBossAlive){
+            for (int i = 0; i < boss.size(); i++) {
+                boss.get(i).update(); // 보스 위치 업데이트
+            }
+        }
         if(!isPause) {
         // Creates a new duck, if it's the time, and add it to the array list.
         if (System.nanoTime() - Duck.lastDuckTime >= Duck.timeBetweenDucks) {
+
+            if (isReloading) {
+                if (System.nanoTime() - reloadStartTime >= reloadDuration) {
+                    ammo = maxAmmo;   // 탄약을 최대치로 채움
+                    isReloading = false; // 장전 상태 해제
+                }
+            }
+            if(ammo<=0 && !isReloading){
+                Reload();
+            }
 
             if (framework.getGun().equals("더블배럴샷건")) {
                 selectTwoDucks();
@@ -264,14 +309,14 @@ public class Game {
             if (Duck.nextDuckLines >= Duck.duckLines.length)
                 Duck.nextDuckLines = 0;
 
-            Duck.lastDuckTime = System.nanoTime();
             if (killedDucks >= 20 && !isBossAlive) {
                 // 보스 생성
-                boss.add(new boss1(1100, 500,0,3000, bossImg));
+                boss.add(new boss1(1300, 500,0.125,3000, bossImg));
                 isBossAlive = true; // 보스가 등장했음을 표시
                 System.out.println("boss activity");
                 ducks.clear();
             }
+            Duck.lastDuckTime = System.nanoTime();
         }
 
         if(!isBossAlive) {
@@ -287,10 +332,10 @@ public class Game {
                 }
             }
             // Does player shoots?
-            if (Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
+            if (Canvas.mouseButtonState(MouseEvent.BUTTON1) && !isReloading) {
                 if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
                     shoots++;
-
+                    ammo--;
                     // 선택된 두 마리 오리를 제거하는 로직 추가
                     if (selectedDuck1 != null) {
 
@@ -328,7 +373,9 @@ public class Game {
                 }
             }
         }else {
-                if (Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
+            if (Canvas.mouseButtonState(MouseEvent.BUTTON1) && !isReloading) {
+                if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
+                    ammo--;
                     if (isBossAlive) {
                         for (int i = 0; i < boss.size(); i++) {
                             // Define the boss hitbox (for exampl, a larger area for the boss).
@@ -336,13 +383,14 @@ public class Game {
                                 // Reduce boss health
                                 boss.get(i).health -= 20; // Reduce boss health by 20 on each hit.
                                 System.out.println("attack boss");
+                                System.out.println(boss.get(i).health);
                                 // If the boss is dead, update score, money, etc.
                                 if (boss.get(i).health <= 0) {
                                     money += 100; // Bosses give more money
                                     score += boss.get(i).score; // Boss-specific score
+                                    boss.remove(i);
                                     Pause();
                                     // Remove the boss from the array list.
-                                    boss.remove(i);
                                 }
 
                                 // Since a boss was hit, we can leave the loop.
@@ -351,8 +399,9 @@ public class Game {
                         }
                     }
                 }
+                lastTimeShoot = System.nanoTime();
             }
-
+        }
 
         // When 200 ducks runaway, the game ends.
         if (runawayDucks >= 10)
@@ -365,7 +414,7 @@ public class Game {
             return;
         }
 }
-    
+
     /**
      * Draw the game to the screen.
      * 
@@ -381,14 +430,33 @@ public class Game {
         {
             ducks.get(i).Draw(g2d);
         }
-
+        if(isPause){
+        }
         // 보스 그리기
         if (!boss.isEmpty()) {
             for (int i = 0; i < boss.size(); i++) {
-                boss.get(i).Draw(g2d);
+                // 보스 이미지 그리기
+                g2d.drawImage(bossImg, boss.get(i).x, boss.get(i).y - 20, null);
+
+                // 보스의 체력 상태를 기반으로 HP 이미지를 선택
+                int currentHealth = boss.get(i).health;
+                int maxHealth = boss.get(i).maxHealth; // 보스의 최대 체력
+
+                // 체력에 따른 HP 이미지를 표시
+                int hpIndex = (int) ((currentHealth / (double) maxHealth) * 11); // 0에서 11까지의 인덱스를 계산
+                hpIndex = Math.max(0, Math.min(11, hpIndex)); // 범위를 0 ~ 11로 제한
+                // HP 바 크기 조정 (예: 50% 크기)
+                int hpBarWidth = hpImages[hpIndex].getWidth(null) / 8; // 너비 50%
+                int hpBarHeight = hpImages[hpIndex].getHeight(null) / 8; // 높이 50%
+
+                // HP 바 그리기 (크기 조정 후)
+                g2d.drawImage(hpImages[hpIndex], boss.get(i).x - 20, boss.get(i).y - 60, hpBarWidth, hpBarHeight, null);
             }
         }
 
+        if(isReloading){
+            g2d.drawString("Reloading", Framework.frameWidth/2, Framework.frameHeight/2);
+        }
         
         g2d.drawImage(grassImg, 0, Framework.frameHeight - grassImg.getHeight(), Framework.frameWidth, grassImg.getHeight(), null);
         
@@ -396,11 +464,18 @@ public class Game {
         // 더블배럴샷건일 때 랜덤 오리 2마리 지정
         if (framework.getGun().equals("더블배럴샷건")) {
             drawSightOnSelectedDucks(g2d);
+            reloadDuration = 2500000000L;
+        }
+        if(framework.getGun().equals("AK-47")){
+            maxAmmo = 30;
+            reloadDuration = 3000000000L;
+            timeBetweenShots = 100_000_000L;
         }
 
         g2d.setFont(font);
         g2d.setColor(Color.darkGray);
-        
+
+        g2d.drawString("Ammo: " + ammo + "/" + maxAmmo, 10, 50);
         g2d.drawString("RUNAWAY: " + runawayDucks, 10, 21);
         g2d.drawString("KILLS: " + killedDucks, 160, 21);
         g2d.drawString("SHOOTS: " + shoots, 299, 21);
@@ -436,5 +511,10 @@ public class Game {
 
     public void setgun(String gun){
         this.gun = gun;
+    }
+
+    private void Reload() {
+        isReloading = true;
+        reloadStartTime = System.nanoTime();
     }
 }
