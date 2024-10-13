@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 public class AddFriends extends JFrame {
     private JTextField nicknameField;
     private JButton addFriendButton;
+    private String DataPath;
 
     public AddFriends(Framework framework) {
         // 기본 프레임 설정
@@ -16,6 +17,7 @@ public class AddFriends extends JFrame {
         setSize(300, 150);
         setLocationRelativeTo(null);
         setLayout(new FlowLayout());
+        DataPath = "https://shootthedock-default-rtdb.firebaseio.com/users/" + framework.firebaseClient.email + "/"+ "userinfo/friends/";
 
         // 닉네임 입력 필드
         nicknameField = new JTextField(15);
@@ -32,7 +34,8 @@ public class AddFriends extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String nickname = nicknameField.getText();
                 // 여기서 닉네임 처리 로직 추가 가능
-                framework.friendsAdder(nickname);
+                //framework.friendsAdder(nickname);
+                framework.firebaseClient.senderDatabase("nickname",DataPath,nickname);
                 framework.friendsAdderother(nickname);
                 System.out.println("추가할 친구: " + nickname);
             }

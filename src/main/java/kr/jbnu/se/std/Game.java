@@ -5,12 +5,15 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.Timer;
 
 /**
  * Actual game.
@@ -27,20 +30,22 @@ public class Game {
     private boolean isPause = false;
     private int Round;
     private boolean isBossAlive;
-    private Duck selectedDuck1 = null;
-    private Duck selectedDuck2 = null;
+    private Duck[] hunterSelectedDucks;
+    private Duck[] playerSelectedDucks;
     private int ammo;          // 현재 사용 가능한 총알
     private int maxAmmo;       // 한 번에 장전할 수 있는 최대 탄약 수
     private boolean isReloading; // 장전 중인지 여부
     private long reloadStartTime; // 장전이 시작된 시간
     private long reloadDuration;  // 장전 시간 (예: 2초)
     private URL hpUrl;
-
+    private int selectduck;
+    private ScheduledExecutorService hunterExecutor;
 
     /**
      * Font that we will use to write statistic to the screen.
      */
     private Font font;
+    boolean hunterTrigger = true;
 
     private BufferedImage bossImg;
     private BufferedImage[] hpImages = new BufferedImage[12]; // HP 이미지를 저장할 배열
@@ -50,6 +55,8 @@ public class Game {
      */
     private ArrayList<Duck> ducks;
     private ArrayList<boss1> boss;
+    private ArrayList<Buttonbuy> buttonbuy;
+    private ArrayList<Hunter1> Hunters;
 
     /**
      * How many ducks leave the screen alive?
@@ -86,6 +93,7 @@ public class Game {
      * kr.jbnu.se.std.Game background image.
      */
     private BufferedImage backgroundImg;
+    private BufferedImage buttonImg;
 
     /**
      * Bottom grass.
@@ -101,6 +109,7 @@ public class Game {
      * Shotgun sight image.
      */
     private BufferedImage sightImg;
+    private boolean Hunter1 = false;
 
     /**
      * Middle width of the sight image.
@@ -111,6 +120,8 @@ public class Game {
      */
     private int sightImgMiddleHeight;
     private String gun;
+
+
 
 
     public Game(Framework framework) {
@@ -141,14 +152,16 @@ public class Game {
 
         ducks = new ArrayList<Duck>();
         boss = new ArrayList<boss1>();
+        buttonbuy = new ArrayList<Buttonbuy>();
+        Hunters = new ArrayList<Hunter1>();
 
         runawayDucks = 0;
         killedDucks = 0;
         score = 0;
         shoots = 0;
-        Round = 0;
+        Round = 1;
         isBossAlive = false;
-
+        Hunter1 = false;
         lastTimeShoot = 0;
         timeBetweenShots = 500_000_000L;
 
@@ -179,6 +192,8 @@ public class Game {
                 }
             }
 
+            URL Buttonimg = this.getClass().getResource("/images/btn_buy.png");
+            buttonImg = ImageIO.read(Buttonimg);
 
             URL backgroundImgUrl = this.getClass().getResource("/images/background.png");
             backgroundImg = ImageIO.read(backgroundImgUrl);
@@ -201,34 +216,143 @@ public class Game {
         }
     }
 
-    // 더블배럴샷건 모드에서 두 마리 오리를 선택하는 메소드
-    private void selectTwoDucks() {
+    private void selectPlayerDucks(int numberOfDucks) {
         // 선택된 오리들이 이미 있으면 리턴
-        if (selectedDuck1 != null) {
+        if (playerSelectedDucks != null) {
             return;
         }
 
-        // 오리들이 충분히 있을 때 두 마리 오리를 무작위로 선택
-        if (ducks.size() >= 1) {
+        // 오리들이 충분히 있을 때 N마리 오리를 무작위로 선택
+        if (ducks.size() >= numberOfDucks) {
+            playerSelectedDucks = new Duck[numberOfDucks]; // Player 선택된 오리 배열 초기화
             Random random = new Random();
-            int index1 = random.nextInt(ducks.size());
 
+            for (int i = 0; i < numberOfDucks; i++) {
+                Duck selectedDuck;
+                int index;
 
-            selectedDuck1 = ducks.get(index1);
+                // 중복되지 않는 오리를 선택
+                do {
+                    index = random.nextInt(ducks.size());
+                    selectedDuck = ducks.get(index);
+                } while (Arrays.asList(playerSelectedDucks).contains(selectedDuck) ||
+                        (hunterSelectedDucks != null && Arrays.asList(hunterSelectedDucks).contains(selectedDuck))); // hunterSelectedDucks가 null일 경우 중복 방지 생략
+
+                playerSelectedDucks[i] = selectedDuck;
+            }
         }
     }
 
-    // 오리들이 죽으면 선택된 오리를 null로 설정
-    private void updateSelectedDucks() {
-        if (selectedDuck1 != null && !ducks.contains(selectedDuck1)) {
-            selectedDuck1 = null;
+
+
+    // N마리 오리를 선택하는 메소드 (Hunter용)
+    private void selectHunterDucks(int numberOfDucks) {
+        if (ducks.size() >= numberOfDucks) {
+            hunterSelectedDucks = new Duck[numberOfDucks]; // Hunter 선택된 오리 배열 초기화
+            Random random = new Random();
+
+            for (int i = 0; i < numberOfDucks; i++) {
+                Duck selectedDuck;
+                int index;
+
+                // 중복되지 않는 오리를 선택
+                do {
+                    index = random.nextInt(ducks.size());
+                    selectedDuck = ducks.get(index);
+                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || Arrays.asList(playerSelectedDucks).contains(selectedDuck)); // 중복 방지
+
+                hunterSelectedDucks[i] = selectedDuck;
+            }
         }
     }
 
-    // 더블배럴샷건 모드에서 두 마리 오리에게 sightImg를 그리기
-    private void drawSightOnSelectedDucks(Graphics2D g2d) {
-        if (selectedDuck1 != null) {
-            g2d.drawImage(sightImg, selectedDuck1.x, selectedDuck1.y, null);
+    // Hunter가 자동으로 오리를 제거하는 메소드
+    private void startHunterAutoKill(int interval) {
+        hunterExecutor = Executors.newScheduledThreadPool(1); // 스레드 풀 생성
+        hunterExecutor.scheduleAtFixedRate(() -> {
+            if (hunterSelectedDucks == null || Arrays.stream(hunterSelectedDucks).allMatch(Objects::isNull)) {
+                // Hunter가 선택한 오리가 없으면 새롭게 선택
+                selectHunterDucks(1);
+            }
+            if (hunterSelectedDucks != null) {
+                for (Duck duck : hunterSelectedDucks) {
+                    if (duck != null && !Arrays.asList(playerSelectedDucks).contains(duck)) {
+                        // Hunter가 선택한 오리가 Player가 선택한 오리와 중복되지 않도록 확인
+                        ducks.remove(duck);
+                        killedDucks++;
+                        money += 10;
+                        score += duck.score;
+                        System.out.println("Hunter가 오리를 죽였습니다: " + duck);
+                        break; // 한 마리씩 죽이고 나가도록
+
+                    }
+                }
+                updateHunterSelectedDucks();
+            }
+        }, 0, interval, TimeUnit.MILLISECONDS); // interval 시간마다 실행
+    }
+
+
+    // 게임이 끝나면 Hunter의 자동조준 타이머를 중지하는 코드
+    private void stopHunterAutoKill() {
+        if (hunterExecutor != null && !hunterExecutor.isShutdown()) {
+            hunterExecutor.shutdown(); // Hunter의 자동 조준 종료
+        }
+    }
+
+
+    private void updateAndReselectPlayerDucks(int numberOfDucks) {
+        // playerSelectedDucks가 null일 때만 새로 선택
+        playerSelectedDucks = null;
+        if (playerSelectedDucks == null) {
+            selectPlayerDucks(numberOfDucks);
+        }
+    }
+
+    // 오리들이 죽으면 Hunter 선택된 오리를 null로 설정
+    private void updateHunterSelectedDucks() {
+        Random random = new Random();
+
+        for (int i = 0; i < hunterSelectedDucks.length; i++) {
+            if (hunterSelectedDucks[i] == null || !ducks.contains(hunterSelectedDucks[i])) {
+                // 새로운 오리를 선택하여 중복되지 않게 추가
+                Duck selectedDuck;
+                int index;
+
+                do {
+                    index = random.nextInt(ducks.size());
+                    selectedDuck = ducks.get(index);
+                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) ||
+                        Arrays.asList(playerSelectedDucks).contains(selectedDuck)); // 중복 방지
+
+                hunterSelectedDucks[i] = selectedDuck;
+            }
+        }
+    }
+
+    // 더블배럴샷건 모드에서 Player 선택된 오리들에게 sightImg를 그리기
+    private void drawSightOnPlayerSelectedDucks(Graphics2D g2d) {
+        if (playerSelectedDucks != null) {
+            for (Duck duck : playerSelectedDucks) {
+                if (duck != null) {
+                    g2d.drawImage(sightImg, duck.x, duck.y, null);
+                }
+            }
+        }else{
+            return;
+        }
+    }
+
+    // 더블배럴샷건 모드에서 Hunter 선택된 오리들에게 sightImg를 그리기
+    private void drawSightOnHunterSelectedDucks(Graphics2D g2d) {
+        if (hunterSelectedDucks != null) {
+            for (Duck duck : hunterSelectedDucks) {
+                if (duck != null) {
+                    g2d.drawImage(sightImg, duck.x, duck.y, null);
+                }else{
+                    return;
+                }
+            }
         }
     }
 
@@ -253,6 +377,7 @@ public class Game {
     public void Pause() {
         ducks.clear();
         isPause = true;
+        System.out.println("buttonbuyadd");
         Framework.gameState = Framework.GameState.Pause;
     }
 
@@ -281,6 +406,15 @@ public class Game {
                 boss.get(i).update(); // 보스 위치 업데이트
             }
         }
+
+        if(Hunter1&& hunterTrigger){
+            startHunterAutoKill(2500);
+            hunterTrigger = false;
+        }else if(!Hunter1){
+            stopHunterAutoKill();
+        }else if(!hunterTrigger){
+
+        }
         if(!isPause) {
         // Creates a new duck, if it's the time, and add it to the array list.
         if (System.nanoTime() - Duck.lastDuckTime >= Duck.timeBetweenDucks) {
@@ -296,11 +430,11 @@ public class Game {
             }
 
             if (framework.getGun().equals("더블배럴샷건")) {
-                selectTwoDucks();
-            }
+                selectPlayerDucks(1);
+                // 선택된 오리들이 죽었는지 확인하고, 죽으면 다시 선택
+            }else if(framework.getGun().equals("기본권총")){
 
-            // 선택된 오리들이 죽었는지 확인하고, 죽으면 다시 선택
-            updateSelectedDucks();
+            }
             // Here we create new duck and add it to the array list.
             ducks.add(new Duck(Duck.duckLines[Duck.nextDuckLines][0] + random.nextInt(200), Duck.duckLines[Duck.nextDuckLines][1], Duck.duckLines[Duck.nextDuckLines][2], Duck.duckLines[Duck.nextDuckLines][3], duckImg));
 
@@ -336,18 +470,21 @@ public class Game {
                 if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
                     shoots++;
                     ammo--;
-                    // 선택된 두 마리 오리를 제거하는 로직 추가
-                    if (selectedDuck1 != null) {
+                    if (playerSelectedDucks != null) {
+                        for (int i = 0; i < playerSelectedDucks.length; i++) {
+                            if (playerSelectedDucks[i] != null) {
+                                killedDucks++; // 죽인 오리 수 증가
+                                money += 10; // 돈 증가
+                                score += playerSelectedDucks[i].score; // 점수 증가
 
-                        // 선택된 오리 제거 및 점수 업데이트
-                        if (selectedDuck1 != null) {
-                            killedDucks++;
-                            money += 10;
-                            score += selectedDuck1.score;
-                            ducks.remove(selectedDuck1);
-                            selectedDuck1 = null; // 선택된 오리 초기화
+                                // 오리 리스트에서 제거
+                                ducks.remove(playerSelectedDucks[i]);
+
+                                // 선택된 오리를 null로 설정하여 초기화
+                                playerSelectedDucks[i] = null;
+                                updateAndReselectPlayerDucks(1);
+                            }
                         }
-
                     }
                     // We go over all the ducks and we look if any of them was shoot.
                     for (int i = 0; i < ducks.size(); i++) {
@@ -392,9 +529,8 @@ public class Game {
                                     Pause();
                                     // Remove the boss from the array list.
                                 }
-
-                                // Since a boss was hit, we can leave the loop.
                                 break;
+                                // Since a boss was hit, we can leave the loop.
                             }
                         }
                     }
@@ -404,14 +540,28 @@ public class Game {
         }
 
         // When 200 ducks runaway, the game ends.
-        if (runawayDucks >= 10)
-            Framework.gameState = Framework.GameState.GAMEOVER;
-        if (Framework.gameState == Framework.GameState.GAMEOVER && !leaderboardSaved) {
-            framework.saveScore(score);
-            leaderboardSaved = true;  // 리더보드 저장 완료
+            if (runawayDucks >= 10)
+                Framework.gameState = Framework.GameState.GAMEOVER;
+            if (Framework.gameState == Framework.GameState.GAMEOVER && !leaderboardSaved) {
+                framework.saveScore(score);
+                leaderboardSaved = true;  // 리더보드 저장 완료
+            }
         }
-    }else{
-            return;
+        if(isPause) {
+            System.out.println("isPause");
+            buttonbuy.add(new Buttonbuy(framework.getWidth()/2 - 300, framework.getHeight()/2+50, buttonImg));
+                for (int i = 0; i < buttonbuy.size(); i++) {
+                    if (Canvas.mouseButtonState(MouseEvent.BUTTON1) && money > 200) {
+                        if (new Rectangle(buttonbuy.get(i).x, buttonbuy.get(i).y, 367, 257).contains(mousePosition)) {
+                            System.out.println("buybutton");
+                            System.out.println(mousePosition);
+                            System.out.println(buttonbuy.get(i).x + " " + buttonbuy.get(i).y);
+                            Hunters.add(new Hunter1(220, 110, 0, 100, duckImg));
+                            Hunter1 = true;
+                            money -= 200;
+                    }
+                }
+            }
         }
 }
 
@@ -430,7 +580,18 @@ public class Game {
         {
             ducks.get(i).Draw(g2d);
         }
+        if(Hunter1){
+            g2d.drawImage(bossImg,Hunters.get(0).x,Hunters.get(0).y,null);
+            drawSightOnHunterSelectedDucks(g2d);
+
+        }
+
         if(isPause){
+            int buyWidth = buttonImg.getWidth(null) / 2; // 너비 50%
+            int buyHeight = buttonImg.getHeight(null) / 2; // 높이 50%
+            for(int i = 0; i < buttonbuy.size(); i++) {
+                g2d.drawImage(buttonImg, buttonbuy.get(i).x, buttonbuy.get(i).y,buyWidth,buyHeight,null);
+            }
         }
         // 보스 그리기
         if (!boss.isEmpty()) {
@@ -457,13 +618,11 @@ public class Game {
         if(isReloading){
             g2d.drawString("Reloading", Framework.frameWidth/2, Framework.frameHeight/2);
         }
-        
-        g2d.drawImage(grassImg, 0, Framework.frameHeight - grassImg.getHeight(), Framework.frameWidth, grassImg.getHeight(), null);
-        
+
         g2d.drawImage(sightImg, mousePosition.x - sightImgMiddleWidth, mousePosition.y - sightImgMiddleHeight, null);
         // 더블배럴샷건일 때 랜덤 오리 2마리 지정
         if (framework.getGun().equals("더블배럴샷건")) {
-            drawSightOnSelectedDucks(g2d);
+            drawSightOnPlayerSelectedDucks(g2d);
             reloadDuration = 2500000000L;
         }
         if(framework.getGun().equals("AK-47")){

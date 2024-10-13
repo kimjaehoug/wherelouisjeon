@@ -128,6 +128,7 @@ public class Framework extends Canvas {
     private InventoryWindow inventoryWindow;
     private String inventoryimage;
     private String whatgun;
+    public FirebaseClient firebaseClient;
 
 
     /**
@@ -146,27 +147,11 @@ public class Framework extends Canvas {
         loginClient = new LoginClient(this);
         loginClient.setVisible(true);
         MainV2 = new MainClient(this);
-
+        whatgun = "기본권총";
         MainV2.setVisible(false);
         this.setVisible(false);
-
-
         databaseReference = FirebaseDatabase.getInstance().getReference();
-    }
-
-    public void refreshIdToken(String email) {
-        try {
-            // 사용자의 ID 토큰을 새로 고치기 위한 로직
-            UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
-            String uid = userRecord.getUid();
-
-            // Custom token을 생성합니다.
-            String customToken = FirebaseAuth.getInstance().createCustomToken(uid);
-            this.idToken = customToken; // 새로 생성된 ID 토큰
-            System.out.println("New ID Token: " + idToken);
-        } catch (FirebaseAuthException e) {
-            System.err.println("Error refreshing ID Token: " + e.getMessage());
-        }
+        firebaseClient = new FirebaseClient(email);
     }
     public void Invitewindow(){
             inviteFriends = new InviteFriends(this);
@@ -277,7 +262,6 @@ public class Framework extends Canvas {
             }
         });
     }
-
 
     public void friendsAdder(String nickname) {
         OkHttpClient client = new OkHttpClient();
@@ -1122,7 +1106,11 @@ public class Framework extends Canvas {
             switch (gameState)
             {
                 case Pause:
+                    gameTime += System.nanoTime() - lastTime;
 
+                    game.UpdateGame(gameTime, mousePosition());
+
+                    lastTime = System.nanoTime();
                     break;
                 case MainPage:
                     gameState = GameState.STARTING;
