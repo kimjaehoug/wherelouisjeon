@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="상점 구성">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024__10__2___9_18__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024__10__2__오후_9_18_[Changes]/shelved.patch" beforeDir="false" />
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="shop">
+      <change afterPath="$PROJECT_DIR$/target/classes/images/login_btn.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/images/login_btn_press.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -207,7 +205,7 @@
       <workItem from="1728546323563" duration="11000" />
       <workItem from="1728546345164" duration="170000" />
       <workItem from="1728889822042" duration="2267000" />
-      <workItem from="1728893501022" duration="345000" />
+      <workItem from="1728893501022" duration="820000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -345,7 +343,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728450140303</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="shop">
+      <option name="closed" value="true" />
+      <created>1728894172126</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1728894172127</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -387,7 +393,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/yewon111" />
+                        <option value="HEAD" />
                       </list>
                     </value>
                   </entry>
@@ -418,7 +424,8 @@
     <MESSAGE value="yw" />
     <MESSAGE value="dafsdasdf" />
     <MESSAGE value="버튼까지 수정완.." />
-    <option name="LAST_COMMIT_MESSAGE" value="버튼까지 수정완.." />
+    <MESSAGE value="shop" />
+    <option name="LAST_COMMIT_MESSAGE" value="shop" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
