@@ -4,9 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.border.EmptyBorder;
 
 public class ShopWindow extends JFrame {
-    private static final int ITEMS_PER_PAGE = 8; // 페이지당 아이템 수
+    private static final int ITEMS_PER_PAGE = 6; // 페이지당 아이템 수
     private String[] itemNames = {
             "더블배럴샷건", "AK-47", "M4A1", "SMG", "스나이퍼", "핸드건", "유탄발사기", "톱",
             "기타1", "기타2", "기타3", "기타4", "기타5", "기타6", "기타7", "기타8"
@@ -32,18 +33,29 @@ public class ShopWindow extends JFrame {
     public ShopWindow(Framework framework) {
         this.framework = framework;
         setTitle("상점");
-        setSize(400, 600);
+        setSize(840, 560);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        // 상점 나가기 버튼 추가
+        JButton exitButton = new JButton("상점 나가기");
+        exitButton.addActionListener(e -> {
+            dispose();
+        });
+
+        // 오른쪽 상단에 위치시키기 위한 패널
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(exitButton, BorderLayout.EAST);
+        add(topPanel, BorderLayout.NORTH);
+
         // 아이템 패널
         JPanel itemPanel = new JPanel();
-        itemPanel.setLayout(new GridLayout(4, 2)); // 4행 2열로 배치
+        itemPanel.setLayout(new GridLayout(2, 3));
+        itemPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
 
         // 아이템 추가
         addItemsToPanel(itemPanel);
-        add(itemPanel, BorderLayout.CENTER); // 중앙에 추가
-        setVisible(true);
+        add(itemPanel, BorderLayout.CENTER);
 
         // 버튼 패널
         JPanel buttonPanel = new JPanel();
@@ -55,6 +67,7 @@ public class ShopWindow extends JFrame {
             if (currentPage > 0) {
                 currentPage--;
                 updateItemPanel(itemPanel);
+                updateButtonState(prevButton, nextButton);
             }
         });
 
@@ -63,61 +76,82 @@ public class ShopWindow extends JFrame {
             if ((currentPage + 1) * ITEMS_PER_PAGE < itemNames.length) {
                 currentPage++;
                 updateItemPanel(itemPanel);
+                updateButtonState(prevButton, nextButton);
             }
         });
 
+        updateButtonState(prevButton, nextButton);
+
+        // 버튼 사이에 공백 추가
         buttonPanel.add(prevButton);
+        buttonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonPanel.add(nextButton);
-        add(buttonPanel, BorderLayout.SOUTH); // 하단에 추가
+        add(buttonPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
+    private void updateButtonState(JButton prevButton, JButton nextButton) {
+        prevButton.setEnabled(currentPage > 0);
+        nextButton.setEnabled((currentPage + 1) * ITEMS_PER_PAGE < itemNames.length);
+    }
+
     private void addItemsToPanel(JPanel panel) {
+        panel.removeAll();
         for (int i = 0; i < ITEMS_PER_PAGE; i++) {
             int index = currentPage * ITEMS_PER_PAGE + i;
             if (index < itemNames.length) {
                 JPanel item = createItemPanel(itemNames[index], itemImages[index], itemPrices[index]);
                 panel.add(item);
+            } else {
+                JPanel emptySlot = new JPanel();
+                emptySlot.setBackground(panel.getBackground());
+                panel.add(emptySlot);
             }
         }
+        panel.revalidate();
+        panel.repaint();
     }
 
     private void updateItemPanel(JPanel panel) {
-        panel.removeAll(); // 기존 아이템 제거
-        addItemsToPanel(panel); // 새로운 아이템 추가
-        panel.revalidate(); // 패널 재검증
-        panel.repaint(); // 패널 재페인팅
+        panel.removeAll();
+        addItemsToPanel(panel);
+        panel.revalidate();
+        panel.repaint();
     }
 
     private JPanel createItemPanel(String name, String imagePath, int price) {
         JPanel itemPanel = new JPanel();
-        itemPanel.setLayout(new BorderLayout());
+        itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
+        itemPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         // 아이템 이미지
         JLabel itemImageLabel = new JLabel(new ImageIcon(imagePath));
-        itemPanel.add(itemImageLabel, BorderLayout.WEST); // 왼쪽에 이미지 추가
+        itemImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        itemPanel.add(itemImageLabel);
 
         // 아이템 이름 및 가격
         JPanel nameAndPricePanel = new JPanel();
-        nameAndPricePanel.setLayout(new BorderLayout());
+        nameAndPricePanel.setLayout(new BoxLayout(nameAndPricePanel, BoxLayout.Y_AXIS));
         JLabel itemNameLabel = new JLabel(name);
         JLabel itemPriceLabel = new JLabel(price + " 원");
-        nameAndPricePanel.add(itemNameLabel, BorderLayout.CENTER); // 중앙에 이름 추가
-        nameAndPricePanel.add(itemPriceLabel, BorderLayout.SOUTH); // 하단에 가격 추가
+        itemNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        itemPriceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameAndPricePanel.add(itemNameLabel);
+        nameAndPricePanel.add(itemPriceLabel);
 
-        itemPanel.add(nameAndPricePanel, BorderLayout.CENTER); // 중앙에 이름 및 가격 추가
+        itemPanel.add(nameAndPricePanel);
 
         // 구매 버튼
         JButton buyButton = new JButton("구매");
+        buyButton.setMaximumSize(new Dimension(Short.MAX_VALUE, buyButton.getPreferredSize().height)); // 최대 너비 설정
         buyButton.addActionListener(e -> {
             framework.InventoryAdder_Gun(name);
             framework.buySomeThing(price);
             framework.getMoney();
             System.out.println(name + " 구매!");
-
         });
-        itemPanel.add(buyButton, BorderLayout.EAST); // 오른쪽에 버튼 추가
+        itemPanel.add(buyButton);
 
         return itemPanel;
     }
