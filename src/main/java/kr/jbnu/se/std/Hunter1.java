@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
  * @author www.gametutorial.net
  */
 
-public class boss1 {
+public class Hunter1 {
 
     /**
      * How much time must pass in order to create a new duck?
@@ -76,7 +76,7 @@ public class boss1 {
      * @param score How many points this duck is worth?
      * @param bossImg Image of the boss.
      */
-    public boss1(int x, int y, double speed, int score, BufferedImage bossImg)
+    public Hunter1(int x, int y, double speed, int score, BufferedImage bossImg)
     {
         this.x = x;
         this.y = y;
@@ -89,6 +89,7 @@ public class boss1 {
         this.health = 200;
         this.maxHealth = health;
     }
+
 
     /**
      * Move the duck.

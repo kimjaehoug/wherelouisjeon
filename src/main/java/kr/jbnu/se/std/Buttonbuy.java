@@ -9,16 +9,16 @@ import java.awt.image.BufferedImage;
  * @author www.gametutorial.net
  */
 
-public class boss1 {
+public class Buttonbuy {
 
     /**
      * How much time must pass in order to create a new duck?
      */
-    public static long timeBetweenboss = Framework.secInNanosec / 2;
+    public static long timeBetweenButton = Framework.secInNanosec / 2;
     /**
      * Last time when the duck was created.
      */
-    public static long lastbossTime = 0;
+    public static long lastButtonTime = 0;
 
     /**
      * kr.jbnu.se.std.Duck lines.
@@ -26,7 +26,7 @@ public class boss1 {
      * Speed of the duck?
      * How many points is a duck worth?
      */
-    public static int[][] bossLines = {
+    public static int[][] ButtonLines = {
             {Framework.frameWidth, (int)(Framework.frameHeight * 0.60), -2, 20},
             {Framework.frameWidth, (int)(Framework.frameHeight * 0.65), -3, 30},
             {Framework.frameWidth, (int)(Framework.frameHeight * 0.70), -4, 40},
@@ -48,7 +48,6 @@ public class boss1 {
     public int y;
     public int width;
     public int height;
-    public int maxHealth;
 
     /**
      * How fast the duck should move? And to which direction?
@@ -58,13 +57,11 @@ public class boss1 {
     /**
      * How many points this duck is worth?
      */
-    public int score;
 
     /**
      * kr.jbnu.se.std.Duck image.
      */
-    BufferedImage bossImg;
-    public int health;
+    BufferedImage ButtonImg;
 
 
     /**
@@ -72,23 +69,15 @@ public class boss1 {
      *
      * @param x Starting x coordinate.
      * @param y Starting y coordinate.
-     * @param speed The speed of this duck.
-     * @param score How many points this duck is worth?
-     * @param bossImg Image of the boss.
      */
-    public boss1(int x, int y, double speed, int score, BufferedImage bossImg)
+    public Buttonbuy(int x, int y, BufferedImage ButtonImg)
     {
         this.x = x;
         this.y = y;
 
-        this.speed = speed;
-
-        this.score = score;
-
-        this.bossImg = bossImg;
-        this.health = 200;
-        this.maxHealth = health;
+        this.ButtonImg = ButtonImg;
     }
+
 
     /**
      * Move the duck.
@@ -104,15 +93,6 @@ public class boss1 {
      */
     public void Draw(Graphics2D g2d)
     {
-        g2d.drawImage(bossImg, x, y, null);
-    }
-
-    // 보스가 피해를 입었을 때 체력을 감소시킴
-    public void takeDamage(int damage) {
-        this.health -= damage;
-    }
-    // 보스가 죽었는지 확인
-    public boolean isDead() {
-        return health <= 0;
+        g2d.drawImage(ButtonImg, x, y, null);
     }
 }

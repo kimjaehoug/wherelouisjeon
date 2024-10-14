@@ -4,10 +4,51 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="btn">
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="131313">
+      <change afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/FriendManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MessageManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MessageReceiver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024-10-07__2_39__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024-10-07_오후_2_39_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/AddFriends.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/AddFriends.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ChatwithFriends.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ChatwithFriends.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/FirebaseClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/FirebaseClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainV2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainV2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/boss1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/boss1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/AddFriends$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/AddFriends$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/AddFriends.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/AddFriends.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ChatwithFriends.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ChatwithFriends.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/FirebaseClient$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/FirebaseClient$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/FirebaseClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/FirebaseClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$10.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$11.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$12.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$13.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$14.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$15.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$16.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$17.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$18.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$19.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainV2.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +65,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="chatwithFriends" />
+        <entry key="$PROJECT_DIR$" value="Chat+mainFROnt" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -38,7 +79,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/kimjaehoug/wherelouisjeon.git&quot;,
-    &quot;accountId&quot;: &quot;c6ecef48-6dfd-4d4c-97ed-658986e97146&quot;
+    &quot;accountId&quot;: &quot;a44d6209-844a-4745-82f7-f6385177c124&quot;
   }
 }</component>
   <component name="MarkdownSettingsMigration">
@@ -65,7 +106,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;yyyyeee&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;yewon111&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/jae/Downloads/shoottheduck&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -86,9 +127,8 @@
       <recent name="D:\70.Classes\2024-2\source_code_analysis\shoottheduck\src\main\java" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\hello\IdeaProjects\wherelouisjeon\src\main\resources\images" />
-      <recent name="$PROJECT_DIR$/src/main" />
       <recent name="$PROJECT_DIR$/src/main/resources/images" />
+      <recent name="$PROJECT_DIR$/src/main" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Window2222">
@@ -171,8 +211,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
       </set>
     </attachedChunks>
   </component>
@@ -194,11 +234,9 @@
       <workItem from="1727776036881" duration="31242000" />
       <workItem from="1727875707906" duration="28902000" />
       <workItem from="1728066880239" duration="8135000" />
-      <workItem from="1728462602954" duration="2881000" />
-      <workItem from="1728543142165" duration="864000" />
-      <workItem from="1728797144821" duration="3454000" />
-      <workItem from="1728886830000" duration="32000" />
-      <workItem from="1728893250307" duration="1336000" />
+      <workItem from="1728357407136" duration="20461000" />
+      <workItem from="1728822405134" duration="5605000" />
+      <workItem from="1728889652442" duration="9001000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -330,37 +368,29 @@
     </task>
     <task id="LOCAL-00017" summary="131313">
       <option name="closed" value="true" />
-      <created>1728280412095</created>
+      <created>1728363801963</created>
       <option name="number" value="00017" />
       <option name="presentableId" value="LOCAL-00017" />
       <option name="project" value="LOCAL" />
-      <updated>1728280412095</updated>
+      <updated>1728363801963</updated>
     </task>
-    <task id="LOCAL-00018" summary="hp">
+    <task id="LOCAL-00018" summary="131313">
       <option name="closed" value="true" />
-      <created>1728466392718</created>
+      <created>1728462444356</created>
       <option name="number" value="00018" />
       <option name="presentableId" value="LOCAL-00018" />
       <option name="project" value="LOCAL" />
-      <updated>1728466392718</updated>
+      <updated>1728462444356</updated>
     </task>
-    <task id="LOCAL-00019" summary="buy">
+    <task id="LOCAL-00019" summary="131313">
       <option name="closed" value="true" />
-      <created>1728543494606</created>
+      <created>1728800544817</created>
       <option name="number" value="00019" />
       <option name="presentableId" value="LOCAL-00019" />
       <option name="project" value="LOCAL" />
-      <updated>1728543494607</updated>
+      <updated>1728800544817</updated>
     </task>
-    <task id="LOCAL-00020" summary="btn">
-      <option name="closed" value="true" />
-      <created>1728543980629</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1728543980629</updated>
-    </task>
-    <option name="localTasksCounter" value="21" />
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -377,7 +407,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/chatwithFriends" />
+                        <option value="origin/yewon111" />
                       </list>
                     </value>
                   </entry>
@@ -393,9 +423,6 @@
     <MESSAGE value="loginfunction" />
     <MESSAGE value="yw" />
     <MESSAGE value="131313" />
-    <MESSAGE value="hp" />
-    <MESSAGE value="buy" />
-    <MESSAGE value="btn" />
-    <option name="LAST_COMMIT_MESSAGE" value="btn" />
+    <option name="LAST_COMMIT_MESSAGE" value="131313" />
   </component>
 </project>

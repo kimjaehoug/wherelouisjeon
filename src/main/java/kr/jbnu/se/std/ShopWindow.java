@@ -110,8 +110,10 @@ public class ShopWindow extends JFrame {
         // 구매 버튼
         JButton buyButton = new JButton("구매");
         buyButton.addActionListener(e -> {
-            framework.InventoryAdder_Gun(name);
-            framework.buySomeThing(price);
+            //framework.InventoryAdder_Gun(name);
+            //framework.buySomeThing(price);
+            framework.inventoryManager.addGunToInventory(name);
+            framework.inventoryManager.buySomething(price);
             framework.getMoney();
             System.out.println(name + " 구매!");
 
