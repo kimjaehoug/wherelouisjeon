@@ -136,7 +136,6 @@ public class Game {
                 LoadContent();
 
                 Framework.gameState = Framework.GameState.PLAYING;
-                framework.startReceivingInventory();
             }
         };
         threadForInitGame.start();

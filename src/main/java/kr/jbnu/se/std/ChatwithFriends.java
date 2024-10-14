@@ -36,7 +36,6 @@ public class ChatwithFriends extends JFrame {
 
         sendButton = new JButton("전송");
         inputPanel.add(sendButton, BorderLayout.EAST);
-
         add(inputPanel, BorderLayout.SOUTH);
 
         // 전송 버튼 클릭 이벤트
@@ -63,14 +62,17 @@ public class ChatwithFriends extends JFrame {
     private void sendMessage() {
         String message = inputField.getText();
         if (!message.isEmpty()) {
-            framework.sendMessageFriend(selectnickname, inputField.getText());
+            //framework.sendMessageFriend(selectnickname, inputField.getText());
+            framework.messageManager.sendMessageToFriend(selectnickname, inputField.getText());
             inputField.setText(""); // 입력 필드 초기화
         }
     }
+
     public void setFriends(String nickname){
         this.selectnickname = nickname;
         setTitle(selectnickname + "와의 채팅");
     }
+
     public String getFriends(){
         return selectnickname;
     }

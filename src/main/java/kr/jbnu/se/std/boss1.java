@@ -90,7 +90,6 @@ public class boss1 {
         this.maxHealth = health;
     }
 
-
     /**
      * Move the duck.
      */

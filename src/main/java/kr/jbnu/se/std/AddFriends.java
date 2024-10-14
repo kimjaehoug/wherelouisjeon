@@ -35,8 +35,8 @@ public class AddFriends extends JFrame {
                 String nickname = nicknameField.getText();
                 // 여기서 닉네임 처리 로직 추가 가능
                 //framework.friendsAdder(nickname);
-                framework.firebaseClient.senderDatabase("nickname",DataPath,nickname);
-                framework.friendsAdderother(nickname);
+                framework.friendManager.addFriend(nickname);
+                framework.friendManager.addFriendToOther(nickname);
                 System.out.println("추가할 친구: " + nickname);
             }
         });
