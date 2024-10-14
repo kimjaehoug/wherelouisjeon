@@ -80,7 +80,7 @@ public class Framework extends Canvas {
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MainPage, DESTROYED}
+    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MainPage, Round, Pause, DESTROYED}
     /**
      * Current state of the game
      */
@@ -93,6 +93,7 @@ public class Framework extends Canvas {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
     private final ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduler3 = Executors.newScheduledThreadPool(1);
     private final Set<String> existingFriends = new HashSet<>(); // 중복 방지를 위한 Set
     private final Set<String> existingFriendsinvite = new HashSet<>(); // 중복 방지를 위한 Set
 
@@ -124,6 +125,8 @@ public class Framework extends Canvas {
     private int money;
     private InviteFriends inviteFriends;
     private ShopWindow shopWindow;
+    private InventoryWindow inventoryWindow;
+    private String inventoryimage;
 
 
     /**
@@ -170,6 +173,12 @@ public class Framework extends Canvas {
             if(inviteFriends == null){
                 stopReceivingFriendInvite();
             }
+    }
+
+    public void inventoryWindow(){
+        inventoryWindow = new InventoryWindow(this);
+        startReceivingInventory();
+
     }
     public void stopfriendadd(){
         addFriends = null;
@@ -410,7 +419,10 @@ public class Framework extends Canvas {
         }
     }
     // Firebase에서 메시지 수신
+    public void startReceivingInventory(){
+        scheduler3.scheduleAtFixedRate(this::receivedinventory, 0, 1, TimeUnit.MINUTES);
 
+    }
     public void startReceivingMessages() {
         // 0초 후에 시작하고, 5초마다 receiveMessages 메소드를 호출
         scheduler.scheduleAtFixedRate(this::receiveMessages, 0, 1, TimeUnit.SECONDS);
@@ -434,6 +446,66 @@ public class Framework extends Canvas {
         scheduler2.shutdownNow();
     }
 
+    public void receivedinventory() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://shootthedock-default-rtdb.firebaseio.com/users/"+ email+"/userinfo/inventory/Gun"+".json?auth=" + idToken; // 채팅 메시지를 가져올 URL
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                SwingUtilities.invokeLater(() -> {
+                    System.err.println("채팅 메시지 가져오기 실패: " + e.getMessage());
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    JSONObject jsonResponse = new JSONObject(responseBody);
+
+                    // JSON 객체가 비어있는지 확인
+                    if (jsonResponse.length() == 0) {
+                        SwingUtilities.invokeLater(() -> {
+                            System.out.println("채팅 내역이 존재하지 않습니다.");
+                        });
+                        return;
+                    }
+
+                    // 채팅 메시지 출력
+                    for (String key : jsonResponse.keySet()) {
+                        JSONObject inventoryData = jsonResponse.getJSONObject(key);
+                        String inventory = inventoryData.getString("item");
+                        if(inventory.equals("더블배럴샷건")){
+                            inventoryimage = "src/main/resources/images/duck.png";
+                        }
+
+                        // 인벤토리 적용하기 (타임스탬프 키 사용)
+                        if (!receivedMessageKeysF.contains(key)) {
+                            receivedMessageKeysF.add(key); // 새 메시지 키 추가
+                            String uniqueMessage = inventory; // 고유 메시지 생성
+                            SwingUtilities.invokeLater(() -> {
+                                inventoryWindow.addPanel(uniqueMessage,inventoryimage);
+                            });
+                        }
+                    }
+                } else {
+                    SwingUtilities.invokeLater(() -> {
+                        System.err.println("인벤토리 가져오기 실패: " + response.message());
+                    });
+                }
+            }
+        });
+    }
+
+    public void getGun(String gun){
+        game.setgun(gun);
+    }
     public void receiveMessagesFriends2() {
         OkHttpClient client = new OkHttpClient();
         String url = "https://shootthedock-default-rtdb.firebaseio.com/chatfriend/"+ nickname+selectnickname+".json?auth=" + idToken; // 채팅 메시지를 가져올 URL
@@ -937,7 +1009,6 @@ public class Framework extends Canvas {
     public void onGameStart(){
         MainV2.dispose();
         window.onLoginSuccess();
-        stopmain();
         stopshop();
         stopfriendadd();
         stopfriends();
@@ -1046,6 +1117,9 @@ public class Framework extends Canvas {
 
             switch (gameState)
             {
+                case Pause:
+
+                    break;
                 case MainPage:
                     gameState = GameState.STARTING;
                     break;
@@ -1121,6 +1195,9 @@ public class Framework extends Canvas {
     @Override
     public void Draw(Graphics2D g2d) {
             switch (gameState) {
+                case Pause:
+                    game.Draw(g2d, mousePosition());
+                    break;
                 case PLAYING:
                     game.Draw(g2d, mousePosition());
                     break;
@@ -1176,6 +1253,18 @@ public class Framework extends Canvas {
         gameState = GameState.PLAYING;
     }
 
+    private void nextRoundGame()
+    {
+        // We set gameTime to zero and lastTime to current time for later calculations.
+        gameTime = 0;
+        lastTime = System.nanoTime();
+
+        game.NextRound();
+
+        // We change game status so that the game can start.
+        gameState = GameState.PLAYING;
+    }
+
     /**
      * Returns the position of the mouse pointer in game frame/window.
      * If mouse position is null than this method return 0,0 coordinate.
@@ -1209,6 +1298,11 @@ public class Framework extends Canvas {
     {
         switch (gameState)
         {
+            case Pause:
+                if(e.getKeyCode() == KeyEvent.VK_SPACE){
+                    nextRoundGame();
+                }
+                break;
             case GAMEOVER:
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
                     System.exit(0);
@@ -1239,4 +1333,6 @@ public class Framework extends Canvas {
                 break;
         }
     }
+
+
 }
