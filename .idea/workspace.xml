@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="buy">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_left.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_right.png" afterDir="false" />
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="btn">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024-10-07__2_39__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2024-10-07_오후_2_39_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +195,10 @@
       <workItem from="1727875707906" duration="28902000" />
       <workItem from="1728066880239" duration="8135000" />
       <workItem from="1728462602954" duration="2881000" />
-      <workItem from="1728543142165" duration="623000" />
+      <workItem from="1728543142165" duration="864000" />
+      <workItem from="1728797144821" duration="3454000" />
+      <workItem from="1728886830000" duration="32000" />
+      <workItem from="1728893250307" duration="1336000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -348,7 +352,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728543494607</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="btn">
+      <option name="closed" value="true" />
+      <created>1728543980629</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1728543980629</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -383,6 +395,7 @@
     <MESSAGE value="131313" />
     <MESSAGE value="hp" />
     <MESSAGE value="buy" />
-    <option name="LAST_COMMIT_MESSAGE" value="buy" />
+    <MESSAGE value="btn" />
+    <option name="LAST_COMMIT_MESSAGE" value="btn" />
   </component>
 </project>
