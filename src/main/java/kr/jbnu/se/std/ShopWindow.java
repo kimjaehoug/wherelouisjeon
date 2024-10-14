@@ -59,8 +59,24 @@ public class ShopWindow extends JFrame {
 
         // 버튼 패널
         JPanel buttonPanel = new JPanel();
-        JButton prevButton = new JButton("이전");
-        JButton nextButton = new JButton("다음");
+        ImageIcon prevIcon = new ImageIcon("src/main/resources/images/btn_left.png");
+        ImageIcon nextIcon = new ImageIcon("src/main/resources/images/btn_right.png");
+
+        Image scaledPrevImage = prevIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        Image scaledNextImage = nextIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+
+        JButton prevButton = new JButton(new ImageIcon(scaledPrevImage));
+        JButton nextButton = new JButton(new ImageIcon(scaledNextImage));
+
+        prevButton.setContentAreaFilled(false);
+        prevButton.setBorderPainted(false);
+        prevButton.setFocusPainted(false);
+        prevButton.setMargin(new Insets(0, 0, 0, 0));
+
+        nextButton.setContentAreaFilled(false);
+        nextButton.setBorderPainted(false);
+        nextButton.setFocusPainted(false);
+        nextButton.setMargin(new Insets(0, 0, 0, 0));
 
         // 이전 버튼 클릭 이벤트
         prevButton.addActionListener(e -> {
@@ -123,12 +139,18 @@ public class ShopWindow extends JFrame {
     private JPanel createItemPanel(String name, String imagePath, int price) {
         JPanel itemPanel = new JPanel();
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
-        itemPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        //itemPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        itemPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        itemPanel.setBackground(Color.WHITE);
+        itemPanel.setPreferredSize(new Dimension(120, 180));
 
         // 아이템 이미지
         JLabel itemImageLabel = new JLabel(new ImageIcon(imagePath));
         itemImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         itemPanel.add(itemImageLabel);
+
+        itemPanel.add(Box.createRigidArea(new Dimension(0, 5))); // 공백 추가
+
 
         // 아이템 이름 및 가격
         JPanel nameAndPricePanel = new JPanel();
@@ -137,14 +159,36 @@ public class ShopWindow extends JFrame {
         JLabel itemPriceLabel = new JLabel(price + " 원");
         itemNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         itemPriceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         nameAndPricePanel.add(itemNameLabel);
         nameAndPricePanel.add(itemPriceLabel);
-
         itemPanel.add(nameAndPricePanel);
 
+        itemPanel.add(Box.createRigidArea(new Dimension(0, 5))); // 공백 추가
+
+
         // 구매 버튼
-        JButton buyButton = new JButton("구매");
-        buyButton.setMaximumSize(new Dimension(Short.MAX_VALUE, buyButton.getPreferredSize().height)); // 최대 너비 설정
+        ImageIcon buyIcon = new ImageIcon("src/main/resources/images/btn_buy.png");
+        ImageIcon buyPressIcon = new ImageIcon("src/main/resources/images/btn_buy_press.png");
+        Image scaledBuyImage = buyIcon.getImage().getScaledInstance(100, 43, Image.SCALE_SMOOTH); // 원하는 크기로 조정
+        JButton buyButton = new JButton(new ImageIcon(scaledBuyImage));
+
+        buyButton.setContentAreaFilled(false);
+        buyButton.setBorderPainted(false);
+        buyButton.setFocusPainted(false);
+        buyButton.setMargin(new Insets(0, 0, 0, 0));
+        buyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        buyButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                buyButton.setIcon(new ImageIcon(buyPressIcon.getImage().getScaledInstance(100, 43, Image.SCALE_SMOOTH)));
+            }
+
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                buyButton.setIcon(new ImageIcon(scaledBuyImage));
+            }
+        });
+
         buyButton.addActionListener(e -> {
             framework.InventoryAdder_Gun(name);
             framework.buySomeThing(price);
