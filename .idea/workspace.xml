@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="main">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient$6.class" afterDir="false" />
@@ -39,12 +41,12 @@
     &quot;assignee&quot;: &quot;kimjaehoug&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/kimjaehoug/wherelouisjeon.git",
-    "accountId": "c6ecef48-6dfd-4d4c-97ed-658986e97146"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/kimjaehoug/wherelouisjeon.git&quot;,
+    &quot;accountId&quot;: &quot;c6ecef48-6dfd-4d4c-97ed-658986e97146&quot;
   }
-}]]></component>
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -200,7 +202,8 @@
       <workItem from="1728357407136" duration="20461000" />
       <workItem from="1728822405134" duration="5605000" />
       <workItem from="1728889652442" duration="9001000" />
-      <workItem from="1728982922667" duration="4706000" />
+      <workItem from="1728982922667" duration="4732000" />
+      <workItem from="1728991511911" duration="1709000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -394,7 +397,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728990254328</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="main">
+      <option name="closed" value="true" />
+      <created>1728991454868</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1728991454868</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
