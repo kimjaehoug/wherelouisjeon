@@ -17,10 +17,8 @@ public class MainClient extends JFrame {
     private int money;
     private JLabel moneyLabel;
     // 원본 이미지 아이콘 생성
-    ImageIcon originalIcon = new ImageIcon("src/main/resources/images/start_btn.png");
-
-    // 눌릴 때 이미지 아이콘 생성
-    ImageIcon pressedIcon = new ImageIcon("src/main/resources/images/press_start_btn.png");
+    ImageIcon startIcon = new ImageIcon("src/main/resources/images/start_btn.png");
+    ImageIcon pressedStartIcon = new ImageIcon("src/main/resources/images/press_start_btn.png");
 
     public MainClient(Framework framework) {
         // 기본 프레임 설정
@@ -32,20 +30,21 @@ public class MainClient extends JFrame {
         setResizable(false);
         setLayout(new BorderLayout());
 
-        // 상단 패널
+        // 상단 패널에 GridLayout 설정 (1행 3열)
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BorderLayout());
+        topPanel.setLayout(new GridLayout(1, 3, 10, 0)); // 1행 3열, 수평 간격 10
 
-        // 게임 시작 버튼
+        // 게임 시작 버튼 추가
         JButton startButton = new JButton();
         startButton.setPreferredSize(new Dimension(300, 100)); // 버튼 크기 설정
         startButton.setFocusable(false); // 포커스 비활성화
         startButton.setBackground(Color.LIGHT_GRAY); // 배경색 설정 (이미지 외의 영역에 적용)
         startButton.setBorderPainted(false); // 테두리 제거
         startButton.setContentAreaFilled(false); // 버튼 내용 영역 비움 (이미지만 표시)
+
         // 원본 이미지 크기
-        int originalWidth = originalIcon.getIconWidth();
-        int originalHeight = originalIcon.getIconHeight();
+        int originalWidth = startIcon.getIconWidth();
+        int originalHeight = startIcon.getIconHeight();
 
         // 버튼 크기
         int buttonWidth = startButton.getPreferredSize().width;
@@ -60,7 +59,7 @@ public class MainClient extends JFrame {
         int scaledHeight = (int) (originalHeight * scaleFactor);
 
         // 이미지 크기 조정
-        Image scaledImage = originalIcon.getImage().getScaledInstance(
+        Image scaledImage = startIcon.getImage().getScaledInstance(
                 scaledWidth,
                 scaledHeight,
                 Image.SCALE_SMOOTH
@@ -76,11 +75,11 @@ public class MainClient extends JFrame {
             System.out.println("게임이 시작됩니다!");
         });
 
-// 버튼 눌림 효과를 위한 마우스 리스너 추가
+        // 버튼 눌림 효과를 위한 마우스 리스너 추가
         startButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                startButton.setIcon(new ImageIcon(pressedIcon.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH)));
+                startButton.setIcon(new ImageIcon(pressedStartIcon.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH)));
                 startButton.setBackground(Color.GRAY); // 눌릴 때 색상 변경
 
                 // 1초 후에 원래 아이콘으로 복원
@@ -99,38 +98,134 @@ public class MainClient extends JFrame {
             }
         });
 
-// 버튼을 패널에 추가
-        topPanel.add(startButton, BorderLayout.CENTER);
-        JButton inventoryButton = new JButton("inventory");
+        // 인벤토리 버튼 추가
+        JButton inventoryButton = new JButton();
         inventoryButton.setPreferredSize(new Dimension(300, 100));
         inventoryButton.setFocusable(false);
         inventoryButton.setBackground(Color.LIGHT_GRAY);
         inventoryButton.setBorderPainted(false);
         inventoryButton.setContentAreaFilled(false);
 
+        // 이미지 설정
+        ImageIcon inventoryIcon = new ImageIcon("src/main/resources/images/btn_inventory.png");
+        ImageIcon pressedInventoryIcon = new ImageIcon("src/main/resources/images/btn_inventory_press.png");
+
+        int invButtonWidth = inventoryButton.getPreferredSize().width;
+        int invButtonHeight = inventoryButton.getPreferredSize().height;
+
+        double invWidthRatio = (double) invButtonWidth / inventoryIcon.getIconWidth();
+        double invHeightRatio = (double) invButtonHeight / inventoryIcon.getIconHeight();
+        double invScaleFactor = Math.min(invWidthRatio, invHeightRatio);
+
+        int invScaledWidth = (int) (inventoryIcon.getIconWidth() * invScaleFactor);
+        int invScaledHeight = (int) (inventoryIcon.getIconHeight() * invScaleFactor);
+        Image invScaledImage = inventoryIcon.getImage().getScaledInstance(invScaledWidth, invScaledHeight, Image.SCALE_SMOOTH);
+        ImageIcon invScaledIcon = new ImageIcon(invScaledImage);
+
+        // 처음부터 이미지 아이콘 설정
+        inventoryButton.setIcon(invScaledIcon);
+
+        // ActionListener에 버튼이 눌렸을 때의 동작만 포함
         inventoryButton.addActionListener(e -> {
             framework.inventoryWindow();
         });
-        // 상점 버튼 생성
-        JButton shopButton = new JButton("상점");
-        shopButton.setPreferredSize(new Dimension(300, 100)); // 버튼 크기 설정
-        shopButton.setFocusable(false); // 포커스 비활성화
-        shopButton.setBackground(Color.LIGHT_GRAY); // 배경색 설정
-        shopButton.setBorderPainted(false); // 테두리 제거
-        shopButton.setContentAreaFilled(false); // 버튼 내용 영역 비움 (이미지만 표시)
 
-        // 상점 버튼 클릭 시 동작 정의
-        shopButton.addActionListener(e -> {
-            // 상점 창 열기
-            framework.Shopwindowopen();
-            System.out.println("상점이 열립니다!");
-            // framework.openShopWindow(); // 예시: 상점 창 열기
+        inventoryButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Image pressedInvImage = pressedInventoryIcon.getImage().getScaledInstance(invScaledWidth, invScaledHeight, Image.SCALE_SMOOTH);
+                inventoryButton.setIcon(new ImageIcon(pressedInvImage));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                inventoryButton.setIcon(invScaledIcon);
+            }
         });
 
-        // 버튼을 상단 패널에 추가
-        topPanel.add(shopButton, BorderLayout.SOUTH);
-        topPanel.add(inventoryButton, BorderLayout.NORTH);// 상단 패널의 남쪽에 추가
+        // 상점 버튼 생성
+        JButton shopButton = new JButton();
+        shopButton.setPreferredSize(new Dimension(300, 100));
+        shopButton.setFocusable(false);
+        shopButton.setBackground(Color.LIGHT_GRAY);
+        shopButton.setBorderPainted(false);
+        shopButton.setContentAreaFilled(false);
 
+        // 상점 이미지 설정
+        ImageIcon shopIcon = new ImageIcon("src/main/resources/images/btn_shop.png");
+        ImageIcon pressedShopIcon = new ImageIcon("src/main/resources/images/btn_shop_press.png");
+
+        int shopButtonWidth = shopButton.getPreferredSize().width;
+        int shopButtonHeight = shopButton.getPreferredSize().height;
+
+        double shopWidthRatio = (double) shopButtonWidth / shopIcon.getIconWidth();
+        double shopHeightRatio = (double) shopButtonHeight / shopIcon.getIconHeight();
+        double shopScaleFactor = Math.min(shopWidthRatio, shopHeightRatio);
+
+        int shopScaledWidth = (int) (shopIcon.getIconWidth() * shopScaleFactor);
+        int shopScaledHeight = (int) (shopIcon.getIconHeight() * shopScaleFactor);
+        Image shopScaledImage = shopIcon.getImage().getScaledInstance(shopScaledWidth, shopScaledHeight, Image.SCALE_SMOOTH);
+        ImageIcon shopScaledIcon = new ImageIcon(shopScaledImage);
+
+        // 처음부터 상점 아이콘 설정
+        shopButton.setIcon(shopScaledIcon);
+
+        shopButton.addActionListener(e -> {
+            framework.Shopwindowopen();
+            System.out.println("상점이 열립니다!");
+        });
+
+        JButton rankButton = new JButton();
+        rankButton.setPreferredSize(new Dimension(300, 100));
+        rankButton.setFocusable(false);
+        rankButton.setBackground(Color.LIGHT_GRAY);
+        rankButton.setBorderPainted(false);
+        rankButton.setContentAreaFilled(false);
+        ImageIcon rankIcon = new ImageIcon("src/main/resources/images/btn_rank.png");
+        ImageIcon pressedRankIcon = new ImageIcon("src/main/resources/images/btn_press.png");
+
+        int rankButtonWidth = rankButton.getPreferredSize().width;
+        int rankButtonHeight = rankButton.getPreferredSize().height;
+
+        double rankWidthRatio = (double) rankButtonWidth / rankIcon.getIconWidth();
+        double rankHeightRatio = (double) rankButtonHeight / rankIcon.getIconHeight();
+        double rankScaleFactor = Math.min(rankWidthRatio, rankHeightRatio);
+
+        int rankScaledWidth = (int) (rankIcon.getIconWidth() * rankScaleFactor);
+        int rankScaledHeight = (int) (rankIcon.getIconHeight() * rankScaleFactor);
+
+        Image rankScaledImage = rankIcon.getImage().getScaledInstance(rankScaledWidth, rankScaledHeight, Image.SCALE_SMOOTH);
+        ImageIcon rankScaledIcon = new ImageIcon(rankScaledImage);
+
+        // 처음부터 랭크 아이콘 설정
+        rankButton.setIcon(rankScaledIcon);
+
+        shopButton.addActionListener(e -> {
+            framework.Shopwindowopen();
+            System.out.println("리더보드가 열립니다!");
+        });
+
+        rankButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Image pressedRankImage = pressedRankIcon.getImage().getScaledInstance(rankScaledWidth, rankScaledHeight, Image.SCALE_SMOOTH);
+                rankButton.setIcon(new ImageIcon(pressedRankImage));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                rankButton.setIcon(rankScaledIcon);
+            }
+        });
+
+        // 버튼들을 서->동 순서로 추가
+        topPanel.add(inventoryButton);
+        topPanel.add(startButton);
+        topPanel.add(shopButton);
+        topPanel.add(rankButton);
+
+        // 상단 패널을 프레임에 추가
+        add(topPanel, BorderLayout.NORTH);
 
         // 프로필 패널
         JPanel profilePanel = new JPanel();
@@ -274,8 +369,6 @@ public class MainClient extends JFrame {
         // 친구 추가 버튼
         JButton addFriendButton = new JButton("친구 추가");
         buttonPanel.add(addFriendButton); // 버튼 패널에 친구 추가 버튼 추가
-
-
 
         // 버튼 눌림 효과를 위한 마우스 리스너 추가
         sendButton.addMouseListener(new MouseAdapter() {
