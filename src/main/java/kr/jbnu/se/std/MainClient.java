@@ -232,7 +232,11 @@ public class MainClient extends JFrame {
         profilePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         // 프로필 사진
-        JLabel profileImage = new JLabel(new ImageIcon("src/main/resources/images/profile.png")); // 프로필 이미지
+        ImageIcon profileIcon = new ImageIcon("src/main/resources/images/profile.png"); // 프로필 이미지 불러오기
+        Image profileImg = profileIcon.getImage(); // ImageIcon을 Image 객체로 변환
+        Image scaledProfileImg = profileImg.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // 크기를 100x100으로 조정
+        ImageIcon scaledProfileIcon = new ImageIcon(scaledProfileImg); // 다시 ImageIcon으로 변환
+        JLabel profileImage = new JLabel(scaledProfileIcon); // 크기 조정된 프로필 이미지 추가
         profilePanel.add(profileImage); // 프로필 사진 추가
 
         // 이름과 자기소개 패널
