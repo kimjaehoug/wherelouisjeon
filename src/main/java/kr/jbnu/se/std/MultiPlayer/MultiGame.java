@@ -452,7 +452,7 @@ public class MultiGame {
 
                 if (killedDucks >= 20 && !isBossAlive) {
                     // 보스 생성
-                    boss.add(new boss1(1300, 500,0.125,3000, bossImg));
+                    boss.add(new boss1(1300, 500,0.125,3000,3000,bossImg));
                     isBossAlive = true; // 보스가 등장했음을 표시
                     System.out.println("boss activity");
                     ducks.clear();
