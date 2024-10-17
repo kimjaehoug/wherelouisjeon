@@ -17,48 +17,131 @@ public class ShopWindow extends JFrame {
             1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000
     };
     private String[] itemImages = {
-            "src/main/resources/images/duck.png", "src/main/resources/images/duck.png",
-            "src/main/resources/images/duck.png", "src/main/resources/images/duck.png",
-            "src/main/resources/images/duck.png", "src/main/resources/images/duck.png",
-            "src/main/resources/images/duck.png", "src/main/resources/images/duck.png",
-            "src/main/resources/images/duck.png", "src/main/resources/images/duck.png",
+            "src/main/resources/images/gun_01.png", "src/main/resources/images/gun_02.png",
+            "src/main/resources/images/gun_03.png", "src/main/resources/images/gun_04.png",
+            "src/main/resources/images/gun_05.png", "src/main/resources/images/gun_06.png",
+            "src/main/resources/images/gun_07.png", "src/main/resources/images/gun_08.png",
+            "src/main/resources/images/gun_09.png", "src/main/resources/images/duck.png",
             "src/main/resources/images/duck.png", "src/main/resources/images/duck.png",
             "src/main/resources/images/duck.png", "src/main/resources/images/duck.png",
             "src/main/resources/images/duck.png", "src/main/resources/images/duck.png"
     };
+    private String nickname;
+    private JLabel nameLabel;
     private Framework framework;
 
     private int currentPage = 0; // 현재 페이지
+    private Image backgroundImage;
 
     public ShopWindow(Framework framework) {
         this.framework = framework;
-        setTitle("상점");
-        setSize(840, 560);
+        setTitle("SHOP");
+        setSize(1000, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // 상점 나가기 버튼 추가
-        JButton exitButton = new JButton("상점 나가기");
+        // Outer Panel 추가
+        OuterPanel outerPanel = new OuterPanel();
+        outerPanel.setLayout(new BorderLayout());
+        add(outerPanel, BorderLayout.CENTER);
+
+        // Top Panel 설정
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        outerPanel.add(topPanel, BorderLayout.NORTH);
+
+        // 간판 추가
+        ImageIcon signboardIcon = new ImageIcon("src/main/resources/images/signboard.png");
+        Image signboardImage = signboardIcon.getImage().getScaledInstance(286, 135, Image.SCALE_SMOOTH);
+        JLabel signboardLabel = new JLabel(new ImageIcon(signboardImage));
+        signboardLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JLabel shopLabel = new JLabel("SHOP");
+        shopLabel.setFont(new Font("ADLaM Display", Font.BOLD, 45));
+        shopLabel.setForeground(Color.DARK_GRAY);
+        shopLabel.setHorizontalAlignment(JLabel.CENTER);
+        shopLabel.setVerticalAlignment(JLabel.CENTER);
+
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(286, 135));
+
+        signboardLabel.setBounds(0, 0, 286, 135);
+        shopLabel.setBounds(0, 0, 286, 135);
+
+        layeredPane.add(signboardLabel, Integer.valueOf(0));
+        layeredPane.add(shopLabel, Integer.valueOf(1));
+
+        // 상점 나가기 버튼
+        JButton exitButton = new JButton();
+        ImageIcon exitIcon = new ImageIcon("src/main/resources/images/btn_X.png");
+        ImageIcon exitPressIcon = new ImageIcon("src/main/resources/images/btn_X_press.png");
+
+        int buttonWidth = 70;
+        int buttonHeight = (int) (70 * (117.0 / 120)); // 비율 맞춤
+        exitButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+
+        Image scaledExitImage = exitIcon.getImage().getScaledInstance(buttonWidth, buttonHeight, Image.SCALE_SMOOTH);
+        Image scaledPressImage = exitPressIcon.getImage().getScaledInstance(buttonWidth, buttonHeight, Image.SCALE_SMOOTH);
+
+        exitButton.setIcon(new ImageIcon(scaledExitImage));
+        exitButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                exitButton.setIcon(new ImageIcon(scaledPressImage));
+            }
+
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                exitButton.setIcon(new ImageIcon(scaledExitImage));
+            }
+        });
+
         exitButton.addActionListener(e -> {
             dispose();
         });
 
-        // 오른쪽 상단에 위치시키기 위한 패널
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(exitButton, BorderLayout.EAST);
-        add(topPanel, BorderLayout.NORTH);
+        // Top Panel에 간판과 버튼 추가
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        topPanel.add(layeredPane, gbc);
 
-        // 아이템 패널
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 0.0;
+        gbc.anchor = GridBagConstraints.NORTHEAST;
+        topPanel.add(exitButton, gbc);
+
+        // Background Panel 추가
+        BackgroundPanel backgroundPanel = new BackgroundPanel();
+        backgroundPanel.setLayout(new BorderLayout());
+
+        // 아이템 패널 추가
         JPanel itemPanel = new JPanel();
         itemPanel.setLayout(new GridLayout(2, 3));
         itemPanel.setBorder(new EmptyBorder(30, 30, 30, 30));
+        backgroundPanel.add(itemPanel, BorderLayout.CENTER);
 
-        // 아이템 추가
+        // 프로필 패널
+        JPanel profilePanel = new JPanel();
+        profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
+        profilePanel.setBorder(BorderFactory.createTitledBorder("프로필"));
+        profilePanel.setPreferredSize(new Dimension(200, 560));
+        backgroundPanel.add(profilePanel, BorderLayout.EAST);
+
+        // 닉네임 및 재화 표시
+        nameLabel = new JLabel("닉네임: " + nickname);
+        JLabel moneyLabel = new JLabel("재화: " + " 원");
+
+        profilePanel.add(nameLabel);
+        profilePanel.add(moneyLabel);
+
         addItemsToPanel(itemPanel);
-        add(itemPanel, BorderLayout.CENTER);
 
         // 버튼 패널
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
         ImageIcon prevIcon = new ImageIcon("src/main/resources/images/btn_left.png");
         ImageIcon nextIcon = new ImageIcon("src/main/resources/images/btn_right.png");
 
@@ -102,9 +185,41 @@ public class ShopWindow extends JFrame {
         buttonPanel.add(prevButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonPanel.add(nextButton);
-        add(buttonPanel, BorderLayout.SOUTH);
+
+        backgroundPanel.add(buttonPanel, BorderLayout.SOUTH);
+        outerPanel.add(backgroundPanel, BorderLayout.CENTER);
+
+        backgroundPanel.revalidate();
+        backgroundPanel.repaint();
 
         setVisible(true);
+    }
+
+    private class OuterPanel extends JPanel {
+        public OuterPanel() {
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+        }
+    }
+
+    private class BackgroundPanel extends JPanel {
+        public BackgroundPanel() {
+            setBackground(Color.BLUE); // 예: 연한 회색
+            setOpaque(true); // 패널을 불투명하게 설정
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+        }
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+        nameLabel.setText("이름: " + nickname);
     }
 
     private void updateButtonState(JButton prevButton, JButton nextButton) {
@@ -137,20 +252,46 @@ public class ShopWindow extends JFrame {
     }
 
     private JPanel createItemPanel(String name, String imagePath, int price) {
-        JPanel itemPanel = new JPanel();
+        JPanel itemPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Image backgroundImage = new ImageIcon("src/main/resources/images/paper_rectangle.png").getImage();
+                int panelWidth = getWidth();
+                int panelHeight = getHeight();
+                int originalWidth = backgroundImage.getWidth(null);
+                int originalHeight = backgroundImage.getHeight(null);
+                double aspectRatio = (double) originalWidth / originalHeight;
+                int newWidth = (int) (panelHeight * aspectRatio);
+                int x = (panelWidth - newWidth) / 2;
+
+                g.drawImage(backgroundImage, x + 15, 15, newWidth - 30, panelHeight - 30, this);
+            }
+        };
+
         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
-        //itemPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        itemPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        itemPanel.setBackground(Color.WHITE);
         itemPanel.setPreferredSize(new Dimension(120, 180));
+        itemPanel.setOpaque(false);
+
+        // 위쪽 공백 추가
+        itemPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         // 아이템 이미지
-        JLabel itemImageLabel = new JLabel(new ImageIcon(imagePath));
+        ImageIcon itemImageIcon = new ImageIcon(imagePath);
+        Image itemImage = itemImageIcon.getImage();
+        int originalWidth = itemImage.getWidth(null);
+        int originalHeight = itemImage.getHeight(null);
+
+        // 비율 계산
+        int newHeight = 100;
+        double aspectRatio = (double) originalWidth / originalHeight;
+        int newWidth = (int) (newHeight * aspectRatio);
+
+        JLabel itemImageLabel = new JLabel(new ImageIcon(itemImage.getScaledInstance(150, newHeight, Image.SCALE_SMOOTH)));
         itemImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         itemPanel.add(itemImageLabel);
-
         itemPanel.add(Box.createRigidArea(new Dimension(0, 5))); // 공백 추가
-
 
         // 아이템 이름 및 가격
         JPanel nameAndPricePanel = new JPanel();
@@ -162,15 +303,15 @@ public class ShopWindow extends JFrame {
 
         nameAndPricePanel.add(itemNameLabel);
         nameAndPricePanel.add(itemPriceLabel);
-        itemPanel.add(nameAndPricePanel);
+        nameAndPricePanel.setOpaque(false);
 
         itemPanel.add(Box.createRigidArea(new Dimension(0, 5))); // 공백 추가
-
+        itemPanel.add(nameAndPricePanel);
 
         // 구매 버튼
         ImageIcon buyIcon = new ImageIcon("src/main/resources/images/btn_buy.png");
         ImageIcon buyPressIcon = new ImageIcon("src/main/resources/images/btn_buy_press.png");
-        Image scaledBuyImage = buyIcon.getImage().getScaledInstance(100, 43, Image.SCALE_SMOOTH); // 원하는 크기로 조정
+        Image scaledBuyImage = buyIcon.getImage().getScaledInstance(100, 43, Image.SCALE_SMOOTH);
         JButton buyButton = new JButton(new ImageIcon(scaledBuyImage));
 
         buyButton.setContentAreaFilled(false);
@@ -190,11 +331,22 @@ public class ShopWindow extends JFrame {
         });
 
         buyButton.addActionListener(e -> {
-            framework.InventoryAdder_Gun(name);
-            framework.buySomeThing(price);
-            framework.getMoney();
-            System.out.println(name + " 구매!");
+            int response = JOptionPane.showConfirmDialog(this,
+                    name + " 구매하시겠습니까?", "구매 확인",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if (response == JOptionPane.YES_OPTION) {
+                framework.InventoryAdder_Gun(name);
+                framework.buySomeThing(price);
+                framework.getMoney();
+
+                // 구매 완료 알림
+                JOptionPane.showMessageDialog(this, name + " 구매가 완료되었습니다!", "구매 완료", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println(name + " 구매!");
+            }
         });
+
+        itemPanel.add(Box.createVerticalGlue());
         itemPanel.add(buyButton);
 
         return itemPanel;
@@ -207,3 +359,4 @@ public class ShopWindow extends JFrame {
         }
     }
 }
+
