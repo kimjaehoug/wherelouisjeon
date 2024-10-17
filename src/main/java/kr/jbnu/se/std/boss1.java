@@ -76,7 +76,7 @@ public class boss1 {
      * @param score How many points this duck is worth?
      * @param bossImg Image of the boss.
      */
-    public boss1(int x, int y, double speed, int score, BufferedImage bossImg)
+    public boss1(int x, int y, double speed, int score,int health ,BufferedImage bossImg)
     {
         this.x = x;
         this.y = y;
@@ -86,7 +86,7 @@ public class boss1 {
         this.score = score;
 
         this.bossImg = bossImg;
-        this.health = 200;
+        this.health = health;
         this.maxHealth = health;
     }
 

@@ -1,7 +1,8 @@
 package kr.jbnu.se.std;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 /**
  * The duck class.
@@ -9,12 +10,14 @@ import java.awt.image.BufferedImage;
  * @author www.gametutorial.net
  */
 
-public class Duck {
+public class Duck implements Serializable {
     
     /**
      * How much time must pass in order to create a new duck?
      */
     public static long timeBetweenDucks = Framework.secInNanosec / 2;
+
+    private static final long serialVersionUID = 1L;
     /**
      * Last time when the duck was created.
      */
@@ -61,6 +64,8 @@ public class Duck {
      * kr.jbnu.se.std.Duck image.
      */
     private BufferedImage duckImg;
+
+    private boolean isAlive;
     
     
     /**
@@ -81,7 +86,8 @@ public class Duck {
         
         this.score = score;
         
-        this.duckImg = duckImg;        
+        this.duckImg = duckImg;
+        this.isAlive = true;
     }
     
     
@@ -100,5 +106,23 @@ public class Duck {
     public void Draw(Graphics2D g2d)
     {
         g2d.drawImage(duckImg, x, y, null);
+    }
+
+    public Image getImage() {
+        return duckImg;
+    }
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
+
+    public void shoot() {
+        this.isAlive = false;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
     }
 }

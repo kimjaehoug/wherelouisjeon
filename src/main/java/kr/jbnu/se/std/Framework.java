@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -130,6 +132,9 @@ public class Framework extends Canvas {
     private String whatgun;
     public FirebaseClient firebaseClient;
     public FriendManager friendManager;
+    private Clip clip;
+
+    private static Framework instance;
 
     public MessageManager messageManager;
 
@@ -212,6 +217,35 @@ public class Framework extends Canvas {
 
         if(chatwithFriends == null){
             friendmessageReceiver.stopReceivingFriendMessages();
+        }
+    }
+
+
+    private void playBackgroundMusic(String filePath) {
+        try {
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filePath));
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY); // 무한 반복
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void playActiveSound(String filePath){
+        try{
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filePath));
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+        }catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopBackgroundMusic() {
+        if (clip != null && clip.isRunning()) {
+            clip.stop();
         }
     }
 
@@ -497,15 +531,24 @@ public class Framework extends Canvas {
         });
     }
 
+    public static Framework getInstance() {
+        if (instance == null) {
+            instance = new Framework(new Window());
+        }
+        return instance;
+    }
+
     public void onLoginSuccess() {
         isLoginSuccessful = true;
         loginWithFirebase(realemail, password);
         MainV2.setVisible(true);
         stoploginClinet();
+        playBackgroundMusic("src/main/resources/sounds/backgroundonMain.wav");
     }
 
     public void onGameStart(){
         MainV2.dispose();
+        stopBackgroundMusic();
         window.onLoginSuccess();
         stopshop();
         stopfriendadd();
