@@ -36,11 +36,14 @@ public class BossAttack {
 
     public void updatewithgravity(){
         // Update position based on velocity
+        // 수평 위치 업데이트
         x += vx * deltaTime;
-        y += vy * deltaTime;
 
-        // Apply gravity to the vertical velocity
-        vy -= gravity * deltaTime;
+        // 중력을 수직 속도에 적용 (아래로 떨어지게 하기 위해)
+        vy += gravity * deltaTime;  // 중력을 더해 아래로 가속
+
+        // 수직 위치 업데이트
+        y += vy * deltaTime;
     }
 
     // 피격 범위 확인
