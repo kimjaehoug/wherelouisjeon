@@ -10,7 +10,7 @@ public class BossAttack {
     public int x, y;
     public double angle;   // 공격 각도
     public int speed;      // 공격 속도
-    public static final int HIT_RADIUS = 50; // 피격 범위
+    public static final int HIT_RADIUS = 40; // 피격 범위
 
     public BossAttack(int startX, int startY, double angle, int speed) {
         this.x = startX;

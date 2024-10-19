@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -82,7 +83,7 @@ public class Framework extends Canvas {
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MainPage, Round, Pause, DESTROYED}
+    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MainPage, Round, Pause, ENDING, DESTROYED}
     /**
      * Current state of the game
      */
@@ -461,14 +462,19 @@ public class Framework extends Canvas {
         OkHttpClient client = new OkHttpClient();
 
         // Step 1: 사용자 정보에 점수 저장
+        String uniqueKey = String.valueOf(System.currentTimeMillis()); // 시간 기반의 고유 키 생성
         JSONObject userJson = new JSONObject();
-        userJson.put("nickname", this.nickname);
-        userJson.put("score", score);
+        try {
+            userJson.put(uniqueKey, score); // 시간 기반의 고유 키 아래에 점수만 저장
+        } catch (JSONException e) {
+            System.err.println("JSON 생성 오류: " + e.getMessage());
+            return;
+        }
 
         RequestBody userBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson.toString());
         Request userRequest = new Request.Builder()
                 .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/scores.json?auth=" + idToken)
-                .post(userBody)
+                .patch(userBody) // 데이터를 추가할 때는 PATCH를 사용하여 기존 데이터를 유지
                 .build();
 
         client.newCall(userRequest).enqueue(new Callback() {
@@ -484,6 +490,37 @@ public class Framework extends Canvas {
 
                     // Step 2: 최고 점수 확인 및 리더보드 업데이트
                     checkAndSaveLeaderboard(score);
+                } else {
+                    System.err.println("사용자 정보에 점수 저장 실패: " + response.code());
+                }
+            }
+        });
+    }
+
+
+    public void saveMoney(int money) {
+        OkHttpClient client = new OkHttpClient();
+        money = this.money + money;
+        // Step 1: 사용자 정보에 점수 저장
+        JSONObject userJson = new JSONObject();
+        userJson.put("money", money);
+
+        RequestBody userBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson.toString());
+        Request userRequest = new Request.Builder()
+                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo.json?auth=" + idToken)
+                .patch(userBody)
+                .build();
+
+        client.newCall(userRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("사용자 정보에 점수 저장 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    System.out.println("사용자 정보에 점수 저장 성공");
                 } else {
                     System.err.println("사용자 정보에 점수 저장 실패: " + response.code());
                 }
@@ -511,14 +548,24 @@ public class Framework extends Canvas {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
+
+                    // 응답이 비어 있거나 유효하지 않은 경우 처리
+                    if (responseBody == null || responseBody.trim().isEmpty()) {
+                        System.err.println("응답이 비어있거나 잘못되었습니다.");
+                        return;
+                    }
+
                     try {
-                        // 점수 목록을 JSONArray로 처리
-                        JSONArray scoresArray = new JSONArray(responseBody);
                         int highestScore = latestScore;
 
-                        // 배열에서 최고 점수 찾기
-                        for (int i = 0; i < scoresArray.length(); i++) {
-                            int score = scoresArray.getInt(i);
+                        // 응답이 JSON 객체인지 확인
+                        JSONObject scoresObject = new JSONObject(responseBody);
+
+                        // 객체에서 모든 점수 탐색 (타임스탬프를 키로 사용)
+                        Iterator<String> keys = scoresObject.keys();
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            int score = scoresObject.getInt(key);
                             if (score > highestScore) {
                                 highestScore = score;
                             }
@@ -537,20 +584,25 @@ public class Framework extends Canvas {
         });
     }
 
-    private void saveToLeaderboardIfHighest(int highestScore) {
+
+
+
+    private void saveToLeaderboardIfHighest(int highestUserScore) {
         OkHttpClient client = new OkHttpClient();
 
-        // 리더보드에서 현재 점수를 가져옴
-        String leaderboardUrl = "https://shootthedock-default-rtdb.firebaseio.com/leaderboard/" + nickname + ".json";
-        Request request = new Request.Builder()
+        // 리더보드 URL 정의
+        String leaderboardUrl = "https://shootthedock-default-rtdb.firebaseio.com/leaderboard.json?auth=" + idToken;
+
+        // 리더보드 정보를 GET 요청으로 가져옴
+        Request getLeaderboardRequest = new Request.Builder()
                 .url(leaderboardUrl)
                 .get()
                 .build();
 
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(getLeaderboardRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("리더보드 가져오기 실패: " + e.getMessage());
+                System.err.println("리더보드 점수 가져오기 실패: " + e.getMessage());
             }
 
             @Override
@@ -558,46 +610,78 @@ public class Framework extends Canvas {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
                     try {
-                        JSONObject leaderboardObject = new JSONObject(responseBody);
+                        boolean isNewHighScore = true;
 
-                        // 현재 리더보드 점수보다 높다면 업데이트
-                        if (!leaderboardObject.has("score") || leaderboardObject.getInt("score") < highestScore) {
-                            // 리더보드에 최고 점수 저장
-                            JSONObject json = new JSONObject();
-                            json.put("nickname", nickname);
-                            json.put("score", highestScore);
-
-                            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
-                            Request updateRequest = new Request.Builder()
-                                    .url(leaderboardUrl)
-                                    .put(body)
-                                    .build();
-
-                            client.newCall(updateRequest).enqueue(new Callback() {
-                                @Override
-                                public void onFailure(Call call, IOException e) {
-                                    System.err.println("리더보드 업데이트 실패: " + e.getMessage());
+                        // 리더보드가 비어 있지 않다면 현재 최고 점수 확인
+                        if (!responseBody.trim().isEmpty() && !responseBody.equals("{}")) {
+                            JSONObject leaderboardObject = new JSONObject(responseBody);
+                            if (leaderboardObject.has(nickname)) {
+                                // 자신의 점수를 찾았으면, 기존 점수와 비교
+                                int existingScore = leaderboardObject.getJSONObject(nickname).getInt("score");
+                                if (existingScore >= highestUserScore) {
+                                    isNewHighScore = false;
                                 }
+                            }
+                        }
 
-                                @Override
-                                public void onResponse(Call call, Response response) throws IOException {
-                                    if (response.isSuccessful()) {
-                                        System.out.println("리더보드 업데이트 성공: 최고 점수 " + highestScore);
-                                    } else {
-                                        System.err.println("리더보드 업데이트 실패: " + response.code());
-                                    }
-                                }
-                            });
+                        // 새로운 최고 점수라면 리더보드에 추가 또는 갱신
+                        if (isNewHighScore) {
+                            addToLeaderboard(highestUserScore);
                         }
                     } catch (JSONException e) {
                         System.err.println("JSON 파싱 오류: " + e.getMessage());
                     }
                 } else {
-                    System.err.println("리더보드 가져오기 실패: " + response.code());
+                    System.err.println("리더보드 점수 가져오기 실패: " + response.code());
                 }
             }
         });
     }
+
+    private void addToLeaderboard(int highestUserScore) {
+        OkHttpClient client = new OkHttpClient();
+
+        // 리더보드 URL 정의, 닉네임을 키로 사용
+        String leaderboardUrl = "https://shootthedock-default-rtdb.firebaseio.com/leaderboard/" + nickname + ".json?auth=" + idToken;
+
+        // 리더보드에 저장할 JSON 객체 생성
+        JSONObject newEntry = new JSONObject();
+        try {
+            newEntry.put("nickname", nickname);
+            newEntry.put("score", highestUserScore);
+        } catch (JSONException e) {
+            System.err.println("JSON 생성 오류: " + e.getMessage());
+            return;
+        }
+
+        // 새로운 점수 추가를 위한 PUT 요청
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), newEntry.toString());
+        Request updateRequest = new Request.Builder()
+                .url(leaderboardUrl) // 닉네임을 키로 사용해 저장
+                .put(body)
+                .build();
+
+        client.newCall(updateRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("리더보드 업데이트 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    System.out.println("리더보드 업데이트 성공: 최고 점수 " + highestUserScore);
+                } else {
+                    System.err.println("리더보드 업데이트 실패: " + response.code());
+                }
+            }
+        });
+    }
+
+
+
+
+
 
 
     public void getNickname(String idToken) {
@@ -753,6 +837,11 @@ public class Framework extends Canvas {
             beginTime = System.nanoTime();
             switch (gameState)
             {
+                case ENDING:
+                    gameTime += System.nanoTime() - lastTime;
+                    game.UpdateGame(gameTime, mousePosition());
+                    lastTime = System.nanoTime();
+                    break;
                 case Pause:
                     gameTime += System.nanoTime() - lastTime;
                     game.UpdateGame(gameTime, mousePosition());
@@ -831,6 +920,9 @@ public class Framework extends Canvas {
     @Override
     public void Draw(Graphics2D g2d) {
             switch (gameState) {
+                case ENDING:
+                    game.DrawEnding(g2d, mousePosition());
+                    break;
                 case Pause:
                     game.Draw(g2d, mousePosition());
                     break;
@@ -932,6 +1024,11 @@ public class Framework extends Canvas {
     {
         switch (gameState)
         {
+            case ENDING:
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    System.exit(0);
+                }
+                    break;
             case Pause:
                 if(e.getKeyCode() == KeyEvent.VK_SPACE){
                     nextRoundGame();

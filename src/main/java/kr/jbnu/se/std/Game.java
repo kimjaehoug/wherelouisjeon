@@ -275,7 +275,7 @@ public class Game {
             URL backgroundImgUrl4 = this.getClass().getResource("/images/bossbackground4.png");
             backgroundImg4 = ImageIO.read(backgroundImgUrl4);
 
-            URL backgroundImgUrl5 = this.getClass().getResource("/images/bossbackground4.png");
+            URL backgroundImgUrl5 = this.getClass().getResource("/images/boss_lv5.png");
             backgroundImg5 = ImageIO.read(backgroundImgUrl5);
 
             URL backgroundImgUrl2 = this.getClass().getResource("/images/background_mud.png");
@@ -1027,8 +1027,16 @@ public class Game {
                                     money += 100; // Bosses give more money
                                     score += boss.get(i).score; // Boss-specific score
                                     boss.remove(i);
-                                    Pause();
-                                    // Remove the boss from the array list.
+                                    if (Round == 5) {
+                                        Framework.gameState = Framework.GameState.ENDING;
+                                        stopBackgroundMusic();
+                                        framework.saveScore(score);
+                                        framework.saveScore(score);
+                                        leaderboardSaved = true;
+                                        playBackgroundMusic("src/main/resources/sounds/NewBeginningNotTheEnd.wav"); // 엔딩 테마곡 재생
+                                    } else {
+                                        Pause(); // 다른 라운드의 경우 일시 정지 상태로 전환
+                                    }
                                 }
                                 break;
                                 // Since a boss was hit, we can leave the loop.
@@ -1045,6 +1053,7 @@ public class Game {
                 Framework.gameState = Framework.GameState.GAMEOVER;
             if (Framework.gameState == Framework.GameState.GAMEOVER && !leaderboardSaved) {
                 framework.saveScore(score);
+                framework.saveMoney(score);
                 leaderboardSaved = true;  // 리더보드 저장 완료
             }
         }
@@ -1272,6 +1281,7 @@ public class Game {
             timeBetweenShots = 100_000_000L;
         }
 
+
         g2d.setFont(font);
         g2d.setColor(Color.darkGray);
 
@@ -1305,6 +1315,11 @@ public class Game {
         g2d.setColor(Color.red);
         g2d.drawString("kr.jbnu.se.std.Game Over", Framework.frameWidth / 2 - 40, (int)(Framework.frameHeight * 0.65));
         g2d.drawString("Press space or enter to restart.", Framework.frameWidth / 2 - 150, (int)(Framework.frameHeight * 0.70));
+    }
+    public void DrawEnding(Graphics2D g2d, Point mousePosition) {
+        Draw(g2d, mousePosition);
+        // 배경 화면 설정 (엔딩 전용 배경 이미지가 있다면 해당 이미지로 설정)
+        g2d.drawImage(backgroundImg, 0, 0, Framework.frameWidth, Framework.frameHeight, null);
     }
 
     public int getScore(){
