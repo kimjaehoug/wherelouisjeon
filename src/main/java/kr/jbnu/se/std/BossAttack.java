@@ -6,11 +6,11 @@ public class BossAttack {
     private double deltaTime;
     private double gravity;
     private double vy;
-    private double vx;
-    public int x, y;      // 현재 위치
+    private double vx;// 현재 위치
+    public int x, y;
     public double angle;   // 공격 각도
     public int speed;      // 공격 속도
-    public static final int HIT_RADIUS = 80; // 피격 범위
+    public static final int HIT_RADIUS = 50; // 피격 범위
 
     public BossAttack(int startX, int startY, double angle, int speed) {
         this.x = startX;
@@ -19,7 +19,7 @@ public class BossAttack {
         this.speed = speed;
     }
 
-    public BossAttack(int x, int y, double vx, double vy, double gravity, double deltaTime) {
+    public BossAttack(int x,int y, double vx, double vy, double gravity, double deltaTime) {
         this.x = x;
         this.y = y;
         this.vx = vx;

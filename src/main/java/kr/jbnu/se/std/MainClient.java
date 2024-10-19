@@ -219,8 +219,8 @@ public class MainClient extends JFrame {
         });
 
         // 버튼들을 서->동 순서로 추가
-        topPanel.add(inventoryButton);
         topPanel.add(startButton);
+        topPanel.add(inventoryButton);
         topPanel.add(shopButton);
         topPanel.add(rankButton);
 

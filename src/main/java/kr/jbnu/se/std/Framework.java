@@ -459,33 +459,145 @@ public class Framework extends Canvas {
 
     public void saveScore(int score) {
         OkHttpClient client = new OkHttpClient();
-        JSONObject json = new JSONObject();
-        json.put("nickname", this.nickname);
-        json.put("score", score);
 
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
-        Request request = new Request.Builder()
-                .url("https://shootthedock-default-rtdb.firebaseio.com/leaderboard/"+nickname+".json")
-                .put(body)
+        // Step 1: 사용자 정보에 점수 저장
+        JSONObject userJson = new JSONObject();
+        userJson.put("nickname", this.nickname);
+        userJson.put("score", score);
+
+        RequestBody userBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson.toString());
+        Request userRequest = new Request.Builder()
+                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/scores.json?auth=" + idToken)
+                .post(userBody)
                 .build();
 
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(userRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("점수 저장 실패: " + e.getMessage());
+                System.err.println("사용자 정보에 점수 저장 실패: " + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    System.out.println("점수 저장 성공: " + response.body().string());
+                    System.out.println("사용자 정보에 점수 저장 성공");
+
+                    // Step 2: 최고 점수 확인 및 리더보드 업데이트
+                    checkAndSaveLeaderboard(score);
                 } else {
-                    System.err.println("점수 저장 실패: " + response.code());
+                    System.err.println("사용자 정보에 점수 저장 실패: " + response.code());
                 }
             }
         });
     }
 
+    private void checkAndSaveLeaderboard(int latestScore) {
+        OkHttpClient client = new OkHttpClient();
+
+        // 사용자 정보에서 모든 점수를 가져옴
+        String userScoresUrl = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/scores.json?auth=" + idToken;
+        Request request = new Request.Builder()
+                .url(userScoresUrl)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("점수 목록 가져오기 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    try {
+                        // 점수 목록을 JSONArray로 처리
+                        JSONArray scoresArray = new JSONArray(responseBody);
+                        int highestScore = latestScore;
+
+                        // 배열에서 최고 점수 찾기
+                        for (int i = 0; i < scoresArray.length(); i++) {
+                            int score = scoresArray.getInt(i);
+                            if (score > highestScore) {
+                                highestScore = score;
+                            }
+                        }
+
+                        // 리더보드에 최고 점수가 있는지 확인 후 없으면 저장
+                        saveToLeaderboardIfHighest(highestScore);
+
+                    } catch (JSONException e) {
+                        System.err.println("JSON 파싱 오류: " + e.getMessage());
+                    }
+                } else {
+                    System.err.println("점수 목록 가져오기 실패: " + response.code());
+                }
+            }
+        });
+    }
+
+    private void saveToLeaderboardIfHighest(int highestScore) {
+        OkHttpClient client = new OkHttpClient();
+
+        // 리더보드에서 현재 점수를 가져옴
+        String leaderboardUrl = "https://shootthedock-default-rtdb.firebaseio.com/leaderboard/" + nickname + ".json";
+        Request request = new Request.Builder()
+                .url(leaderboardUrl)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("리더보드 가져오기 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    try {
+                        JSONObject leaderboardObject = new JSONObject(responseBody);
+
+                        // 현재 리더보드 점수보다 높다면 업데이트
+                        if (!leaderboardObject.has("score") || leaderboardObject.getInt("score") < highestScore) {
+                            // 리더보드에 최고 점수 저장
+                            JSONObject json = new JSONObject();
+                            json.put("nickname", nickname);
+                            json.put("score", highestScore);
+
+                            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
+                            Request updateRequest = new Request.Builder()
+                                    .url(leaderboardUrl)
+                                    .put(body)
+                                    .build();
+
+                            client.newCall(updateRequest).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    System.err.println("리더보드 업데이트 실패: " + e.getMessage());
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    if (response.isSuccessful()) {
+                                        System.out.println("리더보드 업데이트 성공: 최고 점수 " + highestScore);
+                                    } else {
+                                        System.err.println("리더보드 업데이트 실패: " + response.code());
+                                    }
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        System.err.println("JSON 파싱 오류: " + e.getMessage());
+                    }
+                } else {
+                    System.err.println("리더보드 가져오기 실패: " + response.code());
+                }
+            }
+        });
+    }
 
 
     public void getNickname(String idToken) {
@@ -550,11 +662,6 @@ public class Framework extends Canvas {
         MainV2.dispose();
         stopBackgroundMusic();
         window.onLoginSuccess();
-        stopshop();
-        stopfriendadd();
-        stopfriends();
-        stopReceivingFriendschat();
-        stopReceivingFriendInvite();
         gameState = GameState.VISUALIZING;
         this.setVisible(true);
         gameThread = new Thread() {
@@ -831,10 +938,11 @@ public class Framework extends Canvas {
                 }
                 break;
             case GAMEOVER:
-                if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     System.exit(0);
-                else if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER)
-                    restartGame();
+                } else if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    gameState = GameState.MAIN_MENU;  // 게임 오버 시 스페이스바나 엔터를 누르면 메인 메뉴로 돌아감
+                }
                 break;
             case PLAYING:
             case MAIN_MENU:
