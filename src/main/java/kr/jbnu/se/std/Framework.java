@@ -785,6 +785,7 @@ public class Framework extends Canvas {
         gameTime = 0;
         lastTime = System.nanoTime();
 
+
         game.NextRound();
 
         // We change game status so that the game can start.

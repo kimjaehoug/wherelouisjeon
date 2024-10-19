@@ -362,8 +362,8 @@ public class ShopWindow extends JFrame {
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
             if (response == JOptionPane.YES_OPTION) {
-                framework.InventoryAdder_Gun(name);
-                framework.buySomeThing(price);
+                framework.inventoryManager.addGunToInventory(name);
+                framework.inventoryManager.buySomething(price);
                 framework.getMoney();
 
                 // 구매 완료 알림
