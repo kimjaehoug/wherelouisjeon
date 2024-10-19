@@ -4,32 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="shop">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_X2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_complete.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_complete_press.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_left2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_left2_press.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_right2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_right2_press.png" afterDir="false" />
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="shop&amp;inventory">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/btn_X.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/btn_X.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/btn_X_press.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/btn_X2_press.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/paper_rectangle.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/paper_rectangle.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/paper_square.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/paper_square.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/signboard.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/signboard.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/images/btn_X.png" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/images/btn_X.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/images/btn_X_press.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/images/paper_rectangle.png" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/images/paper_rectangle.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/images/paper_square.png" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/images/paper_square.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/images/signboard.png" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/images/signboard.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$BackgroundPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$BackgroundPanel.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$OuterPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$OuterPanel.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" afterDir="false" />
@@ -236,7 +217,7 @@
       <workItem from="1729140858138" duration="163000" />
       <workItem from="1729147266365" duration="1469000" />
       <workItem from="1729170959844" duration="12878000" />
-      <workItem from="1729216970837" duration="10350000" />
+      <workItem from="1729216970837" duration="12022000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -374,7 +355,23 @@
       <option name="project" value="LOCAL" />
       <updated>1728918328176</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="shop&amp;inventory">
+      <option name="closed" value="true" />
+      <created>1729319105179</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1729319105179</updated>
+    </task>
+    <task id="LOCAL-00019" summary="shop&amp;inventory">
+      <option name="closed" value="true" />
+      <created>1729319125651</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1729319125651</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

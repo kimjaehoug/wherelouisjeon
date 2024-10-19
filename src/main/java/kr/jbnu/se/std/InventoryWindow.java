@@ -249,10 +249,10 @@ public class InventoryWindow extends JFrame {
                     }
 
                     selectedPanel = itemPanel; // 현재 클릭한 아이템 패널 저장
-                    selectedPanel.setBackground(Color.WHITE);
+                    selectedPanel.setOpaque(false);
                     selectedPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 
-                    itemPanel.setBackground(Color.WHITE);
+                    itemPanel.setOpaque(false);
                     itemPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
                     selectedItem = name;
                     System.out.println(name + " 선택됨!");
@@ -260,7 +260,7 @@ public class InventoryWindow extends JFrame {
             });
         } else {
             // 빈 아이템 패널의 경우 다른 스타일을 설정
-            itemPanel.setBackground(Color.WHITE);
+            itemPanel.setOpaque(false);
         }
 
         // 종이 이미지 추가
@@ -317,15 +317,15 @@ public class InventoryWindow extends JFrame {
             Image scaledImage = originalIcon.getImage().getScaledInstance(newWidth, 150, Image.SCALE_SMOOTH);
 
             JLabel itemImageLabel = new JLabel(new ImageIcon(scaledImage));
-            itemImageLabel.setOpaque(false); // 배경을 투명하게 설정
-            itemPanel.add(itemImageLabel); // 종이 위에 이미지 추가
+            itemImageLabel.setOpaque(false);
+            itemPanel.add(itemImageLabel);
         }
 
         // 아이템 이름 추가
         JLabel itemNameLabel = new JLabel(name);
-        itemNameLabel.setOpaque(false); // 배경을 투명하게 설정
-        itemNameLabel.setHorizontalAlignment(JLabel.CENTER); // 중앙 정렬
-        itemPanel.add(itemNameLabel); // 이름 추가
+        itemNameLabel.setOpaque(false);
+        itemNameLabel.setHorizontalAlignment(JLabel.CENTER);
+        itemPanel.add(itemNameLabel);
     }
 
 

@@ -34,7 +34,7 @@ public class ShopWindow extends JFrame {
     public ShopWindow(Framework framework) {
         this.framework = framework;
         setTitle("SHOP");
-        setSize(1000, 800);
+        setSize(800, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -130,16 +130,12 @@ public class ShopWindow extends JFrame {
         JPanel profilePanel = new JPanel();
         profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
         profilePanel.setBorder(BorderFactory.createTitledBorder("프로필"));
-        profilePanel.setPreferredSize(new Dimension(200, 560));
-        backgroundPanel.add(profilePanel, BorderLayout.EAST);
+        profilePanel.setPreferredSize(new Dimension(800, 50));
+        backgroundPanel.add(profilePanel, BorderLayout.NORTH);
 
-        // 닉네임 및 재화 표시
-        nameLabel = new JLabel("닉네임: " + nickname);
+        // 재화 표시
         JLabel moneyLabel = new JLabel("재화: " + " 원");
-
-        profilePanel.add(nameLabel);
         profilePanel.add(moneyLabel);
-
         addItemsToPanel(itemPanel);
 
         // 버튼 패널
