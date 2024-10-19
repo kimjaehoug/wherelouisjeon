@@ -48,11 +48,12 @@ public class boss1 {
     public int y;
     public int width;
     public int height;
+    public int maxHealth;
 
     /**
      * How fast the duck should move? And to which direction?
      */
-    private int speed;
+    private double speed;
 
     /**
      * How many points this duck is worth?
@@ -75,7 +76,7 @@ public class boss1 {
      * @param score How many points this duck is worth?
      * @param bossImg Image of the boss.
      */
-    public boss1(int x, int y, int speed, int score, BufferedImage bossImg)
+    public boss1(int x, int y, double speed, int score,int health ,BufferedImage bossImg)
     {
         this.x = x;
         this.y = y;
@@ -85,16 +86,16 @@ public class boss1 {
         this.score = score;
 
         this.bossImg = bossImg;
-        this.health = 500;
+        this.health = health;
+        this.maxHealth = health;
     }
-
 
     /**
      * Move the duck.
      */
-    public void Update()
+    public void update()
     {
-        x += speed;
+        x -= speed;
     }
 
     /**

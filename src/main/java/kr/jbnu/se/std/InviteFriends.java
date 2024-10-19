@@ -1,6 +1,7 @@
 package kr.jbnu.se.std;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,8 +9,10 @@ import java.awt.event.ActionListener;
 public class InviteFriends extends JFrame {
     private DefaultListModel<String> friendRequestsModel; // 친구 신청 목록을 관리하는 모델
     private Framework framework;
+    private String DataPath;
     public InviteFriends(Framework framework) {
         this.framework = framework;
+        DataPath = "https://shootthedock-default-rtdb.firebaseio.com/users/" + framework.firebaseClient.email + "/"+ "userinfo/friends/";
         setTitle("친구 신청 목록");
         setVisible(true);
         setSize(400, 300);
@@ -42,7 +45,8 @@ public class InviteFriends extends JFrame {
                 if (selectedRequest != null) {
                     acceptFriendRequest(selectedRequest);
                     friendRequestsModel.removeElement(selectedRequest);
-                    framework.friendsAdder(selectedRequest);
+                    //framework.friendsAdder(selectedRequest);
+                    framework.firebaseClient.senderDatabase("nickname",DataPath,selectedRequest);
                     framework.deleteFriendInvite(selectedRequest);// 수락 후 신청 목록에서 제거
                 }
             }

@@ -4,8 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="shop&amp;inventory">
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="131313">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/bossbackground4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/hunterrrrr.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/ArabPirate.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/FantasticThemePark.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/JungleBook.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/RuinCastle.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/SinkingThings.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/TempleOfDarkness.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/TempleOfDarkness.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/WhaleBelly.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/WhaleBelly.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/WorldHorizon.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/sounds/hit.wav" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/BossAttack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/BossAttack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/BossAttack.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/BossAttack.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,13 +48,10 @@
       </list>
     </option>
   </component>
-  <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="origin/yewon111" />
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="chatwithFriends" />
+        <entry key="$PROJECT_DIR$" value="Chat+mainFROnt" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,14 +65,11 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/kimjaehoug/wherelouisjeon.git&quot;,
-    &quot;accountId&quot;: &quot;fbb2cdd8-8f11-4e46-b870-8e948249df1a&quot;
+    &quot;accountId&quot;: &quot;a44d6209-844a-4745-82f7-f6385177c124&quot;
   }
 }</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -57,54 +80,51 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.MainClient.executor": "Run",
-    "Application.MainV2.executor": "Run",
-    "Application.ShopWindow.executor": "Run",
-    "Application.Window (1).executor": "Run",
-    "Application.Window.executor": "Run",
-    "Application.Window2222.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "frontend",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/t0106/IdeaProjects/frontend/src/main/resources/images",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "advanced.settings",
-    "vue.rearranger.settings.migration": "true",
-    "애플리케이션.Window.executor": "Run",
-    "애플리케이션.Window2222.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.MainClient.executor&quot;: &quot;Run&quot;,
+    &quot;Application.MainV2.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ShopWindow.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Window (1).executor&quot;: &quot;Run&quot;,
+    &quot;Application.Window.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Window2222.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;yewon111&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jae/Downloads/shoottheduck&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;profiler.calltree.filter&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\t0106\IdeaProjects\frontend\src\main\resources\images" />
       <recent name="D:\70.Classes\2024-2\source_code_analysis\shoottheduck\src\main\resources" />
       <recent name="D:\70.Classes\2024-2\source_code_analysis\shoottheduck\src\main\java" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\t0106\IdeaProjects\frontend\src\main\resources\images" />
-      <recent name="$PROJECT_DIR$/src/main" />
+      <recent name="$PROJECT_DIR$/src/main/resources/sounds" />
       <recent name="$PROJECT_DIR$/src/main/resources/images" />
+      <recent name="$PROJECT_DIR$/src/main" />
     </key>
   </component>
-  <component name="RunManager" selected="애플리케이션.Window">
+  <component name="RunManager" selected="Application.Window2222">
     <configuration name="MainClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="kr.jbnu.se.std.MainClient" />
       <module name="shoottheduck" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.jbnu.se.std.*" />
+          <option name="PATTERN" value="kr.jbnu.se.std.MultiPlayer.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -117,7 +137,7 @@
       <module name="shoottheduck" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.jbnu.se.std.*" />
+          <option name="PATTERN" value="kr.jbnu.se.std.MultiPlayer.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -130,7 +150,7 @@
       <module name="shoottheduck" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.jbnu.se.std.*" />
+          <option name="PATTERN" value="kr.jbnu.se.std.MultiPlayer.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -150,7 +170,7 @@
       <module name="shoottheduck" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.jbnu.se.std.*" />
+          <option name="PATTERN" value="kr.jbnu.se.std.MultiPlayer.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -159,24 +179,27 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="애플리케이션.MainClient" />
-      <item itemvalue="애플리케이션.MainV2" />
-      <item itemvalue="애플리케이션.ShopWindow" />
-      <item itemvalue="애플리케이션.Window" />
-      <item itemvalue="애플리케이션.Window2222" />
+      <item itemvalue="Application.Window" />
+      <item itemvalue="Application.MainClient" />
+      <item itemvalue="Application.MainV2" />
+      <item itemvalue="Application.ShopWindow" />
+      <item itemvalue="Application.Window2222" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="애플리케이션.Window" />
-        <item itemvalue="애플리케이션.Window2222" />
+        <item itemvalue="Application.Window2222" />
+        <item itemvalue="Application.MainV2" />
+        <item itemvalue="Application.ShopWindow" />
+        <item itemvalue="Application.MainClient" />
+        <item itemvalue="Application.Window" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
       </set>
     </attachedChunks>
   </component>
@@ -198,18 +221,12 @@
       <workItem from="1727776036881" duration="31242000" />
       <workItem from="1727875707906" duration="28902000" />
       <workItem from="1728066880239" duration="8135000" />
-      <workItem from="1728351301726" duration="1133000" />
-      <workItem from="1728360254741" duration="5558000" />
-      <workItem from="1728367895036" duration="43000" />
-      <workItem from="1728374283095" duration="2948000" />
-      <workItem from="1728447211872" duration="2592000" />
-      <workItem from="1728915215594" duration="8323000" />
-      <workItem from="1728973072991" duration="1491000" />
-      <workItem from="1729054821019" duration="28548000" />
-      <workItem from="1729140858138" duration="163000" />
-      <workItem from="1729147266365" duration="1469000" />
-      <workItem from="1729170959844" duration="12878000" />
-      <workItem from="1729216970837" duration="14084000" />
+      <workItem from="1728357407136" duration="20461000" />
+      <workItem from="1728822405134" duration="5605000" />
+      <workItem from="1728889652442" duration="37652000" />
+      <workItem from="1729054707457" duration="10617000" />
+      <workItem from="1729069599398" duration="4970000" />
+      <workItem from="1729323809352" duration="3878000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -339,50 +356,77 @@
       <option name="project" value="LOCAL" />
       <updated>1728279465226</updated>
     </task>
-    <task id="LOCAL-00017" summary="shop">
+    <task id="LOCAL-00017" summary="131313">
       <option name="closed" value="true" />
-      <created>1728918328175</created>
+      <created>1728363801963</created>
       <option name="number" value="00017" />
       <option name="presentableId" value="LOCAL-00017" />
       <option name="project" value="LOCAL" />
-      <updated>1728918328176</updated>
+      <updated>1728363801963</updated>
     </task>
-    <task id="LOCAL-00018" summary="shop&amp;inventory">
+    <task id="LOCAL-00018" summary="131313">
       <option name="closed" value="true" />
-      <created>1729319105179</created>
+      <created>1728462444356</created>
       <option name="number" value="00018" />
       <option name="presentableId" value="LOCAL-00018" />
       <option name="project" value="LOCAL" />
-      <updated>1729319105179</updated>
+      <updated>1728462444356</updated>
     </task>
-    <task id="LOCAL-00019" summary="shop&amp;inventory">
+    <task id="LOCAL-00019" summary="131313">
       <option name="closed" value="true" />
-      <created>1729319125651</created>
+      <created>1728800544817</created>
       <option name="number" value="00019" />
       <option name="presentableId" value="LOCAL-00019" />
       <option name="project" value="LOCAL" />
-      <updated>1729319125651</updated>
+      <updated>1728800544817</updated>
     </task>
-    <task id="LOCAL-00020" summary="shop&amp;inventory">
+    <task id="LOCAL-00020" summary="131313">
       <option name="closed" value="true" />
-      <created>1729320640910</created>
+      <created>1728915363555</created>
       <option name="number" value="00020" />
       <option name="presentableId" value="LOCAL-00020" />
       <option name="project" value="LOCAL" />
-      <updated>1729320640910</updated>
+      <updated>1728915363555</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="131313">
+      <option name="closed" value="true" />
+      <created>1728915375265</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1728915375265</updated>
+    </task>
+    <task id="LOCAL-00022" summary="131313">
+      <option name="closed" value="true" />
+      <created>1728999106644</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1728999106644</updated>
+    </task>
+    <task id="LOCAL-00023" summary="131313">
+      <option name="closed" value="true" />
+      <created>1729055917408</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1729055917408</updated>
+    </task>
+    <task id="LOCAL-00024" summary="131313">
+      <option name="closed" value="true" />
+      <created>1729324804828</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1729324804828</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
-    <option name="OPEN_GENERIC_TABS">
-      <map>
-        <entry key="d5bb0426-8fb1-4fdf-86b2-1b3f25c8abf6" value="TOOL_WINDOW" />
-      </map>
-    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -393,7 +437,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="frontend" />
+                        <option value="origin/frontend" />
                       </list>
                     </value>
                   </entry>
@@ -402,21 +446,13 @@
             </State>
           </value>
         </entry>
-        <entry key="d5bb0426-8fb1-4fdf-86b2-1b3f25c8abf6">
-          <value>
-            <State />
-          </value>
-        </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="loginfunction" />
-    <MESSAGE value="131313" />
     <MESSAGE value="yw" />
-    <MESSAGE value="dafsdasdf" />
-    <MESSAGE value="shop" />
-    <MESSAGE value="shop&amp;inventory" />
-    <option name="LAST_COMMIT_MESSAGE" value="shop&amp;inventory" />
+    <MESSAGE value="131313" />
+    <option name="LAST_COMMIT_MESSAGE" value="131313" />
   </component>
 </project>

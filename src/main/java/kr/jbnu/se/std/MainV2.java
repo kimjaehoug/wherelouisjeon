@@ -236,7 +236,7 @@ public class MainV2 extends JFrame {
                 timer.setRepeats(false); // 1회만 실행
                 timer.start();
                 if (!message.isEmpty()) {
-                    framework.sendMessage(message);
+                    //framework.sendMessage(message);
                     messageField.setText(""); // 입력 필드 초기화
                 }
             }
