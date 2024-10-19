@@ -273,10 +273,17 @@ public class MainClient extends JFrame {
 
         // 채팅창 배경 이미지 설정
         ImageIcon chatBackgroundIcon = new ImageIcon("src/main/resources/images/background_chat.png");
-        JLabel chatBackgroundLabel = new JLabel(chatBackgroundIcon);
+        JLabel chatBackgroundLabel = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // JLabel의 크기에 맞게 이미지를 조정하여 그리기
+                g.drawImage(chatBackgroundIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         chatBackgroundLabel.setLayout(new BorderLayout());
-        chatBackgroundLabel.setPreferredSize(new Dimension(1047, 468));
         chatBackgroundLabel.add(chatScroll, BorderLayout.CENTER); // 중앙에 추가
+
 
         centerPanel.add(chatBackgroundLabel, BorderLayout.CENTER); // 중앙에 추가
 
@@ -301,9 +308,17 @@ public class MainClient extends JFrame {
 
         // 친구 목록 배경 이미지 설정
         ImageIcon friendBackgroundIcon = new ImageIcon("src/main/resources/images/background_friend.png");
-        JLabel friendsBackgroundLabel = new JLabel(friendBackgroundIcon);
+        JLabel friendsBackgroundLabel = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // JLabel의 크기에 맞게 이미지를 조정하여 그리기
+                g.drawImage(friendBackgroundIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         friendsBackgroundLabel.setLayout(new BorderLayout());
         friendsBackgroundLabel.setPreferredSize(new Dimension(195, 468));
+
 
         // 친구 목록 스크롤 패널
         friendsScroll.setOpaque(false);  // 스크롤 패널도 투명하게
