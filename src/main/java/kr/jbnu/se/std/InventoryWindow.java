@@ -9,7 +9,6 @@ public class InventoryWindow extends JFrame {
     private int currentPage;
     private String[] itemNames;
     private String[] itemImages;
-    //private JPanel panel;
     private JButton buyButton;
     private String selectedItem = null;
     private JPanel centerPanel;
@@ -28,18 +27,7 @@ public class InventoryWindow extends JFrame {
         centerPanel = new JPanel();
         centerPanel.setLayout(new GridBagLayout());
         centerPanel.setPreferredSize(new Dimension(500, 840));
-        addItemsToPanel(centerPanel);
         add(centerPanel, BorderLayout.CENTER);
-
-        addItemsToPanel(centerPanel);
-        add(centerPanel, BorderLayout.CENTER);
-
-        JPanel itemPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(5, 5, 5, 5);
-        addItemsToPanel(itemPanel);
-        add(itemPanel, BorderLayout.CENTER);
 
         // 간판 추가
         ImageIcon signboardIcon = new ImageIcon("src/main/resources/images/signboard.png");
@@ -64,7 +52,6 @@ public class InventoryWindow extends JFrame {
 
         // 인벤토리 나가기 버튼
         JButton exitButton = new JButton();
-
         exitButton.setContentAreaFilled(false);
         exitButton.setBorderPainted(false);
         exitButton.setFocusPainted(false);
@@ -120,7 +107,7 @@ public class InventoryWindow extends JFrame {
         buyButton.addActionListener(e -> {
             if (selectedItem != null) {
                 System.out.println(selectedItem + " 장착!");
-                //framework.setGun(selectedItem); //이거 뭐임..???
+                framework.setGun(selectedItem); // 실제 사용 메서드에 맞게 수정
             } else {
                 System.out.println("아이템을 선택하세요!");
             }
@@ -140,39 +127,8 @@ public class InventoryWindow extends JFrame {
         JButton prevButton = new JButton(new ImageIcon(scaledPrevImage));
         JButton nextButton = new JButton(new ImageIcon(scaledNextImage));
 
-        prevButton.setPreferredSize(new Dimension(50, 50));
-        nextButton.setPreferredSize(new Dimension(50, 50));
-
         setButtonProperties(prevButton, new ImageIcon(scaledPrevImage), new ImageIcon(prevPressIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
         setButtonProperties(nextButton, new ImageIcon(scaledNextImage), new ImageIcon(nextPressIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
-
-        prevButton.setContentAreaFilled(false);
-        prevButton.setBorderPainted(false);
-        prevButton.setFocusPainted(false);
-        prevButton.setMargin(new Insets(0, 0, 0, 0));
-
-        nextButton.setContentAreaFilled(false);
-        nextButton.setBorderPainted(false);
-        nextButton.setFocusPainted(false);
-        nextButton.setMargin(new Insets(0, 0, 0, 0));
-
-        // 이전 버튼 클릭 이벤트
-        prevButton.addActionListener(e -> {
-            if (currentPage > 0) {
-                currentPage--;
-                updateItemPanel(itemPanel);
-                updateButtonState(prevButton, nextButton);
-            }
-        });
-
-        // 다음 버튼 클릭 이벤트
-        nextButton.addActionListener(e -> {
-            if ((currentPage + 1) * ITEMS_PER_PAGE < itemNames.length) {
-                currentPage++;
-                updateItemPanel(itemPanel);
-                updateButtonState(prevButton, nextButton);
-            }
-        });
 
         updateButtonState(prevButton, nextButton);
 
@@ -183,7 +139,6 @@ public class InventoryWindow extends JFrame {
         add(buttonPanel, BorderLayout.SOUTH);
 
         setVisible(true);
-
     }
 
     private void setButtonProperties(JButton button, ImageIcon defaultIcon, ImageIcon pressedIcon) {
@@ -193,14 +148,13 @@ public class InventoryWindow extends JFrame {
         button.setFocusPainted(false);
         button.setMargin(new Insets(0, 0, 0, 0));
 
-        // 마우스 리스너 추가
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                button.setIcon(pressedIcon); // 눌렸을 때 아이콘 변경
+                button.setIcon(pressedIcon);
             }
 
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                button.setIcon(defaultIcon); // 놓았을 때 원래 아이콘으로 복구
+                button.setIcon(defaultIcon);
             }
         });
     }
@@ -210,10 +164,17 @@ public class InventoryWindow extends JFrame {
         nextButton.setEnabled((currentPage + 1) * ITEMS_PER_PAGE < itemNames.length);
     }
 
-    public void addPanel(String gun, String imagepath){
-        JPanel itemPanel = createItemPanel(gun,imagepath);
-        add(itemPanel, BorderLayout.CENTER);
-        repaint();
+    public void addPanel(String gun, String imagepath) {
+        itemNames = appendToArray(itemNames, gun);
+        itemImages = appendToArray(itemImages, imagepath);
+        updateItemPanel(centerPanel);
+    }
+
+    private String[] appendToArray(String[] array, String newItem) {
+        String[] newArray = new String[array.length + 1];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        newArray[array.length] = newItem;
+        return newArray;
     }
 
     public JPanel createItemPanel(String name, String imagePath) {
@@ -232,7 +193,6 @@ public class InventoryWindow extends JFrame {
             itemPanel.add(itemImageLabel);
         }
 
-        // 아이템 이름
         JLabel itemNameLabel = new JLabel(name);
         itemNameLabel.setOpaque(false);
         itemNameLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -248,7 +208,7 @@ public class InventoryWindow extends JFrame {
                         selectedPanel.setBorder(null);
                     }
 
-                    selectedPanel = itemPanel; // 현재 클릭한 아이템 패널 저장
+                    selectedPanel = itemPanel;
                     selectedPanel.setOpaque(false);
                     selectedPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 
@@ -258,12 +218,8 @@ public class InventoryWindow extends JFrame {
                     System.out.println(name + " 선택됨!");
                 }
             });
-        } else {
-            // 빈 아이템 패널의 경우 다른 스타일을 설정
-            itemPanel.setOpaque(false);
         }
 
-        // 종이 이미지 추가
         ImageIcon paperIcon = new ImageIcon("src/main/resources/images/paper_square.png");
         Image scaledPaperImage = paperIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
         JLabel paperLabel = new JLabel(new ImageIcon(scaledPaperImage));
@@ -308,32 +264,10 @@ public class InventoryWindow extends JFrame {
         panel.repaint();
     }
 
-    private void addItemToPanel(JPanel itemPanel, String name, String imagePath) {
-        // 아이템 이미지 추가
-        if (imagePath != null && !imagePath.isEmpty()) {
-            ImageIcon originalIcon = new ImageIcon(imagePath);
-            double aspectRatio = (double) originalIcon.getIconWidth() / originalIcon.getIconHeight();
-            int newWidth = (int) (150 * aspectRatio);
-            Image scaledImage = originalIcon.getImage().getScaledInstance(newWidth, 150, Image.SCALE_SMOOTH);
-
-            JLabel itemImageLabel = new JLabel(new ImageIcon(scaledImage));
-            itemImageLabel.setOpaque(false);
-            itemPanel.add(itemImageLabel);
-        }
-
-        // 아이템 이름 추가
-        JLabel itemNameLabel = new JLabel(name);
-        itemNameLabel.setOpaque(false);
-        itemNameLabel.setHorizontalAlignment(JLabel.CENTER);
-        itemPanel.add(itemNameLabel);
-    }
-
-
     public void updateItemPanel(JPanel panel) {
-        panel.removeAll(); // 기존 아이템 제거
-        addItemsToPanel(panel); // 새로운 아이템 추가
-        panel.revalidate(); // 패널 재검증
-        panel.repaint(); // 패널 재페인팅
+        panel.removeAll();
+        addItemsToPanel(panel);
+        panel.revalidate();
+        panel.repaint();
     }
-
 }

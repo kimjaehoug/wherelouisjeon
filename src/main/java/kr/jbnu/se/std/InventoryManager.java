@@ -14,6 +14,7 @@ public class InventoryManager {
 
     private OkHttpClient client = new OkHttpClient();
     private String email;
+    private String inventoryImage;
     private String idToken;
     private Set<String> receivedMessageKeysF = new HashSet<>();
     private InventoryWindow inventoryWindow;
@@ -118,12 +119,13 @@ public class InventoryManager {
                     for (String key : jsonResponse.keySet()) {
                         JSONObject inventoryData = jsonResponse.getJSONObject(key);
                         String inventory = inventoryData.getString("item");
-                        String inventoryImage;
 
                         if ("더블배럴샷건".equals(inventory)) {
-                            inventoryImage = "src/main/resources/images/duck.png";
-                        } else {
-                            inventoryImage = "";
+                            inventoryImage = "src/main/resources/images/gun_01.png";
+                        }else if("AK-47".equals(inventory)) {
+                            inventoryImage = "src/main/resources/images/gun_02.png";
+                        }else if("핸드건".equals(inventory)) {
+                            inventoryImage = "src/main/resources/images/gun_03.png";
                         }
 
                         if (!receivedMessageKeysF.contains(key)) {
