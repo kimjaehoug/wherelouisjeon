@@ -16,7 +16,6 @@ import java.awt.event.FocusEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-
 public class LoginClient extends JFrame {
 
     private JTextField idField;
