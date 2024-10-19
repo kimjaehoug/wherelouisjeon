@@ -2,8 +2,6 @@ package kr.jbnu.se.std;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.border.EmptyBorder;
 
 public class ShopWindow extends JFrame {
@@ -75,20 +73,25 @@ public class ShopWindow extends JFrame {
 
         // 상점 나가기 버튼
         JButton exitButton = new JButton();
-        ImageIcon exitIcon = new ImageIcon("src/main/resources/images/btn_X.png");
-        ImageIcon exitPressIcon = new ImageIcon("src/main/resources/images/btn_X_press.png");
+        ImageIcon exitIcon = new ImageIcon("src/main/resources/images/btn_X2.png");
+        ImageIcon exitPressIcon = new ImageIcon("src/main/resources/images/btn_X2_press.png");
 
         int buttonWidth = 70;
         int buttonHeight = (int) (70 * (117.0 / 120)); // 비율 맞춤
         exitButton.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
 
         Image scaledExitImage = exitIcon.getImage().getScaledInstance(buttonWidth, buttonHeight, Image.SCALE_SMOOTH);
-        Image scaledPressImage = exitPressIcon.getImage().getScaledInstance(buttonWidth, buttonHeight, Image.SCALE_SMOOTH);
+        Image scaledExitPressImage = exitPressIcon.getImage().getScaledInstance(buttonWidth, buttonHeight, Image.SCALE_SMOOTH);
+
+        exitButton.setContentAreaFilled(false);
+        exitButton.setBorderPainted(false);
+        exitButton.setFocusPainted(false);
+        exitButton.setMargin(new Insets(0, 0, 0, 0));
 
         exitButton.setIcon(new ImageIcon(scaledExitImage));
         exitButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                exitButton.setIcon(new ImageIcon(scaledPressImage));
+                exitButton.setIcon(new ImageIcon(scaledExitPressImage));
             }
 
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -142,14 +145,22 @@ public class ShopWindow extends JFrame {
         // 버튼 패널
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
-        ImageIcon prevIcon = new ImageIcon("src/main/resources/images/btn_left.png");
-        ImageIcon nextIcon = new ImageIcon("src/main/resources/images/btn_right.png");
+        ImageIcon prevIcon = new ImageIcon("src/main/resources/images/btn_left2.png");
+        ImageIcon nextIcon = new ImageIcon("src/main/resources/images/btn_right2.png");
+        ImageIcon prevPressIcon = new ImageIcon("src/main/resources/images/btn_left2_press.png");
+        ImageIcon nextPressIcon = new ImageIcon("src/main/resources/images/btn_right2_press.png");
 
         Image scaledPrevImage = prevIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         Image scaledNextImage = nextIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 
         JButton prevButton = new JButton(new ImageIcon(scaledPrevImage));
         JButton nextButton = new JButton(new ImageIcon(scaledNextImage));
+
+        prevButton.setPreferredSize(new Dimension(50, 50));
+        nextButton.setPreferredSize(new Dimension(50, 50));
+
+        setButtonProperties(prevButton, new ImageIcon(scaledPrevImage), new ImageIcon(prevPressIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
+        setButtonProperties(nextButton, new ImageIcon(scaledNextImage), new ImageIcon(nextPressIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
 
         prevButton.setContentAreaFilled(false);
         prevButton.setBorderPainted(false);
@@ -215,6 +226,25 @@ public class ShopWindow extends JFrame {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
         }
+    }
+
+    private void setButtonProperties(JButton button, ImageIcon defaultIcon, ImageIcon pressedIcon) {
+        button.setIcon(defaultIcon);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setMargin(new Insets(0, 0, 0, 0));
+
+        // 마우스 리스너 추가
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                button.setIcon(pressedIcon); // 눌렸을 때 아이콘 변경
+            }
+
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                button.setIcon(defaultIcon); // 놓았을 때 원래 아이콘으로 복구
+            }
+        });
     }
 
     public void setNickname(String nickname) {

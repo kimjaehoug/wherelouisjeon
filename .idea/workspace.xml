@@ -5,41 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="shop">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_X.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_X_press.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/gun_01.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/gun_02.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/gun_03.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/gun_04.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/gun_05.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/gun_06.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/gun_07.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/gun_08.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/gun_09.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/paper_rectangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/paper_square.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/signboard.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_X2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_complete.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_complete_press.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_left2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_left2_press.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_right2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/btn_right2_press.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/LoginClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/LoginClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/images/btn_X.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/btn_X.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/images/btn_X_press.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/btn_X2_press.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/images/paper_rectangle.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/paper_rectangle.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/images/paper_square.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/paper_square.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/images/signboard.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/signboard.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/images/btn_X.png" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/images/btn_X.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/images/btn_X_press.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/images/paper_rectangle.png" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/images/paper_rectangle.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/images/paper_square.png" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/images/paper_square.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/images/signboard.png" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/images/signboard.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$10.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$11.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$12.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$13.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$6.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$7.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$8.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$9.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$ImagePanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$ImagePanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$BackgroundPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$BackgroundPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$OuterPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$OuterPanel.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -53,6 +45,9 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="origin/yewon111" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -241,6 +236,7 @@
       <workItem from="1729140858138" duration="163000" />
       <workItem from="1729147266365" duration="1469000" />
       <workItem from="1729170959844" duration="12878000" />
+      <workItem from="1729216970837" duration="10350000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -400,7 +396,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="frontend" />
+                        <option value="origin/frontend" />
                       </list>
                     </value>
                   </entry>
@@ -423,6 +419,7 @@
     <MESSAGE value="yw" />
     <MESSAGE value="dafsdasdf" />
     <MESSAGE value="shop" />
-    <option name="LAST_COMMIT_MESSAGE" value="shop" />
+    <MESSAGE value="shop&amp;inventory" />
+    <option name="LAST_COMMIT_MESSAGE" value="shop&amp;inventory" />
   </component>
 </project>
