@@ -1,0 +1,19 @@
+<changelist name="Uncommitted_changes_before_Update_at_2024-10-19_오후_5_03_[Changes]1" date="1729325074096" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-10-19_오후_5_03_[Changes]1/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 2024-10-19 오후 5:03 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Game$1.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/Game$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-10-19_오후_5_03_[Changes]1/Game$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/BossAttack.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/BossAttack.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-10-19_오후_5_03_[Changes]1/BossAttack.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Game.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/Game.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-10-19_오후_5_03_[Changes]1/Game.class" />
+  </binary>
+</changelist>
