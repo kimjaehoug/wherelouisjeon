@@ -129,6 +129,7 @@ public class Framework extends Canvas {
     private InviteFriends inviteFriends;
     private ShopWindow shopWindow;
     private InventoryWindow inventoryWindow;
+    private RankWindow rankWindow;
     private String inventoryimage;
     private String whatgun;
     public FirebaseClient firebaseClient;
@@ -199,10 +200,16 @@ public class Framework extends Canvas {
         shopWindow = null;
     }
 
+    public void stoprank() { rankWindow = null; }
+
     public void stopmain(){
         MainV2 = null;
     }
 
+    public void RankWindow(){
+        RankWindow rankWindow = new RankWindow();
+        rankWindow.setVisible(true);
+    }
 
     public void Shopwindowopen(){
         shopWindow = new ShopWindow(this);
