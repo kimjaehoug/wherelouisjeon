@@ -30,9 +30,18 @@ public class MainClient extends JFrame {
         setResizable(false);
         setLayout(new BorderLayout());
 
-        // 상단 패널에 GridLayout 설정 (1행 3열)
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new GridLayout(1, 3, 10, 0)); // 1행 3열, 수평 간격 10
+        // 상단 패널 배경 이미지 설정
+        ImageIcon UpBackgroundIcon = new ImageIcon("src/main/resources/images/background_sky.png");
+
+        JPanel topPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // JPanel의 크기에 맞게 이미지를 조정하여 그리기
+                g.drawImage(UpBackgroundIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        topPanel.setLayout(new GridLayout(1, 4, 10, 0)); // 1행 4열, 수평 간격 10
 
         // 게임 시작 버튼 추가
         JButton startButton = new JButton();
@@ -228,10 +237,17 @@ public class MainClient extends JFrame {
         add(topPanel, BorderLayout.NORTH);
 
         // 프로필 패널
-        JPanel profilePanel = new JPanel();
+        JPanel profilePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // 프로필 패널의 크기에 맞게 이미지를 조정하여 그리기
+                g.drawImage(UpBackgroundIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         profilePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        // 프로필 사진
+// 프로필 사진
         ImageIcon profileIcon = new ImageIcon("src/main/resources/images/profile.png"); // 프로필 이미지 불러오기
         Image profileImg = profileIcon.getImage(); // ImageIcon을 Image 객체로 변환
         Image scaledProfileImg = profileImg.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // 크기를 100x100으로 조정
@@ -239,19 +255,28 @@ public class MainClient extends JFrame {
         JLabel profileImage = new JLabel(scaledProfileIcon); // 크기 조정된 프로필 이미지 추가
         profilePanel.add(profileImage); // 프로필 사진 추가
 
-        // 이름과 자기소개 패널
+// 이름과 자기소개 패널
         JPanel namePanel = new JPanel();
         namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS)); // 세로로 정렬
+        namePanel.setOpaque(false); // 배경을 투명하게 설정
+
         nameLabel = new JLabel("이름: " + nickname); // 이름 레이블
+        nameLabel.setForeground(Color.BLACK); // 글자 색상 설정 (배경과 대비되게)
+
         JLabel introLabel = new JLabel("자기소개 한줄");
+        introLabel.setForeground(Color.BLACK); // 글자 색상 설정 (배경과 대비되게)
+
         moneyLabel = new JLabel("DP : ");
+        moneyLabel.setForeground(Color.BLACK); // 글자 색상 설정 (배경과 대비되게)
+
         namePanel.add(nameLabel);
         namePanel.add(introLabel);
         namePanel.add(moneyLabel);
         profilePanel.add(namePanel); // 프로필 패널에 추가
 
+
         topPanel.add(profilePanel, BorderLayout.EAST); // 오른쪽에 추가
-        add(topPanel, BorderLayout.NORTH); // 상단에 추가
+
 
         // 중앙 패널
         JPanel centerPanel = new JPanel();
@@ -273,10 +298,17 @@ public class MainClient extends JFrame {
 
         // 채팅창 배경 이미지 설정
         ImageIcon chatBackgroundIcon = new ImageIcon("src/main/resources/images/background_chat.png");
-        JLabel chatBackgroundLabel = new JLabel(chatBackgroundIcon);
+        JLabel chatBackgroundLabel = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // JLabel의 크기에 맞게 이미지를 조정하여 그리기
+                g.drawImage(chatBackgroundIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         chatBackgroundLabel.setLayout(new BorderLayout());
-        chatBackgroundLabel.setPreferredSize(new Dimension(1047, 468));
         chatBackgroundLabel.add(chatScroll, BorderLayout.CENTER); // 중앙에 추가
+
 
         centerPanel.add(chatBackgroundLabel, BorderLayout.CENTER); // 중앙에 추가
 
@@ -301,9 +333,17 @@ public class MainClient extends JFrame {
 
         // 친구 목록 배경 이미지 설정
         ImageIcon friendBackgroundIcon = new ImageIcon("src/main/resources/images/background_friend.png");
-        JLabel friendsBackgroundLabel = new JLabel(friendBackgroundIcon);
+        JLabel friendsBackgroundLabel = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // JLabel의 크기에 맞게 이미지를 조정하여 그리기
+                g.drawImage(friendBackgroundIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         friendsBackgroundLabel.setLayout(new BorderLayout());
         friendsBackgroundLabel.setPreferredSize(new Dimension(195, 468));
+
 
         // 친구 목록 스크롤 패널
         friendsScroll.setOpaque(false);  // 스크롤 패널도 투명하게
@@ -331,6 +371,7 @@ public class MainClient extends JFrame {
         // 버튼 패널 (전송 버튼과 친구 추가 버튼을 포함)
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
 
         // 전송 버튼
         JButton sendButton = new JButton();
@@ -370,9 +411,6 @@ public class MainClient extends JFrame {
 
         // 버튼에 조정된 이미지 아이콘 설정
         sendButton.setIcon(sendScaledIcon);
-        // 친구 추가 버튼
-        JButton addFriendButton = new JButton("친구 추가");
-        buttonPanel.add(addFriendButton); // 버튼 패널에 친구 추가 버튼 추가
 
         // 버튼 눌림 효과를 위한 마우스 리스너 추가
         sendButton.addMouseListener(new MouseAdapter() {
@@ -397,6 +435,64 @@ public class MainClient extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 // 마우스 릴리즈 시에는 아무 동작도 하지 않도록 설정
+            }
+        });
+
+
+        // 친구 추가 버튼
+        JButton addFriendButton = new JButton("친구 추가");
+        addFriendButton.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0)); // 왼쪽에 5픽셀의 여백 추가
+        buttonPanel.add(addFriendButton); // 버튼 패널에 친구 추가 버튼 추가
+        addFriendButton.setPreferredSize(new Dimension(100, 50)); // 버튼 크기 설정
+        addFriendButton.setFocusable(false); // 포커스 비활성화
+        addFriendButton.setBackground(Color.LIGHT_GRAY); // 배경색 설정 (이미지 외의 영역에 적용)
+        addFriendButton.setBorderPainted(false); // 테두리 제거
+        addFriendButton.setContentAreaFilled(false); // 버튼 내용 영역 비움 (이미지만 표시)
+        buttonPanel.add(addFriendButton); // 버튼 패널에 전송 버튼 추가
+
+        // 원본 이미지 아이콘 생성
+        ImageIcon addFriIcon = new ImageIcon("src/main/resources/images/btn_addFriend.png");
+        ImageIcon addFriPressIcon = new ImageIcon("src/main/resources/images/btn_addFriend.png");
+        // 원본 이미지 크기
+        int addFriOriginalWidth = addFriIcon.getIconWidth();
+        int addFriOriginalHeight = addFriPressIcon.getIconHeight();
+
+        // 버튼 크기
+        int addFriButtonWidth = addFriendButton.getPreferredSize().width;
+        int addFriButtonHeight = addFriendButton.getPreferredSize().height;
+
+        // 이미지 비율을 유지하면서 버튼 크기에 맞게 조정
+        double addFriWidthRatio = (double) addFriButtonWidth / addFriOriginalWidth;
+        double addFriHeightRatio = (double) addFriButtonHeight / addFriOriginalHeight;
+        double addFriScaleFactor = Math.min(addFriWidthRatio, addFriHeightRatio); // 비율 유지하며 맞춤
+
+        int addFriScaledWidth = (int) (addFriOriginalWidth * addFriScaleFactor);
+        int addFriScaledHeight = (int) (addFriOriginalHeight * addFriScaleFactor);
+
+        // 이미지 크기 조정
+        Image addFriScaledImage = addFriIcon.getImage().getScaledInstance(
+                addFriScaledWidth,
+                addFriScaledHeight,
+                Image.SCALE_SMOOTH
+        );
+        ImageIcon addFriScaledIcon = new ImageIcon(addFriScaledImage);
+
+        // addFriendButton에 조정된 이미지 아이콘 설정
+        addFriendButton.setIcon(addFriScaledIcon);
+
+// 버튼 눌림 효과를 위한 마우스 리스너 추가
+        addFriendButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // 눌린 상태의 이미지로 변경
+                Image pressedAddFriImage = addFriPressIcon.getImage().getScaledInstance(addFriScaledWidth, addFriScaledHeight, Image.SCALE_SMOOTH);
+                addFriendButton.setIcon(new ImageIcon(pressedAddFriImage));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // 원래 이미지로 복원
+                addFriendButton.setIcon(addFriScaledIcon);
             }
         });
 
