@@ -237,10 +237,17 @@ public class MainClient extends JFrame {
         add(topPanel, BorderLayout.NORTH);
 
         // 프로필 패널
-        JPanel profilePanel = new JPanel();
+        JPanel profilePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // 프로필 패널의 크기에 맞게 이미지를 조정하여 그리기
+                g.drawImage(UpBackgroundIcon.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         profilePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        // 프로필 사진
+// 프로필 사진
         ImageIcon profileIcon = new ImageIcon("src/main/resources/images/profile.png"); // 프로필 이미지 불러오기
         Image profileImg = profileIcon.getImage(); // ImageIcon을 Image 객체로 변환
         Image scaledProfileImg = profileImg.getScaledInstance(100, 100, Image.SCALE_SMOOTH); // 크기를 100x100으로 조정
@@ -248,19 +255,28 @@ public class MainClient extends JFrame {
         JLabel profileImage = new JLabel(scaledProfileIcon); // 크기 조정된 프로필 이미지 추가
         profilePanel.add(profileImage); // 프로필 사진 추가
 
-        // 이름과 자기소개 패널
+// 이름과 자기소개 패널
         JPanel namePanel = new JPanel();
         namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS)); // 세로로 정렬
+        namePanel.setOpaque(false); // 배경을 투명하게 설정
+
         nameLabel = new JLabel("이름: " + nickname); // 이름 레이블
+        nameLabel.setForeground(Color.BLACK); // 글자 색상 설정 (배경과 대비되게)
+
         JLabel introLabel = new JLabel("자기소개 한줄");
+        introLabel.setForeground(Color.BLACK); // 글자 색상 설정 (배경과 대비되게)
+
         moneyLabel = new JLabel("DP : ");
+        moneyLabel.setForeground(Color.BLACK); // 글자 색상 설정 (배경과 대비되게)
+
         namePanel.add(nameLabel);
         namePanel.add(introLabel);
         namePanel.add(moneyLabel);
         profilePanel.add(namePanel); // 프로필 패널에 추가
 
+
         topPanel.add(profilePanel, BorderLayout.EAST); // 오른쪽에 추가
-        add(topPanel, BorderLayout.NORTH); // 상단에 추가
+
 
         // 중앙 패널
         JPanel centerPanel = new JPanel();
