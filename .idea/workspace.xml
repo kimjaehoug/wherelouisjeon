@@ -4,20 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="131313">
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="main">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$19.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$12.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$13.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,10 +19,13 @@
       </list>
     </option>
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="origin/yewon111" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Chat+mainFROnt" />
+        <entry key="$PROJECT_DIR$" value="chatwithFriends" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -48,11 +39,14 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/kimjaehoug/wherelouisjeon.git&quot;,
-    &quot;accountId&quot;: &quot;a44d6209-844a-4745-82f7-f6385177c124&quot;
+    &quot;accountId&quot;: &quot;c6ecef48-6dfd-4d4c-97ed-658986e97146&quot;
   }
 }</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -75,9 +69,9 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;yewon111&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/jae/Downloads/shoottheduck&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/t0106/IdeaProjects/frontend/src/main/resources/images&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -87,18 +81,22 @@
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;profiler.calltree.filter&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;애플리케이션.Window.executor&quot;: &quot;Run&quot;,
+    &quot;애플리케이션.Window2222.executor&quot;: &quot;Run&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\t0106\IdeaProjects\frontend\src\main\resources\images" />
       <recent name="D:\70.Classes\2024-2\source_code_analysis\shoottheduck\src\main\resources" />
       <recent name="D:\70.Classes\2024-2\source_code_analysis\shoottheduck\src\main\java" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/resources/images" />
-      <recent name="$PROJECT_DIR$/src/main/resources/sounds" />
+      <recent name="C:\Users\hello\IdeaProjects\wherelouisjeon\src\main\resources\images" />
+      <recent name="C:\Users\t0106\IdeaProjects\frontend\src\main\resources\images" />
       <recent name="$PROJECT_DIR$/src/main" />
+      <recent name="$PROJECT_DIR$/src/main/resources/images" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Window2222">
@@ -107,7 +105,7 @@
       <module name="shoottheduck" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.jbnu.se.std.MultiPlayer.*" />
+          <option name="PATTERN" value="kr.jbnu.se.std.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -120,7 +118,7 @@
       <module name="shoottheduck" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.jbnu.se.std.MultiPlayer.*" />
+          <option name="PATTERN" value="kr.jbnu.se.std.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -133,7 +131,7 @@
       <module name="shoottheduck" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.jbnu.se.std.MultiPlayer.*" />
+          <option name="PATTERN" value="kr.jbnu.se.std.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -153,7 +151,7 @@
       <module name="shoottheduck" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="kr.jbnu.se.std.MultiPlayer.*" />
+          <option name="PATTERN" value="kr.jbnu.se.std.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -162,27 +160,23 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Window" />
       <item itemvalue="Application.MainClient" />
       <item itemvalue="Application.MainV2" />
       <item itemvalue="Application.ShopWindow" />
+      <item itemvalue="Application.Window" />
       <item itemvalue="Application.Window2222" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Window2222" />
-        <item itemvalue="Application.MainV2" />
-        <item itemvalue="Application.ShopWindow" />
-        <item itemvalue="Application.MainClient" />
-        <item itemvalue="Application.Window" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
-        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
       </set>
     </attachedChunks>
   </component>
@@ -204,12 +198,20 @@
       <workItem from="1727776036881" duration="31242000" />
       <workItem from="1727875707906" duration="28902000" />
       <workItem from="1728066880239" duration="8135000" />
-      <workItem from="1728357407136" duration="20461000" />
-      <workItem from="1728822405134" duration="5605000" />
-      <workItem from="1728889652442" duration="37652000" />
-      <workItem from="1729054707457" duration="10617000" />
-      <workItem from="1729069599398" duration="4970000" />
-      <workItem from="1729323809352" duration="3878000" />
+      <workItem from="1728351301726" duration="1133000" />
+      <workItem from="1728360254741" duration="5558000" />
+      <workItem from="1728367895036" duration="43000" />
+      <workItem from="1728374283095" duration="2948000" />
+      <workItem from="1728447211872" duration="2592000" />
+      <workItem from="1728915215594" duration="8323000" />
+      <workItem from="1728973072991" duration="1491000" />
+      <workItem from="1729054821019" duration="28548000" />
+      <workItem from="1729140858138" duration="163000" />
+      <workItem from="1729147266365" duration="1469000" />
+      <workItem from="1729170959844" duration="12878000" />
+      <workItem from="1729216970837" duration="12022000" />
+      <workItem from="1729326624350" duration="424000" />
+      <workItem from="1729415845468" duration="323000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -339,77 +341,58 @@
       <option name="project" value="LOCAL" />
       <updated>1728279465226</updated>
     </task>
-    <task id="LOCAL-00017" summary="131313">
+    <task id="LOCAL-00017" summary="shop">
       <option name="closed" value="true" />
-      <created>1728363801963</created>
+      <created>1728918328175</created>
       <option name="number" value="00017" />
       <option name="presentableId" value="LOCAL-00017" />
       <option name="project" value="LOCAL" />
-      <updated>1728363801963</updated>
+      <updated>1728918328176</updated>
     </task>
-    <task id="LOCAL-00018" summary="131313">
+    <task id="LOCAL-00018" summary="shop&amp;inventory">
       <option name="closed" value="true" />
-      <created>1728462444356</created>
+      <created>1729319105179</created>
       <option name="number" value="00018" />
       <option name="presentableId" value="LOCAL-00018" />
       <option name="project" value="LOCAL" />
-      <updated>1728462444356</updated>
+      <updated>1729319105179</updated>
     </task>
-    <task id="LOCAL-00019" summary="131313">
+    <task id="LOCAL-00019" summary="shop&amp;inventory">
       <option name="closed" value="true" />
-      <created>1728800544817</created>
+      <created>1729319125651</created>
       <option name="number" value="00019" />
       <option name="presentableId" value="LOCAL-00019" />
       <option name="project" value="LOCAL" />
-      <updated>1728800544817</updated>
+      <updated>1729319125651</updated>
     </task>
-    <task id="LOCAL-00020" summary="131313">
+    <task id="LOCAL-00020" summary="boss_lv5">
       <option name="closed" value="true" />
-      <created>1728915363555</created>
+      <created>1729349332545</created>
       <option name="number" value="00020" />
       <option name="presentableId" value="LOCAL-00020" />
       <option name="project" value="LOCAL" />
-      <updated>1728915363555</updated>
+      <updated>1729349332545</updated>
     </task>
-    <task id="LOCAL-00021" summary="131313">
+    <task id="LOCAL-00021" summary="main">
       <option name="closed" value="true" />
-      <created>1728915375265</created>
+      <created>1729356455606</created>
       <option name="number" value="00021" />
       <option name="presentableId" value="LOCAL-00021" />
       <option name="project" value="LOCAL" />
-      <updated>1728915375265</updated>
+      <updated>1729356455606</updated>
     </task>
-    <task id="LOCAL-00022" summary="131313">
-      <option name="closed" value="true" />
-      <created>1728999106644</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1728999106644</updated>
-    </task>
-    <task id="LOCAL-00023" summary="131313">
-      <option name="closed" value="true" />
-      <created>1729055917408</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1729055917408</updated>
-    </task>
-    <task id="LOCAL-00024" summary="131313">
-      <option name="closed" value="true" />
-      <created>1729324804828</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1729324804828</updated>
-    </task>
-    <option name="localTasksCounter" value="25" />
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="d5bb0426-8fb1-4fdf-86b2-1b3f25c8abf6" value="TOOL_WINDOW" />
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -429,13 +412,23 @@
             </State>
           </value>
         </entry>
+        <entry key="d5bb0426-8fb1-4fdf-86b2-1b3f25c8abf6">
+          <value>
+            <State />
+          </value>
+        </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="loginfunction" />
-    <MESSAGE value="yw" />
     <MESSAGE value="131313" />
-    <option name="LAST_COMMIT_MESSAGE" value="131313" />
+    <MESSAGE value="yw" />
+    <MESSAGE value="dafsdasdf" />
+    <MESSAGE value="shop" />
+    <MESSAGE value="shop&amp;inventory" />
+    <MESSAGE value="boss_lv5" />
+    <MESSAGE value="main" />
+    <option name="LAST_COMMIT_MESSAGE" value="main" />
   </component>
 </project>
