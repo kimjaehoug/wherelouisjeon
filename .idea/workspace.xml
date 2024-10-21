@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="ending">
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="GAMEOVER">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -218,6 +218,7 @@
       <workItem from="1729488194780" duration="43000" />
       <workItem from="1729488946598" duration="48000" />
       <workItem from="1729494495119" duration="106000" />
+      <workItem from="1729510725786" duration="57000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -435,7 +436,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729494523532</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="GAMEOVER">
+      <option name="closed" value="true" />
+      <created>1729510764140</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1729510764140</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -486,6 +495,7 @@
     <MESSAGE value="fireball" />
     <MESSAGE value="fire / giftbox" />
     <MESSAGE value="ending" />
-    <option name="LAST_COMMIT_MESSAGE" value="ending" />
+    <MESSAGE value="GAMEOVER" />
+    <option name="LAST_COMMIT_MESSAGE" value="GAMEOVER" />
   </component>
 </project>
