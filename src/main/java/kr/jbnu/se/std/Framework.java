@@ -946,13 +946,6 @@ public class Framework extends Canvas {
                     int x1 = (frameWidth - shootTheDuckMenuImg.getWidth()) / 2;
                     int y1 = (frameHeight - shootTheDuckMenuImg.getHeight()) / 2;
                     g2d.drawImage(shootTheDuckMenuImg, x1, y1, null);
-                    g2d.drawString("Nickname :" + nickname, frameWidth / 2 - 83, (int) (frameHeight * 0.61));
-                    // 나머지 텍스트는 화면 중앙에 맞게 배치합니다.
-                    g2d.drawString("Use left mouse button to shot the duck.", frameWidth / 2 - 83, (int) (frameHeight * 0.65));
-                    g2d.drawString("Click with left mouse button to start the game.", frameWidth / 2 - 100, (int) (frameHeight * 0.67));
-                    g2d.drawString("Press ESC any time to exit the game.", frameWidth / 2 - 75, (int) (frameHeight * 0.70));
-                    g2d.setColor(Color.white);
-                    g2d.drawString("WWW.GAMETUTORIAL.NET", 7, frameHeight - 5);
                     break;
                 case OPTIONS:
                     //...
