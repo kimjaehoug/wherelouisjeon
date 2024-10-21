@@ -1,6 +1,7 @@
 package kr.jbnu.se.std;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,18 +38,21 @@ public class Game {
     int giftBoxInterval = getRandomInterval(minInterval, maxInterval); // 랜덤 간격
     private Clip clip;
     private Clip clipbg;
+    public int ed = 0;
     private boolean isPause = false;
     private int Round;
     private boolean isBossAlive;
     private Duck[] hunterSelectedDucks;
     private Duck[] FireSelectedDucks;
     private Duck[] playerSelectedDucks;
-    private int ammo;          // 현재 사용 가능한 총알
+    private int ammo;// 현재 사용 가능한 총알
+    boolean ending = true;
     private int maxAmmo;       // 한 번에 장전할 수 있는 최대 탄약 수
     private boolean isReloading; // 장전 중인지 여부
     private long reloadStartTime; // 장전이 시작된 시간
     private long reloadDuration;  // 장전 시간 (예: 2초)
     private URL hpUrl;
+    private long endingStartTime = -1; // 엔딩이 시작된 시간을 저장하는 변수
     private int selectduck;
     private ScheduledExecutorService hunterExecutor;
     private ScheduledExecutorService FireExecutor;
@@ -59,8 +63,11 @@ public class Game {
      * Font that we will use to write statistic to the screen.
      */
     private Font font;
+    private BufferedImage gameoverImg;
     boolean hunterTrigger = true;
     private int damage;
+    private long lastClickTime = 0; // 마지막으로 클릭한 시간
+    private final long clickDelay = 1000; // 클릭 사이의 최소 간격 (밀리초)
     private BufferedImage bossImg;
     private BufferedImage boss2Img;
     private BufferedImage boss3Img;
@@ -75,7 +82,9 @@ public class Game {
     private BufferedImage warningImg;
     private BufferedImage[] hpImages = new BufferedImage[12];
     private BufferedImage[] shopImages = new BufferedImage[4];// HP 이미지를 저장할 배열
+    private BufferedImage[] endingImages = new BufferedImage[4];
     private int duckspeed;
+
         /**
      * Array list of the ducks.
      */
@@ -259,10 +268,28 @@ public class Game {
                 }
             }
 
+            for (int i = 1; i < 4; i++) { // 0부터 11까지 반복
+                try {
+                    // 이미지 경로를 생성
+                    URL ending = this.getClass().getResource("/images/ending_" + i + ".png");
+
+                    // URL이 null이 아닐 경우에만 이미지 읽기
+                    if (ending != null) {
+                        endingImages[i] = ImageIO.read(ending);
+                    } else {
+                        System.out.println("Image not found: /images/shop" + i + ".png");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace(); // IOException 처리
+                }
+            }
 
 
             URL hunterimg = this.getClass().getResource("/images/hunterrrrr.png");
             hunter111Img = ImageIO.read(hunterimg);
+
+            URL gameoverimg = this.getClass().getResource("/images/gameover.png");
+            gameoverImg = ImageIO.read(gameoverimg);
 
 
             URL Buttonimg = this.getClass().getResource("/images/btn_buy.png");
@@ -1033,7 +1060,7 @@ public class Game {
         }
         if(!isPause) {
             int maxGiftBoxes = 1;
-            int Random = 1+(int)(Math.random()*100);
+            int Random = 1+(int)(Math.random()*1000);
         // Creates a new duck, if it's the time, and add it to the array list.
             // 랜덤한 간격으로 선물 상자를 생성
             if (System.nanoTime() - lastGiftBoxTime >= giftBoxInterval * 1_000_000) {
@@ -1151,6 +1178,7 @@ public class Game {
                 Bosswith3delay = true;
                 isBossAlive = true; // 보스가 등장했음을 표시
                 System.out.println("boss activity");
+                endingStartTime = System.nanoTime();
                 ducks.clear();
             }
             Duck.lastDuckTime = System.nanoTime();
@@ -1238,6 +1266,7 @@ public class Game {
                                     if (Round == 5) {
                                         Framework.gameState = Framework.GameState.ENDING;
                                         stopBackgroundMusic();
+                                        endingStartTime = System.currentTimeMillis();
                                         framework.saveScore(score);
                                         framework.saveScore(score);
                                         leaderboardSaved = true;
@@ -1335,11 +1364,11 @@ public class Game {
             }else if(Round == 2){
                 boss.add(new boss1(1200,400,0,1500, 400,boss2Img));
             }else if(Round == 3){
-                boss.add(new boss1(1200,400, 0, 2000, 800,boss3Img));
+                boss.add(new boss1(1200,400, 0, 2000, 2500,boss3Img));
             }else if(Round == 4){
-                boss.add(new boss1(1200,400,0,3000, 1600, boss4Img));
+                boss.add(new boss1(1200,400,0,3000, 6400, boss4Img));
             }else if(Round == 5){
-                boss.add(new boss1(1200,400,0,4000, 3200, boss5Img));
+                boss.add(new boss1(1200,400,0,4000, 12000, boss5Img));
             }
             stopBackgroundMusic();
             if(Round == 1) {
@@ -1536,23 +1565,19 @@ public class Game {
     public void DrawGameOver(Graphics2D g2d, Point mousePosition)
     {
         Draw(g2d, mousePosition);
-        
+        g2d.drawImage(gameoverImg, 0,0,Framework.frameWidth,Framework.frameHeight, null);
         // The first text is used for shade.
-        g2d.setColor(Color.black);
-        g2d.drawString("kr.jbnu.se.std.Game Over", Framework.frameWidth / 2 - 39, (int)(Framework.frameHeight * 0.65) + 1);
+        g2d.setColor(Color.RED);
+        g2d.setFont(font);
+        g2d.drawString("Game OVER", Framework.frameWidth / 2 - 39, (int)(Framework.frameHeight * 0.65) + 1);
         g2d.drawString("Press space or enter to restart.", Framework.frameWidth / 2 - 149, (int)(Framework.frameHeight * 0.70) + 1);
-        g2d.setColor(Color.red);
-        g2d.drawString("kr.jbnu.se.std.Game Over", Framework.frameWidth / 2 - 40, (int)(Framework.frameHeight * 0.65));
-        g2d.drawString("Press space or enter to restart.", Framework.frameWidth / 2 - 150, (int)(Framework.frameHeight * 0.70));
     }
-    public void DrawEnding(Graphics2D g2d, Point mousePosition) {
-        Draw(g2d, mousePosition);
-        // 배경 화면 설정 (엔딩 전용 배경 이미지가 있다면 해당 이미지로 설정)
-        g2d.drawImage(backgroundImg, 0, 0, Framework.frameWidth, Framework.frameHeight, null);
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(() -> {
-            g2d.drawImage(backgroundImg, 0, 0, Framework.frameWidth, Framework.frameHeight, null);
-        }, 1500, TimeUnit.SECONDS);
+    public void DrawEnding(Graphics2D g2d, Point mousePosition, long gameTime) {
+        // 배경화면 설정 (엔딩 전용 배경 이미지)
+            g2d.drawImage(endingImages[ed], 0, 0, Framework.frameWidth-50, Framework.frameHeight-50, null);
+    }
+    public void NextEnding(){
+        ed++;
     }
 
     public int getScore(){

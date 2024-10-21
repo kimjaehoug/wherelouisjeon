@@ -863,6 +863,8 @@ public class Framework extends Canvas {
                     lastTime = System.nanoTime();
                     break;
                 case GAMEOVER:
+                    gameTime += System.nanoTime() - lastTime;
+                    lastTime = System.nanoTime();
                     break;
                 case LOGIN:
                     if (isLoginSuccessful) {
@@ -928,7 +930,7 @@ public class Framework extends Canvas {
     public void Draw(Graphics2D g2d) {
             switch (gameState) {
                 case ENDING:
-                    game.DrawEnding(g2d, mousePosition());
+                    game.DrawEnding(g2d, mousePosition(),gameTime);
                     break;
                 case Pause:
                     game.Draw(g2d, mousePosition());
@@ -1035,7 +1037,10 @@ public class Framework extends Canvas {
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
                     System.exit(0);
                 }
-                    break;
+                if(e.getKeyCode() == KeyEvent.VK_SPACE){
+                    game.ed++;
+                }
+                break;
             case Pause:
                 if(e.getKeyCode() == KeyEvent.VK_SPACE){
                     nextRoundGame();
