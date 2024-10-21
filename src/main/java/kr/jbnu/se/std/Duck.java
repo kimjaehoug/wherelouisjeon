@@ -122,6 +122,16 @@ public class Duck implements Serializable {
         this.isAlive = false;
     }
 
+    // 속도를 변경하는 메서드
+    public void setSpeed(int newSpeed) {
+        this.speed = newSpeed;
+    }
+
+    // 현재 속도를 반환하는 메서드 (필요한 경우)
+    public int getSpeed() {
+        return this.speed;
+    }
+
     public boolean isAlive() {
         return isAlive;
     }

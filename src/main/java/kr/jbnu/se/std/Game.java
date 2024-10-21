@@ -30,6 +30,11 @@ public class Game {
      * We use this to generate a random number.
      */
     private Random random;
+    List<GiftBox> giftBoxes = new ArrayList<>();
+    long lastGiftBoxTime = 0;
+    int minInterval = 3000; // 최소 간격 3초
+    int maxInterval = 10000; // 최대 간격 10초
+    int giftBoxInterval = getRandomInterval(minInterval, maxInterval); // 랜덤 간격
     private Clip clip;
     private Clip clipbg;
     private boolean isPause = false;
@@ -67,8 +72,8 @@ public class Game {
     private BufferedImage warningImg;
     private BufferedImage[] hpImages = new BufferedImage[12];
     private BufferedImage[] shopImages = new BufferedImage[4];// HP 이미지를 저장할 배열
-
-    /**
+    private int duckspeed;
+        /**
      * Array list of the ducks.
      */
     private ArrayList<Duck> ducks;
@@ -111,7 +116,9 @@ public class Game {
      * The time which must elapse between shots.
      */
     private long timeBetweenShots;
-
+    private BufferedImage giftBoxImg1;
+    private BufferedImage giftBoxImg2;
+    private BufferedImage giftBoxImg3;
     /**
      * kr.jbnu.se.std.Game background image.
      */
@@ -175,7 +182,10 @@ public class Game {
         };
         threadForInitGame.start();
     }
-
+    // 랜덤한 시간 간격 생성 메서드
+    public int getRandomInterval(int min, int max) {
+        return min + (int) (Math.random() * (max - min));
+    }
 
     /**
      * Set variables and objects for the game.
@@ -316,6 +326,14 @@ public class Game {
             URL bossAttackImage = this.getClass().getResource("/images/attack1.png");
             bossAttack = ImageIO.read(bossAttackImage);
 
+            URL giftImage1 = this.getClass().getResource("/images/attack1.png");
+            giftBoxImg1 = ImageIO.read(giftImage1);
+
+            URL giftImage2 = this.getClass().getResource("/images/attack1.png");
+            giftBoxImg2 = ImageIO.read(giftImage2);
+
+            URL giftImage3 = this.getClass().getResource("/images/attack1.png");
+            giftBoxImg3 = ImageIO.read(giftImage3);
         } catch (IOException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -370,6 +388,90 @@ public class Game {
             }
         }
     }
+
+
+    // N마리 오리를 선택하는 메소드 (Hunter용)
+    private void selectFireDucks(int numberOfDucks) {
+        if (ducks.size() >= numberOfDucks) {
+            FireSelectedDucks = new Duck[numberOfDucks]; // Hunter 선택된 오리 배열 초기화
+            Random random = new Random();
+
+            for (int i = 0; i < numberOfDucks; i++) {
+                Duck selectedDuck;
+                int index;
+
+                // 중복되지 않는 오리를 선택
+                do {
+                    index = random.nextInt(ducks.size());
+                    selectedDuck = ducks.get(index);
+                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || Arrays.asList(playerSelectedDucks).contains(selectedDuck) || Arrays.asList(FireSelectedDucks)); // 중복 방지
+
+                FireSelectedDucks[i] = selectedDuck;
+            }
+        }
+    }
+
+    // Hunter가 자동으로 오리를 제거하는 메소드
+    private void startFireAutoKill(int interval) {
+        if (FireExecutor == null || FireExecutor.isShutdown()) {
+            FireExecutor = Executors.newScheduledThreadPool(1); // 새로 생성
+        }
+        FireExecutor.scheduleAtFixedRate(() -> {
+            if (FireSelectedDucks == null || Arrays.stream(FireSelectedDucks).allMatch(Objects::isNull)) {
+                // Hunter가 선택한 오리가 없으면 새롭게 선택
+                selectHunterDucks(1);
+            }
+            if (FireSelectedDucks != null) {
+                for (Duck duck : FireSelectedDucks) {
+                    if (duck != null
+                            && !Arrays.asList(playerSelectedDucks).contains(duck)
+                            && !Arrays.asList(hunterSelectedDucks).contains(duck)) {
+                        // Hunter가 선택한 오리가 Player가 선택한 오리와 중복되지 않도록 확인
+                        ducks.remove(duck);
+                        killedDucks++;
+                        money += 10;
+                        score += duck.score;
+                        System.out.println("Hunter가 오리를 죽였습니다: " + duck);
+                        break; // 한 마리씩 죽이고 나가도록
+
+                    }
+                }
+                updateHunterSelectedDucks();
+            }
+        }, 0, interval, TimeUnit.MILLISECONDS); // interval 시간마다 실행
+    }
+
+
+
+    // 게임이 끝나면 Hunter의 자동조준 타이머를 중지하는 코드
+    private void stopFireAutoKill() {
+        if (FireExecutor != null && !FireExecutor.isShutdown()) {
+            FireExecutor.shutdown(); // Hunter의 자동 조준 종료
+        }
+    }
+
+
+    private void updateFireSelectedDucks() {
+        Random random = new Random();
+
+        for (int i = 0; i < FireSelectedDucks.length; i++) {
+            if (hunterSelectedDucks[i] == null || !ducks.contains(hunterSelectedDucks[i]) || !ducks.contains(playerSelectedDucks[i])) {
+                // 새로운 오리를 선택하여 중복되지 않게 추가
+                Duck selectedDuck;
+                int index;
+
+                do {
+                    index = random.nextInt(ducks.size());
+                    selectedDuck = ducks.get(index);
+                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) ||
+                        Arrays.asList(playerSelectedDucks).contains(selectedDuck) ||
+                Arrays.asList(FireSelectedDucks).contains(selectedDuck)); // 중복 방지
+
+                FireSelectedDucks[i] = selectedDuck;
+            }
+        }
+    }
+
 
     // Hunter가 자동으로 오리를 제거하는 메소드
     private void startHunterAutoKill(int interval) {
@@ -454,6 +556,19 @@ public class Game {
     private void drawSightOnHunterSelectedDucks(Graphics2D g2d) {
         if (hunterSelectedDucks != null) {
             for (Duck duck : hunterSelectedDucks) {
+                if (duck != null) {
+                    g2d.drawImage(sightImg_hunter, duck.x, duck.y,28,28,null);
+                }else{
+                    return;
+                }
+            }
+        }
+    }
+
+    // 더블배럴샷건 모드에서 Hunter 선택된 오리들에게 sightImg를 그리기
+    private void drawSightOnFireSelectedDucks(Graphics2D g2d) {
+        if (FireSelectedDucks != null) {
+            for (Duck duck : FireSelectedDucks) {
                 if (duck != null) {
                     g2d.drawImage(sightImg_hunter, duck.x, duck.y,28,28,null);
                 }else{
@@ -909,7 +1024,72 @@ public class Game {
         }
         if(!isPause) {
         // Creates a new duck, if it's the time, and add it to the array list.
-        if (System.nanoTime() - Duck.lastDuckTime >= Duck.timeBetweenDucks) {
+            // 랜덤한 간격으로 선물 상자를 생성
+            if (System.nanoTime() - lastGiftBoxTime >= giftBoxInterval * 1_000_000) {
+                int randomX = (int) (Math.random() * (framework.getWidth() - 50)); // 랜덤 X 좌표 (상자 크기를 고려)
+                int fallSpeed = 5 + (int) (Math.random() * 5); // 5~10 사이의 낙하 속도
+
+                // 랜덤한 타입 선택 (1, 2, 3)
+                int giftBoxType = 1 + (int) (Math.random() * 3);
+
+                // 타입에 따라 이미지 선택
+                BufferedImage selectedImg = giftBoxImg1;
+                if (giftBoxType == 2) {
+                    selectedImg = giftBoxImg2;
+                } else if (giftBoxType == 3) {
+                    selectedImg = giftBoxImg3;
+                }
+
+                // 새로운 선물 상자 추가
+                giftBoxes.add(new GiftBox(randomX, 0, 50, 50, fallSpeed, giftBoxType, selectedImg));
+
+                // 마지막 생성 시간 갱신 및 다음 생성 간격을 랜덤하게 설정
+                lastGiftBoxTime = System.nanoTime();
+                giftBoxInterval = getRandomInterval(minInterval, maxInterval);
+            }
+
+            // 상자 업데이트 및 충돌 체크
+            for (int i = 0; i < giftBoxes.size(); i++) {
+                giftBoxes.get(i).update();
+
+                // 플레이어와 충돌 체크
+                if (new Rectangle(giftBoxes.get(i).x + 18, giftBoxes.get(i).y, 27, 30).contains(mousePosition)
+                        && Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
+                    System.out.println("Player collected a gift!");
+
+                    // 선물 상자의 타입에 따라 다른 보상 제공
+                    if (giftBoxes.get(i).type == 1) {
+                        money += 50; // 1번 상자: 돈 증가
+                    } else if (giftBoxes.get(i).type == 2) {
+                        // 모든 오리의 속도를 증가시키기
+                        for (Duck duck : ducks) {
+                            int currentSpeed = duck.getSpeed();
+                            duck.setSpeed(currentSpeed + 1); // 기존 속도보다 1씩 증가
+                        }
+                        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                        scheduler.schedule(() -> {
+                            for (Duck duck : ducks) {
+                                int currentSpeed = duck.getSpeed();
+                                duck.setSpeed(currentSpeed - 1); // 기존 속도보다 1씩 증가
+                            }
+                        }, 3, TimeUnit.SECONDS);// 3초 후 실행
+                    } else if (giftBoxes.get(i).type == 3) {
+                        PlayerHp += 10; // 3번 상자: 체력 증가
+                    }
+
+                    // 충돌한 상자는 제거
+                    giftBoxes.remove(i);
+                    i--; // 인덱스 조정
+                }
+
+                // 화면 밖으로 벗어난 상자 제거
+                if (giftBoxes.get(i).y > framework.getHeight()) {
+                    giftBoxes.remove(i);
+                    i--; // 인덱스 조정
+                }
+            }
+
+            if (System.nanoTime() - Duck.lastDuckTime >= Duck.timeBetweenDucks) {
 
             if (isReloading) {
                 if (System.nanoTime() - reloadStartTime >= reloadDuration) {
@@ -928,7 +1108,7 @@ public class Game {
 
             }
             // Here we create new duck and add it to the array list.
-            ducks.add(new Duck(Duck.duckLines[Duck.nextDuckLines][0] + random.nextInt(200), Duck.duckLines[Duck.nextDuckLines][1], Duck.duckLines[Duck.nextDuckLines][2], Duck.duckLines[Duck.nextDuckLines][3], duckImg));
+            ducks.add(new Duck(Duck.duckLines[Duck.nextDuckLines][0] + random.nextInt(200), Duck.duckLines[Duck.nextDuckLines][1], Duck.duckLines[Duck.nextDuckLines][2], Duck.duckLines[Duck.nextDuckLines][3],duckImg));
 
             // Here we increase nextDuckLines so that next duck will be created in next line.
             Duck.nextDuckLines++;
@@ -1279,6 +1459,25 @@ public class Game {
             maxAmmo = 30;
             reloadDuration = 3000000000L;
             timeBetweenShots = 100_000_000L;
+        }
+
+        if(giftBoxes != null){
+            for (GiftBox giftBox : giftBoxes) {
+                // 타입에 맞는 이미지를 그리도록 설정
+                BufferedImage selectedImg = null;
+                if (giftBox.type == 1) {
+                    selectedImg = giftBoxImg1;
+                } else if (giftBox.type == 2) {
+                    selectedImg = giftBoxImg2;
+                } else if (giftBox.type == 3) {
+                    selectedImg = giftBoxImg3;
+                }
+
+                // 이미지가 null이 아닐 때만 그리기
+                if (selectedImg != null) {
+                    g2d.drawImage(selectedImg, giftBox.x, giftBox.y, giftBox.width, giftBox.height, null);
+                }
+            }
         }
 
 
