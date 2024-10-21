@@ -32,8 +32,8 @@ public class Game {
     private Random random;
     List<GiftBox> giftBoxes = new ArrayList<>();
     long lastGiftBoxTime = 0;
-    int minInterval = 3000; // 최소 간격 3초
-    int maxInterval = 10000; // 최대 간격 10초
+    int minInterval = 9000; // 최소 간격 3초
+    int maxInterval = 30000; // 최대 간격 10초
     int giftBoxInterval = getRandomInterval(minInterval, maxInterval); // 랜덤 간격
     private Clip clip;
     private Clip clipbg;
@@ -41,6 +41,7 @@ public class Game {
     private int Round;
     private boolean isBossAlive;
     private Duck[] hunterSelectedDucks;
+    private Duck[] FireSelectedDucks;
     private Duck[] playerSelectedDucks;
     private int ammo;          // 현재 사용 가능한 총알
     private int maxAmmo;       // 한 번에 장전할 수 있는 최대 탄약 수
@@ -50,7 +51,9 @@ public class Game {
     private URL hpUrl;
     private int selectduck;
     private ScheduledExecutorService hunterExecutor;
+    private ScheduledExecutorService FireExecutor;
     private int PlayerHp;
+    private BufferedImage sightImg_Fire;
 
     /**
      * Font that we will use to write statistic to the screen.
@@ -112,6 +115,7 @@ public class Game {
      * Last time of the shoot.
      */
     private long lastTimeShoot;
+    private boolean fire = false;
     /**
      * The time which must elapse between shots.
      */
@@ -202,7 +206,7 @@ public class Game {
         runawayDucks = 0;
         killedDucks = 0;
         score = 0;
-        roundPass = 20;
+        roundPass = 60;
         shoots = 0;
         PlayerHp = 100;
         Round = 1;
@@ -326,14 +330,17 @@ public class Game {
             URL bossAttackImage = this.getClass().getResource("/images/attack1.png");
             bossAttack = ImageIO.read(bossAttackImage);
 
-            URL giftImage1 = this.getClass().getResource("/images/attack1.png");
+            URL giftImage1 = this.getClass().getResource("/images/giftbox.png");
             giftBoxImg1 = ImageIO.read(giftImage1);
 
-            URL giftImage2 = this.getClass().getResource("/images/attack1.png");
+            URL giftImage2 = this.getClass().getResource("/images/giftbox.png");
             giftBoxImg2 = ImageIO.read(giftImage2);
 
-            URL giftImage3 = this.getClass().getResource("/images/attack1.png");
+            URL giftImage3 = this.getClass().getResource("/images/giftbox.png");
             giftBoxImg3 = ImageIO.read(giftImage3);
+
+            URL Fire1 = this.getClass().getResource("/images/fire.png");
+            sightImg_Fire = ImageIO.read(Fire1);
         } catch (IOException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -404,9 +411,11 @@ public class Game {
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
-                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || Arrays.asList(playerSelectedDucks).contains(selectedDuck) || Arrays.asList(FireSelectedDucks)); // 중복 방지
+                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || Arrays.asList(playerSelectedDucks).contains(selectedDuck) || Arrays.asList(FireSelectedDucks).contains(selectedDuck)); // 중복 방지
 
                 FireSelectedDucks[i] = selectedDuck;
+                System.out.println("Selected Fire Ducks: " + Arrays.toString(FireSelectedDucks));
+
             }
         }
     }
@@ -419,7 +428,7 @@ public class Game {
         FireExecutor.scheduleAtFixedRate(() -> {
             if (FireSelectedDucks == null || Arrays.stream(FireSelectedDucks).allMatch(Objects::isNull)) {
                 // Hunter가 선택한 오리가 없으면 새롭게 선택
-                selectHunterDucks(1);
+                selectFireDucks(1);
             }
             if (FireSelectedDucks != null) {
                 for (Duck duck : FireSelectedDucks) {
@@ -436,7 +445,7 @@ public class Game {
 
                     }
                 }
-                updateHunterSelectedDucks();
+                updateFireSelectedDucks();
             }
         }, 0, interval, TimeUnit.MILLISECONDS); // interval 시간마다 실행
     }
@@ -570,7 +579,7 @@ public class Game {
         if (FireSelectedDucks != null) {
             for (Duck duck : FireSelectedDucks) {
                 if (duck != null) {
-                    g2d.drawImage(sightImg_hunter, duck.x, duck.y,28,28,null);
+                    g2d.drawImage(sightImg_Fire, duck.x, duck.y,100,100,null);
                 }else{
                     return;
                 }
@@ -615,7 +624,7 @@ public class Game {
         runawayDucks = 0; // 도망간 오리 수 초기화
         Round += 1;
         isBossAlive = false;
-        roundPass += 20;
+        roundPass += 30;
         if(Round == 2){
             playBackgroundMusic("src/main/resources/sounds/JungleBook.wav");
         }else if(Round == 3){
@@ -1023,29 +1032,33 @@ public class Game {
 
         }
         if(!isPause) {
+            int maxGiftBoxes = 1;
+            int Random = 1+(int)(Math.random()*100);
         // Creates a new duck, if it's the time, and add it to the array list.
             // 랜덤한 간격으로 선물 상자를 생성
             if (System.nanoTime() - lastGiftBoxTime >= giftBoxInterval * 1_000_000) {
-                int randomX = (int) (Math.random() * (framework.getWidth() - 50)); // 랜덤 X 좌표 (상자 크기를 고려)
-                int fallSpeed = 5 + (int) (Math.random() * 5); // 5~10 사이의 낙하 속도
+                if ((giftBoxes.size() < maxGiftBoxes) && Random == 50) {
+                    int randomX = (int) (Math.random() * (framework.getWidth() - 50)); // 랜덤 X 좌표 (상자 크기를 고려)
+                    int fallSpeed = 5 + (int) (Math.random() * 5); // 5~10 사이의 낙하 속도
 
-                // 랜덤한 타입 선택 (1, 2, 3)
-                int giftBoxType = 1 + (int) (Math.random() * 3);
+                    // 랜덤한 타입 선택 (1, 2, 3)
+                    int giftBoxType = 1 + (int) (Math.random() * 3);
 
-                // 타입에 따라 이미지 선택
-                BufferedImage selectedImg = giftBoxImg1;
-                if (giftBoxType == 2) {
-                    selectedImg = giftBoxImg2;
-                } else if (giftBoxType == 3) {
-                    selectedImg = giftBoxImg3;
+                    // 타입에 따라 이미지 선택
+                    BufferedImage selectedImg = giftBoxImg1;
+                    if (giftBoxType == 2) {
+                        selectedImg = giftBoxImg2;
+                    } else if (giftBoxType == 3) {
+                        selectedImg = giftBoxImg3;
+                    }
+
+                    // 새로운 선물 상자 추가
+                    giftBoxes.add(new GiftBox(randomX, 0, 150, 150, fallSpeed, giftBoxType, selectedImg));
+
+                    // 마지막 생성 시간 갱신 및 다음 생성 간격을 랜덤하게 설정
+                    lastGiftBoxTime = System.nanoTime();
+                    giftBoxInterval = getRandomInterval(minInterval, maxInterval);
                 }
-
-                // 새로운 선물 상자 추가
-                giftBoxes.add(new GiftBox(randomX, 0, 50, 50, fallSpeed, giftBoxType, selectedImg));
-
-                // 마지막 생성 시간 갱신 및 다음 생성 간격을 랜덤하게 설정
-                lastGiftBoxTime = System.nanoTime();
-                giftBoxInterval = getRandomInterval(minInterval, maxInterval);
             }
 
             // 상자 업데이트 및 충돌 체크
@@ -1053,24 +1066,37 @@ public class Game {
                 giftBoxes.get(i).update();
 
                 // 플레이어와 충돌 체크
-                if (new Rectangle(giftBoxes.get(i).x + 18, giftBoxes.get(i).y, 27, 30).contains(mousePosition)
+                if (new Rectangle(giftBoxes.get(i).x + 18, giftBoxes.get(i).y, 150, 150).contains(mousePosition)
                         && Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
                     System.out.println("Player collected a gift!");
 
                     // 선물 상자의 타입에 따라 다른 보상 제공
                     if (giftBoxes.get(i).type == 1) {
-                        money += 50; // 1번 상자: 돈 증가
+                        startFireAutoKill(1500);
+                        System.out.println("Fire");
+                        fire = true;
+                        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                        scheduler.schedule(() -> {
+                           stopFireAutoKill();
+                           fire = false;
+                        }, 9000, TimeUnit.SECONDS);// 3초 후 실행/ 1번 상자: 돈 증가
                     } else if (giftBoxes.get(i).type == 2) {
                         // 모든 오리의 속도를 증가시키기
+                        System.out.println("speed");
                         for (Duck duck : ducks) {
                             int currentSpeed = duck.getSpeed();
-                            duck.setSpeed(currentSpeed + 1); // 기존 속도보다 1씩 증가
+                            System.out.println(currentSpeed);
+                            if(currentSpeed > -3 ) {
+                                duck.setSpeed(currentSpeed + 1);
+                            }// 기존 속도보다 1씩 증가
                         }
                         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
                         scheduler.schedule(() -> {
                             for (Duck duck : ducks) {
                                 int currentSpeed = duck.getSpeed();
-                                duck.setSpeed(currentSpeed - 1); // 기존 속도보다 1씩 증가
+                                if(currentSpeed > -4) {
+                                    duck.setSpeed(currentSpeed - 1);
+                                }// 기존 속도보다 1씩 증가
                             }
                         }, 3, TimeUnit.SECONDS);// 3초 후 실행
                     } else if (giftBoxes.get(i).type == 3) {
@@ -1083,9 +1109,11 @@ public class Game {
                 }
 
                 // 화면 밖으로 벗어난 상자 제거
-                if (giftBoxes.get(i).y > framework.getHeight()) {
-                    giftBoxes.remove(i);
-                    i--; // 인덱스 조정
+                if(giftBoxes.size() > 0) {
+                    if (giftBoxes.get(i).y > framework.getHeight()) {
+                        giftBoxes.remove(i);
+                        i--; // 인덱스 조정
+                    }
                 }
             }
 
@@ -1444,7 +1472,9 @@ public class Game {
                 g2d.drawImage(hpImages[hpIndex], boss.get(i).x - 20, boss.get(i).y - 60, hpBarWidth, hpBarHeight, null);
             }
         }
-
+        if(fire){
+            drawSightOnFireSelectedDucks(g2d);
+        }
         if(isReloading){
             g2d.drawString("Reloading", Framework.frameWidth/2, Framework.frameHeight/2);
         }
@@ -1519,6 +1549,10 @@ public class Game {
         Draw(g2d, mousePosition);
         // 배경 화면 설정 (엔딩 전용 배경 이미지가 있다면 해당 이미지로 설정)
         g2d.drawImage(backgroundImg, 0, 0, Framework.frameWidth, Framework.frameHeight, null);
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.schedule(() -> {
+            g2d.drawImage(backgroundImg, 0, 0, Framework.frameWidth, Framework.frameHeight, null);
+        }, 1500, TimeUnit.SECONDS);
     }
 
     public int getScore(){
