@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="fireball" />
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="fire / giftbox">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -214,6 +216,7 @@
       <workItem from="1729438276198" duration="158000" />
       <workItem from="1729486863651" duration="3000" />
       <workItem from="1729488194780" duration="43000" />
+      <workItem from="1729488946598" duration="48000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -415,7 +418,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729488228351</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="fire / giftbox">
+      <option name="closed" value="true" />
+      <created>1729488984975</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1729488984975</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -464,6 +475,7 @@
     <MESSAGE value="boss_lv5" />
     <MESSAGE value="main" />
     <MESSAGE value="fireball" />
-    <option name="LAST_COMMIT_MESSAGE" value="fireball" />
+    <MESSAGE value="fire / giftbox" />
+    <option name="LAST_COMMIT_MESSAGE" value="fire / giftbox" />
   </component>
 </project>
