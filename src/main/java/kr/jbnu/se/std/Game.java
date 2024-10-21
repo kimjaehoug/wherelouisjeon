@@ -48,6 +48,7 @@ public class Game {
     private int ammo;// 현재 사용 가능한 총알
     boolean ending = true;
     private int maxAmmo;       // 한 번에 장전할 수 있는 최대 탄약 수
+    private BufferedImage gameoverfImg;
     private boolean isReloading; // 장전 중인지 여부
     private long reloadStartTime; // 장전이 시작된 시간
     private long reloadDuration;  // 장전 시간 (예: 2초)
@@ -288,7 +289,7 @@ public class Game {
             URL hunterimg = this.getClass().getResource("/images/hunterrrrr.png");
             hunter111Img = ImageIO.read(hunterimg);
 
-            URL gameoverimg = this.getClass().getResource("/images/gameover.png");
+            URL gameoverimg = this.getClass().getResource("/images/diegame.png");
             gameoverImg = ImageIO.read(gameoverimg);
 
 
@@ -336,6 +337,9 @@ public class Game {
 
             URL duckImgUrl = this.getClass().getResource("/images/duck.png");
             duckImg = ImageIO.read(duckImgUrl);
+
+            URL gameoverfImgUrl = this.getClass().getResource("/images/duck.png");
+            gameoverfImg = ImageIO.read(gameoverfImgUrl);
 
             URL sightImgUrl = this.getClass().getResource("/images/sight.png");
             sightImg = ImageIO.read(sightImgUrl);
@@ -1566,11 +1570,7 @@ public class Game {
     {
         Draw(g2d, mousePosition);
         g2d.drawImage(gameoverImg, 0,0,Framework.frameWidth,Framework.frameHeight, null);
-        // The first text is used for shade.
-        g2d.setColor(Color.RED);
-        g2d.setFont(font);
-        g2d.drawString("Game OVER", Framework.frameWidth / 2 - 39, (int)(Framework.frameHeight * 0.65) + 1);
-        g2d.drawString("Press space or enter to restart.", Framework.frameWidth / 2 - 149, (int)(Framework.frameHeight * 0.70) + 1);
+        g2d.drawImage(gameoverfImg, Framework.frameWidth/2,Framework.frameHeight/2,400,400, null);
     }
     public void DrawEnding(Graphics2D g2d, Point mousePosition, long gameTime) {
         // 배경화면 설정 (엔딩 전용 배경 이미지)
