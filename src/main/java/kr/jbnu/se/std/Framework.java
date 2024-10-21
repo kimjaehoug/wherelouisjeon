@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -82,7 +83,7 @@ public class Framework extends Canvas {
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MainPage, Round, Pause, DESTROYED}
+    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MainPage, Round, Pause, ENDING, DESTROYED}
     /**
      * Current state of the game
      */
@@ -128,6 +129,7 @@ public class Framework extends Canvas {
     private InviteFriends inviteFriends;
     private ShopWindow shopWindow;
     private InventoryWindow inventoryWindow;
+    private RankWindow rankWindow;
     private String inventoryimage;
     private String whatgun;
     public FirebaseClient firebaseClient;
@@ -198,10 +200,16 @@ public class Framework extends Canvas {
         shopWindow = null;
     }
 
+    public void stoprank() { rankWindow = null; }
+
     public void stopmain(){
         MainV2 = null;
     }
 
+    public void RankWindow(){
+        RankWindow rankWindow = new RankWindow();
+        rankWindow.setVisible(true);
+    }
 
     public void Shopwindowopen(){
         shopWindow = new ShopWindow(this);
@@ -459,32 +467,227 @@ public class Framework extends Canvas {
 
     public void saveScore(int score) {
         OkHttpClient client = new OkHttpClient();
-        JSONObject json = new JSONObject();
-        json.put("nickname", this.nickname);
-        json.put("score", score);
 
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
-        Request request = new Request.Builder()
-                .url("https://shootthedock-default-rtdb.firebaseio.com/leaderboard/"+nickname+".json")
-                .put(body)
+        // Step 1: 사용자 정보에 점수 저장
+        String uniqueKey = String.valueOf(System.currentTimeMillis()); // 시간 기반의 고유 키 생성
+        JSONObject userJson = new JSONObject();
+        try {
+            userJson.put(uniqueKey, score); // 시간 기반의 고유 키 아래에 점수만 저장
+        } catch (JSONException e) {
+            System.err.println("JSON 생성 오류: " + e.getMessage());
+            return;
+        }
+
+        RequestBody userBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson.toString());
+        Request userRequest = new Request.Builder()
+                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/scores.json?auth=" + idToken)
+                .patch(userBody) // 데이터를 추가할 때는 PATCH를 사용하여 기존 데이터를 유지
                 .build();
 
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(userRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("점수 저장 실패: " + e.getMessage());
+                System.err.println("사용자 정보에 점수 저장 실패: " + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    System.out.println("점수 저장 성공: " + response.body().string());
+                    System.out.println("사용자 정보에 점수 저장 성공");
+
+                    // Step 2: 최고 점수 확인 및 리더보드 업데이트
+                    checkAndSaveLeaderboard(score);
                 } else {
-                    System.err.println("점수 저장 실패: " + response.code());
+                    System.err.println("사용자 정보에 점수 저장 실패: " + response.code());
                 }
             }
         });
     }
+
+
+    public void saveMoney(int money) {
+        OkHttpClient client = new OkHttpClient();
+        money = this.money + money;
+        // Step 1: 사용자 정보에 점수 저장
+        JSONObject userJson = new JSONObject();
+        userJson.put("money", money);
+
+        RequestBody userBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson.toString());
+        Request userRequest = new Request.Builder()
+                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo.json?auth=" + idToken)
+                .patch(userBody)
+                .build();
+
+        client.newCall(userRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("사용자 정보에 점수 저장 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    System.out.println("사용자 정보에 점수 저장 성공");
+                } else {
+                    System.err.println("사용자 정보에 점수 저장 실패: " + response.code());
+                }
+            }
+        });
+    }
+
+    private void checkAndSaveLeaderboard(int latestScore) {
+        OkHttpClient client = new OkHttpClient();
+
+        // 사용자 정보에서 모든 점수를 가져옴
+        String userScoresUrl = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/scores.json?auth=" + idToken;
+        Request request = new Request.Builder()
+                .url(userScoresUrl)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("점수 목록 가져오기 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+
+                    // 응답이 비어 있거나 유효하지 않은 경우 처리
+                    if (responseBody == null || responseBody.trim().isEmpty()) {
+                        System.err.println("응답이 비어있거나 잘못되었습니다.");
+                        return;
+                    }
+
+                    try {
+                        int highestScore = latestScore;
+
+                        // 응답이 JSON 객체인지 확인
+                        JSONObject scoresObject = new JSONObject(responseBody);
+
+                        // 객체에서 모든 점수 탐색 (타임스탬프를 키로 사용)
+                        Iterator<String> keys = scoresObject.keys();
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            int score = scoresObject.getInt(key);
+                            if (score > highestScore) {
+                                highestScore = score;
+                            }
+                        }
+
+                        // 리더보드에 최고 점수가 있는지 확인 후 없으면 저장
+                        saveToLeaderboardIfHighest(highestScore);
+
+                    } catch (JSONException e) {
+                        System.err.println("JSON 파싱 오류: " + e.getMessage());
+                    }
+                } else {
+                    System.err.println("점수 목록 가져오기 실패: " + response.code());
+                }
+            }
+        });
+    }
+
+
+
+
+    private void saveToLeaderboardIfHighest(int highestUserScore) {
+        OkHttpClient client = new OkHttpClient();
+
+        // 리더보드 URL 정의
+        String leaderboardUrl = "https://shootthedock-default-rtdb.firebaseio.com/leaderboard.json?auth=" + idToken;
+
+        // 리더보드 정보를 GET 요청으로 가져옴
+        Request getLeaderboardRequest = new Request.Builder()
+                .url(leaderboardUrl)
+                .get()
+                .build();
+
+        client.newCall(getLeaderboardRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("리더보드 점수 가져오기 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    try {
+                        boolean isNewHighScore = true;
+
+                        // 리더보드가 비어 있지 않다면 현재 최고 점수 확인
+                        if (!responseBody.trim().isEmpty() && !responseBody.equals("{}")) {
+                            JSONObject leaderboardObject = new JSONObject(responseBody);
+                            if (leaderboardObject.has(nickname)) {
+                                // 자신의 점수를 찾았으면, 기존 점수와 비교
+                                int existingScore = leaderboardObject.getJSONObject(nickname).getInt("score");
+                                if (existingScore >= highestUserScore) {
+                                    isNewHighScore = false;
+                                }
+                            }
+                        }
+
+                        // 새로운 최고 점수라면 리더보드에 추가 또는 갱신
+                        if (isNewHighScore) {
+                            addToLeaderboard(highestUserScore);
+                        }
+                    } catch (JSONException e) {
+                        System.err.println("JSON 파싱 오류: " + e.getMessage());
+                    }
+                } else {
+                    System.err.println("리더보드 점수 가져오기 실패: " + response.code());
+                }
+            }
+        });
+    }
+
+    private void addToLeaderboard(int highestUserScore) {
+        OkHttpClient client = new OkHttpClient();
+
+        // 리더보드 URL 정의, 닉네임을 키로 사용
+        String leaderboardUrl = "https://shootthedock-default-rtdb.firebaseio.com/leaderboard/" + nickname + ".json?auth=" + idToken;
+
+        // 리더보드에 저장할 JSON 객체 생성
+        JSONObject newEntry = new JSONObject();
+        try {
+            newEntry.put("nickname", nickname);
+            newEntry.put("score", highestUserScore);
+        } catch (JSONException e) {
+            System.err.println("JSON 생성 오류: " + e.getMessage());
+            return;
+        }
+
+        // 새로운 점수 추가를 위한 PUT 요청
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), newEntry.toString());
+        Request updateRequest = new Request.Builder()
+                .url(leaderboardUrl) // 닉네임을 키로 사용해 저장
+                .put(body)
+                .build();
+
+        client.newCall(updateRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.err.println("리더보드 업데이트 실패: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    System.out.println("리더보드 업데이트 성공: 최고 점수 " + highestUserScore);
+                } else {
+                    System.err.println("리더보드 업데이트 실패: " + response.code());
+                }
+            }
+        });
+    }
+
+
+
+
 
 
 
@@ -550,11 +753,6 @@ public class Framework extends Canvas {
         MainV2.dispose();
         stopBackgroundMusic();
         window.onLoginSuccess();
-        stopshop();
-        stopfriendadd();
-        stopfriends();
-        stopReceivingFriendschat();
-        stopReceivingFriendInvite();
         gameState = GameState.VISUALIZING;
         this.setVisible(true);
         gameThread = new Thread() {
@@ -646,6 +844,11 @@ public class Framework extends Canvas {
             beginTime = System.nanoTime();
             switch (gameState)
             {
+                case ENDING:
+                    gameTime += System.nanoTime() - lastTime;
+                    game.UpdateGame(gameTime, mousePosition());
+                    lastTime = System.nanoTime();
+                    break;
                 case Pause:
                     gameTime += System.nanoTime() - lastTime;
                     game.UpdateGame(gameTime, mousePosition());
@@ -660,6 +863,8 @@ public class Framework extends Canvas {
                     lastTime = System.nanoTime();
                     break;
                 case GAMEOVER:
+                    gameTime += System.nanoTime() - lastTime;
+                    lastTime = System.nanoTime();
                     break;
                 case LOGIN:
                     if (isLoginSuccessful) {
@@ -724,6 +929,9 @@ public class Framework extends Canvas {
     @Override
     public void Draw(Graphics2D g2d) {
             switch (gameState) {
+                case ENDING:
+                    game.DrawEnding(g2d, mousePosition(),gameTime);
+                    break;
                 case Pause:
                     game.Draw(g2d, mousePosition());
                     break;
@@ -825,16 +1033,25 @@ public class Framework extends Canvas {
     {
         switch (gameState)
         {
+            case ENDING:
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    System.exit(0);
+                }
+                if(e.getKeyCode() == KeyEvent.VK_SPACE){
+                    game.ed++;
+                }
+                break;
             case Pause:
                 if(e.getKeyCode() == KeyEvent.VK_SPACE){
                     nextRoundGame();
                 }
                 break;
             case GAMEOVER:
-                if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     System.exit(0);
-                else if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER)
-                    restartGame();
+                } else if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    gameState = GameState.MAIN_MENU;  // 게임 오버 시 스페이스바나 엔터를 누르면 메인 메뉴로 돌아감
+                }
                 break;
             case PLAYING:
             case MAIN_MENU:

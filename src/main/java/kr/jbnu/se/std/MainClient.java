@@ -209,8 +209,8 @@ public class MainClient extends JFrame {
         // 처음부터 랭크 아이콘 설정
         rankButton.setIcon(rankScaledIcon);
 
-        shopButton.addActionListener(e -> {
-            framework.Shopwindowopen();
+        rankButton.addActionListener(e -> {
+            framework.RankWindow();
             System.out.println("리더보드가 열립니다!");
         });
 
@@ -228,8 +228,8 @@ public class MainClient extends JFrame {
         });
 
         // 버튼들을 서->동 순서로 추가
-        topPanel.add(inventoryButton);
         topPanel.add(startButton);
+        topPanel.add(inventoryButton);
         topPanel.add(shopButton);
         topPanel.add(rankButton);
 
