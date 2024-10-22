@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="GAMEOVER">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,6 +220,8 @@
       <workItem from="1729488946598" duration="48000" />
       <workItem from="1729494495119" duration="106000" />
       <workItem from="1729510725786" duration="57000" />
+      <workItem from="1729515714389" duration="430000" />
+      <workItem from="1729518319464" duration="4864000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -444,7 +447,23 @@
       <option name="project" value="LOCAL" />
       <updated>1729510764140</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="GAMEOVER">
+      <option name="closed" value="true" />
+      <created>1729515990597</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1729515990597</updated>
+    </task>
+    <task id="LOCAL-00030" summary="GAMEOVER">
+      <option name="closed" value="true" />
+      <created>1729516066416</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1729516066416</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -466,7 +485,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/frontend" />
+                        <option value="origin/main" />
                       </list>
                     </value>
                   </entry>
