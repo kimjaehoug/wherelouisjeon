@@ -59,6 +59,7 @@ public class Game {
     private ScheduledExecutorService FireExecutor;
     private int PlayerHp;
     private BufferedImage sightImg_Fire;
+    private BufferedImage[] giftBoxImages = new BufferedImage[3];
 
     /**
      * Font that we will use to write statistic to the screen.
@@ -361,14 +362,15 @@ public class Game {
             URL bossAttackImage = this.getClass().getResource("/images/attack1.png");
             bossAttack = ImageIO.read(bossAttackImage);
 
-            URL giftImage1 = this.getClass().getResource("/images/giftbox.png");
-            giftBoxImg1 = ImageIO.read(giftImage1);
-
-            URL giftImage2 = this.getClass().getResource("/images/giftbox.png");
-            giftBoxImg2 = ImageIO.read(giftImage2);
-
-            URL giftImage3 = this.getClass().getResource("/images/giftbox.png");
-            giftBoxImg3 = ImageIO.read(giftImage3);
+            try {
+                // giftBoxImages 배열에 이미지 로드
+                for (int i = 0; i < giftBoxImages.length; i++) {
+                    URL giftImage = this.getClass().getResource("/images/giftbox.png");
+                    giftBoxImages[i] = ImageIO.read(giftImage);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             URL Fire1 = this.getClass().getResource("/images/fire.png");
             sightImg_Fire = ImageIO.read(Fire1);
@@ -641,7 +643,7 @@ public class Game {
         ducks.clear();
         isPause = true;
         System.out.println("buttonbuyadd");
-        Framework.gameState = Framework.GameState.Pause;
+        Framework.gameState = Framework.GameState.PAUSE;
         stopBackgroundMusic();
     }
 

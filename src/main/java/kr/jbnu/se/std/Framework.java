@@ -83,7 +83,7 @@ public class Framework extends Canvas {
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MainPage, Round, Pause, ENDING, DESTROYED}
+    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER,MAINPAGE, ROUND, PAUSE, ENDING, DESTROYED}
     /**
      * Current state of the game
      */
@@ -145,7 +145,9 @@ public class Framework extends Canvas {
     public MessageReceiver friendmessageReceiver;
 
     public InventoryManager inventoryManager;
-
+    private FirebaseManager firebaseManager;
+    private AudioManager audioManager;
+    private WindowManager windowManager;
 
     /**
      * Image for menu.
@@ -157,15 +159,13 @@ public class Framework extends Canvas {
     {
         super();
         initializeFirebase();
+        firebaseManager = new FirebaseManager("shootthedock-firebase-adminsdk-304qc-09167d3967",DATABASE_URL);
         this.window = window;
+        windowManager = new WindowManager(this);
+        audioManager = new AudioManager();
         gameState = GameState.LOGIN;
         client = new OkHttpClient();
-        loginClient = new LoginClient(this);
-        loginClient.setVisible(true);
-        MainV2 = new MainClient(this);
         whatgun = "기본권총";
-        MainV2.setVisible(false);
-        this.setVisible(false);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseClient = new FirebaseClient(email);
     }
@@ -452,7 +452,7 @@ public class Framework extends Canvas {
                     if (jsonResponse.has("money")) {
                         money = jsonResponse.getInt("money");
                         System.out.println("money: " + money);
-                        MainV2.setMoney(money);
+                        windowManager.getMainWindow().setMoney(money);
                     } else {
                         System.err.println("사용자 정보가 존재하지 않습니다.");
                     }
@@ -717,10 +717,10 @@ public class Framework extends Canvas {
                     if (jsonResponse.has("nickname")) {
                         nickname = jsonResponse.getString("nickname");
                         System.out.println("Nickname: " + nickname);
-                        MainV2.setNickname(nickname);
+                        windowManager.getMainWindow().setNickname(nickname);
                         friendManager = new FriendManager(email,nickname);
                         messageManager = new MessageManager(nickname);
-                        messageReceiver = new MessageReceiver(idToken,MainV2,email);
+                        messageReceiver = new MessageReceiver(idToken,windowManager.getMainWindow(),email);
                         messageReceiver.startReceivingMessages();
                     } else {
                         System.err.println("사용자 정보가 존재하지 않습니다.");
@@ -744,13 +744,13 @@ public class Framework extends Canvas {
     public void onLoginSuccess() {
         isLoginSuccessful = true;
         loginWithFirebase(realemail, password);
-        MainV2.setVisible(true);
+        windowManager.openMainWindow();
         stoploginClinet();
         playBackgroundMusic("src/main/resources/sounds/backgroundonMain.wav");
     }
 
     public void onGameStart(){
-        MainV2.dispose();
+        windowManager.getMainWindow().dispose();
         stopBackgroundMusic();
         window.onLoginSuccess();
         gameState = GameState.VISUALIZING;
@@ -849,12 +849,12 @@ public class Framework extends Canvas {
                     game.UpdateGame(gameTime, mousePosition());
                     lastTime = System.nanoTime();
                     break;
-                case Pause:
+                case PAUSE:
                     gameTime += System.nanoTime() - lastTime;
                     game.UpdateGame(gameTime, mousePosition());
                     lastTime = System.nanoTime();
                     break;
-                case MainPage:
+                case MAINPAGE:
                     gameState = GameState.STARTING;
                     break;
                 case PLAYING:
@@ -868,7 +868,7 @@ public class Framework extends Canvas {
                     break;
                 case LOGIN:
                     if (isLoginSuccessful) {
-                        gameState = GameState.MainPage;
+                        gameState = GameState.MAINPAGE;
                     }
                     break;
                 case MAIN_MENU:
@@ -932,7 +932,7 @@ public class Framework extends Canvas {
                 case ENDING:
                     game.DrawEnding(g2d, mousePosition(),gameTime);
                     break;
-                case Pause:
+                case PAUSE:
                     game.Draw(g2d, mousePosition());
                     break;
                 case PLAYING:
@@ -1034,7 +1034,7 @@ public class Framework extends Canvas {
                     game.ed++;
                 }
                 break;
-            case Pause:
+            case PAUSE:
                 if(e.getKeyCode() == KeyEvent.VK_SPACE){
                     nextRoundGame();
                 }
