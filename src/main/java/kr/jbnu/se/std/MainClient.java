@@ -210,7 +210,7 @@ public class MainClient extends JFrame {
         rankButton.setIcon(rankScaledIcon);
 
         rankButton.addActionListener(e -> {
-            framework.RankWindow();
+            framework.rankWindow();
             System.out.println("리더보드가 열립니다!");
         });
 

@@ -83,7 +83,7 @@ public class Framework extends Canvas {
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MainPage, Round, Pause, ENDING, DESTROYED}
+    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MAINPAGE, ROUND, PAUSE, ENDING, DESTROYED}
     /**
      * Current state of the game
      */
@@ -129,12 +129,23 @@ public class Framework extends Canvas {
     private InviteFriends inviteFriends;
     private ShopWindow shopWindow;
     private InventoryWindow inventoryWindow;
-    private RankWindow rankWindow;
     private String inventoryimage;
     private String whatgun;
     public FirebaseClient firebaseClient;
     public FriendManager friendManager;
     private Clip clip;
+    private static final String NICKNAME_KEY = "nickname";
+
+    private static final String APPLICATION_JSON = "application/json; charset=utf-8";
+    private static final String FIREBASE_SIGNIN_URL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=";
+    private static final String FIREBASE_API_KEY = "AIzaSyCJDgbBXWSRoRUg3xVqsQrSEz1W5AFiE_Y";
+
+    private static final String FIREBASE_BASE_URL = "https://shootthedock-default-rtdb.firebaseio.com/users/";
+    private static final String USER_INFO_SUFFIX = "/userinfo.json?auth=";
+    private static final String MONEY_KEY = "money";
+    private static final String SCORE_SAVE_FAILURE_MESSAGE = "사용자 정보에 점수 저장 실패: ";
+
+
 
     private static Framework instance;
 
@@ -199,14 +210,11 @@ public class Framework extends Canvas {
     public void stopshop(){
         shopWindow = null;
     }
-
-    public void stoprank() { rankWindow = null; }
-
     public void stopmain(){
         MainV2 = null;
     }
 
-    public void RankWindow(){
+    public void rankWindow(){
         RankWindow rankWindow = new RankWindow();
         rankWindow.setVisible(true);
     }
@@ -305,7 +313,7 @@ public class Framework extends Canvas {
                         // 친구 신청 목록 출력
                         for (String key : jsonObject.keySet()) {
                             JSONObject inviteObject = jsonObject.getJSONObject(key); // 친구 신청 객체
-                            String friendNickname = inviteObject.getString("nickname"); // 친구의 닉네임
+                            String friendNickname = inviteObject.getString(NICKNAME_KEY); // 친구의 닉네임
                             // 중복된 친구 신청이 아닌 경우에만 추가
                             if (!existingFriendsinvite.contains(friendNickname)) {
                                 existingFriendsinvite.add(friendNickname); // 새로운 친구 신청 추가
@@ -389,9 +397,9 @@ public class Framework extends Canvas {
         json.put("email", email);
         json.put("password", password);
         json.put("returnSecureToken", true);
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
+        RequestBody body = RequestBody.create(MediaType.parse(APPLICATION_JSON), json.toString());
         Request request = new Request.Builder()
-                .url("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCJDgbBXWSRoRUg3xVqsQrSEz1W5AFiE_Y")
+                .url(FIREBASE_SIGNIN_URL + FIREBASE_API_KEY)
                 .post(body)
                 .build();
 
@@ -428,7 +436,7 @@ public class Framework extends Canvas {
 
     public void getMoney() {
         OkHttpClient client = new OkHttpClient();
-        String url = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo.json?auth=" + idToken;
+        String url = FIREBASE_BASE_URL + email + USER_INFO_SUFFIX + idToken;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -449,8 +457,8 @@ public class Framework extends Canvas {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
 
-                    if (jsonResponse.has("money")) {
-                        money = jsonResponse.getInt("money");
+                    if (jsonResponse.has(MONEY_KEY)) {
+                        money = jsonResponse.getInt(MONEY_KEY);
                         System.out.println("money: " + money);
                         MainV2.setMoney(money);
                     } else {
@@ -465,6 +473,7 @@ public class Framework extends Canvas {
         });
     }
 
+
     public void saveScore(int score) {
         OkHttpClient client = new OkHttpClient();
 
@@ -478,16 +487,16 @@ public class Framework extends Canvas {
             return;
         }
 
-        RequestBody userBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson.toString());
+        RequestBody userBody = RequestBody.create(MediaType.parse(APPLICATION_JSON), userJson.toString());
         Request userRequest = new Request.Builder()
-                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/scores.json?auth=" + idToken)
+                .url(FIREBASE_BASE_URL + email + "/userinfo/scores.json?auth=" + idToken)
                 .patch(userBody) // 데이터를 추가할 때는 PATCH를 사용하여 기존 데이터를 유지
                 .build();
 
         client.newCall(userRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("사용자 정보에 점수 저장 실패: " + e.getMessage());
+                System.err.println(SCORE_SAVE_FAILURE_MESSAGE + e.getMessage());
             }
 
             @Override
@@ -498,7 +507,7 @@ public class Framework extends Canvas {
                     // Step 2: 최고 점수 확인 및 리더보드 업데이트
                     checkAndSaveLeaderboard(score);
                 } else {
-                    System.err.println("사용자 정보에 점수 저장 실패: " + response.code());
+                    System.err.println(SCORE_SAVE_FAILURE_MESSAGE + response.code());
                 }
             }
         });
@@ -510,18 +519,18 @@ public class Framework extends Canvas {
         money = this.money + money;
         // Step 1: 사용자 정보에 점수 저장
         JSONObject userJson = new JSONObject();
-        userJson.put("money", money);
+        userJson.put(MONEY_KEY, money);
 
-        RequestBody userBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson.toString());
+        RequestBody userBody = RequestBody.create(MediaType.parse(APPLICATION_JSON), userJson.toString());
         Request userRequest = new Request.Builder()
-                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo.json?auth=" + idToken)
+                .url(FIREBASE_BASE_URL + email + USER_INFO_SUFFIX + idToken)
                 .patch(userBody)
                 .build();
 
         client.newCall(userRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("사용자 정보에 점수 저장 실패: " + e.getMessage());
+                System.err.println(SCORE_SAVE_FAILURE_MESSAGE + e.getMessage());
             }
 
             @Override
@@ -529,7 +538,7 @@ public class Framework extends Canvas {
                 if (response.isSuccessful()) {
                     System.out.println("사용자 정보에 점수 저장 성공");
                 } else {
-                    System.err.println("사용자 정보에 점수 저장 실패: " + response.code());
+                    System.err.println(SCORE_SAVE_FAILURE_MESSAGE + response.code());
                 }
             }
         });
@@ -539,7 +548,7 @@ public class Framework extends Canvas {
         OkHttpClient client = new OkHttpClient();
 
         // 사용자 정보에서 모든 점수를 가져옴
-        String userScoresUrl = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/scores.json?auth=" + idToken;
+        String userScoresUrl = FIREBASE_BASE_URL + email + "/userinfo/scores.json?auth=" + idToken;
         Request request = new Request.Builder()
                 .url(userScoresUrl)
                 .get()
@@ -654,7 +663,7 @@ public class Framework extends Canvas {
         // 리더보드에 저장할 JSON 객체 생성
         JSONObject newEntry = new JSONObject();
         try {
-            newEntry.put("nickname", nickname);
+            newEntry.put(NICKNAME_KEY, nickname);
             newEntry.put("score", highestUserScore);
         } catch (JSONException e) {
             System.err.println("JSON 생성 오류: " + e.getMessage());
@@ -662,7 +671,7 @@ public class Framework extends Canvas {
         }
 
         // 새로운 점수 추가를 위한 PUT 요청
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), newEntry.toString());
+        RequestBody body = RequestBody.create(MediaType.parse(APPLICATION_JSON), newEntry.toString());
         Request updateRequest = new Request.Builder()
                 .url(leaderboardUrl) // 닉네임을 키로 사용해 저장
                 .put(body)
@@ -693,7 +702,7 @@ public class Framework extends Canvas {
 
     public void getNickname(String idToken) {
         OkHttpClient client = new OkHttpClient();
-        String url = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo.json?auth=" + idToken;
+        String url = FIREBASE_BASE_URL + email + USER_INFO_SUFFIX + idToken;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -714,8 +723,8 @@ public class Framework extends Canvas {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
 
-                    if (jsonResponse.has("nickname")) {
-                        nickname = jsonResponse.getString("nickname");
+                    if (jsonResponse.has(NICKNAME_KEY)) {
+                        nickname = jsonResponse.getString(NICKNAME_KEY);
                         System.out.println("Nickname: " + nickname);
                         MainV2.setNickname(nickname);
                         friendManager = new FriendManager(email,nickname);
@@ -849,12 +858,12 @@ public class Framework extends Canvas {
                     game.UpdateGame(gameTime, mousePosition());
                     lastTime = System.nanoTime();
                     break;
-                case Pause:
+                case PAUSE:
                     gameTime += System.nanoTime() - lastTime;
                     game.UpdateGame(gameTime, mousePosition());
                     lastTime = System.nanoTime();
                     break;
-                case MainPage:
+                case MAINPAGE:
                     gameState = GameState.STARTING;
                     break;
                 case PLAYING:
@@ -868,7 +877,7 @@ public class Framework extends Canvas {
                     break;
                 case LOGIN:
                     if (isLoginSuccessful) {
-                        gameState = GameState.MainPage;
+                        gameState = GameState.MAINPAGE;
                     }
                     break;
                 case MAIN_MENU:
@@ -932,7 +941,7 @@ public class Framework extends Canvas {
                 case ENDING:
                     game.DrawEnding(g2d, mousePosition(),gameTime);
                     break;
-                case Pause:
+                case PAUSE:
                     game.Draw(g2d, mousePosition());
                     break;
                 case PLAYING:
@@ -1034,7 +1043,7 @@ public class Framework extends Canvas {
                     game.ed++;
                 }
                 break;
-            case Pause:
+            case PAUSE:
                 if(e.getKeyCode() == KeyEvent.VK_SPACE){
                     nextRoundGame();
                 }

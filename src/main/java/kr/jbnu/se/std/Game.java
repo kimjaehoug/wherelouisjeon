@@ -641,7 +641,7 @@ public class Game {
         ducks.clear();
         isPause = true;
         System.out.println("buttonbuyadd");
-        Framework.gameState = Framework.GameState.Pause;
+        Framework.gameState = Framework.GameState.PAUSE;
         stopBackgroundMusic();
     }
 
