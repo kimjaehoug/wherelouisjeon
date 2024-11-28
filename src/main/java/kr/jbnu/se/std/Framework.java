@@ -132,8 +132,8 @@ public class Framework extends Canvas {
     private String inventoryimage;
     private String whatgun;
     public FirebaseClient firebaseClient;
-    public FriendManager friendManager;
-    private Clip clip;
+    public transient FriendManager friendManager;
+    private transient Clip clip;
     private static final String NICKNAME_KEY = "nickname";
 
     private static final String APPLICATION_JSON = "application/json; charset=utf-8";
@@ -144,7 +144,6 @@ public class Framework extends Canvas {
     private static final String USER_INFO_SUFFIX = "/userinfo.json?auth=";
     private static final String MONEY_KEY = "money";
     private static final String SCORE_SAVE_FAILURE_MESSAGE = "사용자 정보에 점수 저장 실패: ";
-
 
 
     private static Framework instance;
