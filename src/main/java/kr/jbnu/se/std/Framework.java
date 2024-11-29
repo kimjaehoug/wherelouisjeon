@@ -68,7 +68,7 @@ public class Framework extends Canvas {
      * Time of one millisecond in nanoseconds.
      * 1 millisecond = 1 000 000 nanoseconds
      */
-    public static final long milisecInNanosec = 1000000L;
+    public static final long MilisecInNanosec = 1000000L;
 
     /**
      * FPS - Frames per second
@@ -92,10 +92,13 @@ public class Framework extends Canvas {
     /**
      * Elapsed game time in nanoseconds.
      */
-
+    @SuppressWarnings("squid:S1948")
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    @SuppressWarnings("squid:S1948")
     private final ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
+    @SuppressWarnings("squid:S1948")
     private final ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
+    @SuppressWarnings("squid:S1948")
     private final ScheduledExecutorService scheduler3 = Executors.newScheduledThreadPool(1);
     private final Set<String> existingFriends = new HashSet<>(); // 중복 방지를 위한 Set
     private final Set<String> existingFriendsinvite = new HashSet<>(); // 중복 방지를 위한 Set
@@ -104,22 +107,30 @@ public class Framework extends Canvas {
     // It is used for calculating elapsed time.
     private long lastTime;
 
+
+
     // The actual game
+    @SuppressWarnings("squid:S1948")
     private Game game;
+    @SuppressWarnings("squid:S1948")
     private Thread gameThread;
     private Window window;
     private String userid;
     private static final String DATABASE_URL = "https://shootthedock-default-rtdb.firebaseio.com";
+    @SuppressWarnings("squid:S1948")
     private OkHttpClient client;
     private String email;
     private String nickname;
     private String idToken;
     private String password;
     private String realemail;
+    @SuppressWarnings("squid:S1948")
     private FirebaseAuth auth;
+    @SuppressWarnings("squid:S1948")
     private DatabaseReference databaseReference;
     private MainClient MainV2;
     private AddFriends addFriends;
+    @SuppressWarnings("squid:S1948")
     private DatabaseReference chatRef;
     private final Set<String> receivedMessageKeys = new HashSet<>();
     private final Set<String> receivedMessageKeysF = new HashSet<>(); // 이미 받은 메시지의 키를 저장할 Set
@@ -131,6 +142,7 @@ public class Framework extends Canvas {
     private InventoryWindow inventoryWindow;
     private String inventoryimage;
     private String whatgun;
+    @SuppressWarnings("squid:S1948")
     public FirebaseClient firebaseClient;
     public transient FriendManager friendManager;
     private transient Clip clip;
@@ -147,19 +159,20 @@ public class Framework extends Canvas {
 
 
     private static Framework instance;
-
+    @SuppressWarnings("squid:S1948")
     public MessageManager messageManager;
-
+    @SuppressWarnings("squid:S1948")
     public MessageReceiver messageReceiver;
-
+    @SuppressWarnings("squid:S1948")
     public MessageReceiver friendmessageReceiver;
-
+    @SuppressWarnings("squid:S1948")
     public InventoryManager inventoryManager;
 
 
     /**
      * Image for menu.
      */
+    @SuppressWarnings("squid:S1948")
     private BufferedImage shootTheDuckMenuImg;
 
 
@@ -381,7 +394,7 @@ public class Framework extends Canvas {
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://shootthedock-default-rtdb.firebaseio.com")
+                    .setDatabaseUrl(DATABASE_URL)
                     .build();
 
             FirebaseApp.initializeApp(options);
@@ -893,7 +906,6 @@ public class Framework extends Canvas {
                     Initialize();
                     // Load files - images, sounds, ...
                     LoadContent();
-
                     // When all things that are called above finished, we change game status to main menu.
                     gameState = GameState.MAIN_MENU;
                     break;
@@ -923,7 +935,7 @@ public class Framework extends Canvas {
 
             // Here we calculate the time that defines for how long we should put threat to sleep to meet the GAME_FPS.
             timeTaken = System.nanoTime() - beginTime;
-            timeLeft = (GAME_UPDATE_PERIOD - timeTaken) / milisecInNanosec; // In milliseconds
+            timeLeft = (GAME_UPDATE_PERIOD - timeTaken) / MilisecInNanosec; // In milliseconds
             // If the time is less than 10 milliseconds, then we will put thread to sleep for 10 millisecond so that some other thread can do some work.
             if (timeLeft < 10)
                 timeLeft = 10; //set a minimum
@@ -1059,6 +1071,7 @@ public class Framework extends Canvas {
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
                     System.exit(0);
                 break;
+
         }
     }
 
@@ -1073,6 +1086,10 @@ public class Framework extends Canvas {
             case MAIN_MENU:
                 if (e.getButton() == MouseEvent.BUTTON1)
                     newGame();
+                break;
+            default:
+                // 다른 상태에서는 특별히 동작하지 않음
+                System.out.println("Unhandled game state: " + gameState);
                 break;
         }
     }
