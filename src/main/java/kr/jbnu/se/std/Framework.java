@@ -156,6 +156,7 @@ public class Framework extends Canvas {
     private static final String USER_INFO_SUFFIX = "/userinfo.json?auth=";
     private static final String MONEY_KEY = "money";
     private static final String SCORE_SAVE_FAILURE_MESSAGE = "사용자 정보에 점수 저장 실패: ";
+    private static final String ERROR_MESSAGE = "데이터 가져오기 실패...";
 
 
     private static Framework instance;
@@ -459,7 +460,7 @@ public class Framework extends Canvas {
             @Override
             public void onFailure(Call call, IOException e) {
                 SwingUtilities.invokeLater(() -> {
-                    System.err.println("데이터 가져오기 실패: " + e.getMessage());
+                    System.err.println(ERROR_MESSAGE + e.getMessage());
                 });
             }
 
@@ -478,7 +479,7 @@ public class Framework extends Canvas {
                     }
                 } else {
                     SwingUtilities.invokeLater(() -> {
-                        System.err.println("데이터 가져오기 실패: " + response.message());
+                        System.err.println(ERROR_MESSAGE + response.message());
                     });
                 }
             }
@@ -725,7 +726,7 @@ public class Framework extends Canvas {
             @Override
             public void onFailure(Call call, IOException e) {
                 SwingUtilities.invokeLater(() -> {
-                    System.err.println("데이터 가져오기 실패: " + e.getMessage());
+                    System.err.println(ERROR_MESSAGE + e.getMessage());
                 });
             }
 
@@ -748,7 +749,7 @@ public class Framework extends Canvas {
                     }
                 } else {
                     SwingUtilities.invokeLater(() -> {
-                        System.err.println("데이터 가져오기 실패: " + response.message());
+                        System.err.println(ERROR_MESSAGE + response.message());
                     });
                 }
             }
@@ -928,6 +929,9 @@ public class Framework extends Canvas {
                         lastVisualizingTime = System.nanoTime();
                     }
                     break;
+                default:
+                    System.out.println("Unhandled GameState: " + gameState);
+                    break;
             }
 
             // Repaint the screen.
@@ -973,6 +977,9 @@ public class Framework extends Canvas {
                 case GAME_CONTENT_LOADING:
                     g2d.setColor(Color.white);
                     g2d.drawString("GAME is LOADING", frameWidth / 2 - 50, frameHeight / 2);
+                    break;
+                default:
+                    System.out.println("Unhandled GameState: " + gameState);
                     break;
             }
     }

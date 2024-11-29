@@ -4,13 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="transient 키워드 무시">
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="상수 대문자로 바꿈&#10;enum 앞에 static 선언 뺌">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Buttonbuy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Buttonbuy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Duck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Duck.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Hunter1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Hunter1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/boss1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/boss1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +227,7 @@
       <workItem from="1732629050382" duration="8278000" />
       <workItem from="1732686034806" duration="80000" />
       <workItem from="1732691298330" duration="12058000" />
-      <workItem from="1732882666038" duration="3600000" />
+      <workItem from="1732882666038" duration="4612000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -516,7 +525,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732884339251</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="상수 대문자로 바꿈&#10;enum 앞에 static 선언 뺌">
+      <option name="closed" value="true" />
+      <created>1732891986575</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1732891986575</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -553,6 +570,7 @@
     <MESSAGE value="transient 키워드 넣음 (FriendManager, Clip)" />
     <MESSAGE value="transient 키워드 넣음 (FriendManager, Clip)&#10;&#10;김성광오빠가 boss12345를 enum으로 관리해줌. BossConfig" />
     <MESSAGE value="transient 키워드 무시" />
-    <option name="LAST_COMMIT_MESSAGE" value="transient 키워드 무시" />
+    <MESSAGE value="상수 대문자로 바꿈&#10;enum 앞에 static 선언 뺌" />
+    <option name="LAST_COMMIT_MESSAGE" value="상수 대문자로 바꿈&#10;enum 앞에 static 선언 뺌" />
   </component>
 </project>
