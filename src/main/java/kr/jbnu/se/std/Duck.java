@@ -15,7 +15,7 @@ public class Duck implements Serializable {
     /**
      * How much time must pass in order to create a new duck?
      */
-    public static long timeBetweenDucks = Framework.secInNanosec / 2;
+    public static long timeBetweenDucks = Framework.SECINNANOSEC / 2;
 
     private static final long serialVersionUID = 1L;
     /**

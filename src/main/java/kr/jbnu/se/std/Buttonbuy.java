@@ -14,7 +14,7 @@ public class Buttonbuy {
     /**
      * How much time must pass in order to create a new duck?
      */
-    public static long timeBetweenButton = Framework.secInNanosec / 2;
+    public static long timeBetweenButton = Framework.SECINNANOSEC / 2;
     /**
      * Last time when the duck was created.
      */

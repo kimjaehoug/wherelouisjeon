@@ -14,7 +14,7 @@ public class boss1 {
     /**
      * How much time must pass in order to create a new duck?
      */
-    public static long timeBetweenboss = Framework.secInNanosec / 2;
+    public static long timeBetweenboss = Framework.SECINNANOSEC / 2;
     /**
      * Last time when the duck was created.
      */

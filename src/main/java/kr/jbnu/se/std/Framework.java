@@ -62,13 +62,13 @@ public class Framework extends Canvas {
      * Time of one second in nanoseconds.
      * 1 second = 1 000 000 000 nanoseconds
      */
-    public static final long secInNanosec = 1000000000L;
+    public static final long SECINNANOSEC = 1000000000L;
 
     /**
      * Time of one millisecond in nanoseconds.
      * 1 millisecond = 1 000 000 nanoseconds
      */
-    public static final long MilisecInNanosec = 1000000L;
+    public static final long MILISECINNANOSEC = 1000000L;
 
     /**
      * FPS - Frames per second
@@ -78,12 +78,12 @@ public class Framework extends Canvas {
     /**
      * Pause between updates. It is in nanoseconds.
      */
-    private final long GAME_UPDATE_PERIOD = secInNanosec / GAME_FPS;
+    private final long GAME_UPDATE_PERIOD = SECINNANOSEC / GAME_FPS;
 
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MAINPAGE, ROUND, PAUSE, ENDING, DESTROYED}
+    public enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING,LOGIN,MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, MAINPAGE, ROUND, PAUSE, ENDING, DESTROYED}
     /**
      * Current state of the game
      */
@@ -914,7 +914,7 @@ public class Framework extends Canvas {
                     // So we wait one second for the window/frame to be set to its correct size. Just in case we
                     // also insert 'this.getWidth() > 1' condition in case when the window/frame size wasn't set in time,
                     // so that we although get approximately size.
-                    if(this.getWidth() > 1 && visualizingTime > secInNanosec)
+                    if(this.getWidth() > 1 && visualizingTime > SECINNANOSEC)
                     {
                         frameWidth = this.getWidth();
                         frameHeight = this.getHeight();
@@ -935,7 +935,7 @@ public class Framework extends Canvas {
 
             // Here we calculate the time that defines for how long we should put threat to sleep to meet the GAME_FPS.
             timeTaken = System.nanoTime() - beginTime;
-            timeLeft = (GAME_UPDATE_PERIOD - timeTaken) / MilisecInNanosec; // In milliseconds
+            timeLeft = (GAME_UPDATE_PERIOD - timeTaken) / MILISECINNANOSEC; // In milliseconds
             // If the time is less than 10 milliseconds, then we will put thread to sleep for 10 millisecond so that some other thread can do some work.
             if (timeLeft < 10)
                 timeLeft = 10; //set a minimum
