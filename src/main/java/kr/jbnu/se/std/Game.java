@@ -19,6 +19,8 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.Timer;
 
+import static kr.jbnu.se.std.BossConfig.*;
+
 /**
  * Actual game.
  * 
@@ -1364,15 +1366,15 @@ public class Game {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.schedule(() -> {
             if(Round == 1){
-                boss.add(new boss1(1200, 400, 0, 1000,200,bossImg));
+                boss.add(BossConfig.getInstance(FIRST));
             }else if(Round == 2){
-                boss.add(new boss1(1200,400,0,1500, 400,boss2Img));
+                boss.add(BossConfig.getInstance(SECOND));
             }else if(Round == 3){
-                boss.add(new boss1(1200,400, 0, 2000, 2500,boss3Img));
+                boss.add(BossConfig.getInstance(THIRD));
             }else if(Round == 4){
-                boss.add(new boss1(1200,400,0,3000, 6400, boss4Img));
+                boss.add(BossConfig.getInstance(FOURTH));
             }else if(Round == 5){
-                boss.add(new boss1(1200,400,0,4000, 12000, boss5Img));
+                boss.add(BossConfig.getInstance(FIFTH));
             }
             stopBackgroundMusic();
             if(Round == 1) {
