@@ -423,7 +423,6 @@ public class Game {
                         score += duck.score;
                         System.out.println("Hunter가 오리를 죽였습니다: " + duck);
                         break; // 한 마리씩 죽이고 나가도록
-
                     }
                 }
                 updateFireSelectedDucks();

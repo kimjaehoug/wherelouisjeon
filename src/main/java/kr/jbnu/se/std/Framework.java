@@ -86,6 +86,12 @@ public class Framework extends Canvas {
      * Current state of the game
      */
     public static GameState gameState;
+    public synchronized static void setGameState(GameState gameState){
+        gameState = gameState;
+    }
+    public synchronized static GameState getGameState(){
+        return gameState;
+    }
 
     /**
      * Elapsed game time in nanoseconds.
@@ -116,7 +122,7 @@ public class Framework extends Canvas {
     private String userid;
     private static final String DATABASE_URL = "https://shootthedock-default-rtdb.firebaseio.com";
     @SuppressWarnings("squid:S1948")
-    private OkHttpClient client;
+    private OkHttpClient clientInstance;
     private String email;
     private String nickname;
     private String idToken;
@@ -181,7 +187,7 @@ public class Framework extends Canvas {
         initializeFirebase();
         this.window = window;
         gameState = GameState.LOGIN;
-        client = new OkHttpClient();
+        clientInstance = new OkHttpClient();
         loginClient = new LoginClient(this);
         loginClient.setVisible(true);
         MainV2 = new MainClient(this);
