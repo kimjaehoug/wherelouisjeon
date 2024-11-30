@@ -1,0 +1,142 @@
+<changelist name="24__11__27__오후_3_36,_체크아웃_전에_커밋되지_않은_변경_내용_[Changes]" date="1732689436249" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/24__11__27__오후_3_36,_체크아웃_전에_커밋되지_않은_변경_내용_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="24. 11. 27. 오후 3:36, 체크아웃 전에 커밋되지 않은 변경 내용 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$12.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/AddFriends$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/AddFriends.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainClient$5.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/GameMain.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$8.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainClient$4.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$9.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainV2$3.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Duck.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$7.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Game.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainClient$3.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$3.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$10.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainClient$2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/ChatwithFriends.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$5.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$4.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/InviteFriends.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$6.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/ShopWindow.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$11.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$6.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$5.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainClient.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainClient$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$GameState.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Window$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$4.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainV2$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$3.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/LoginClient.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainV2$2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Window.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Framework$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/InviteFriends$2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Game$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/MainV2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/ChatwithFriends$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/InviteFriends$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/ChatwithFriends$2.class" />
+  </binary>
+</changelist>

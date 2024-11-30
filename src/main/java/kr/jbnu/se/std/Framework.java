@@ -88,6 +88,13 @@ public class Framework extends Canvas {
      * Current state of the game
      */
     public static GameState gameState;
+    public synchronized static void setGameState(GameState state) {
+        gameState = state;
+    }
+
+    public synchronized static GameState getGameState() {
+        return gameState;
+    }
 
     /**
      * Elapsed game time in nanoseconds.
@@ -158,8 +165,8 @@ public class Framework extends Canvas {
     public Framework (Window window)
     {
         super();
-        initializeFirebase();
-        firebaseManager = new FirebaseManager("shootthedock-firebase-adminsdk-304qc-09167d3967",DATABASE_URL);
+        //initializeFirebase();
+        firebaseManager = new FirebaseManager("src/main/shootthedock-firebase-adminsdk-304qc-09167d3967.json",DATABASE_URL);
         this.window = window;
         windowManager = new WindowManager(this);
         audioManager = new AudioManager();

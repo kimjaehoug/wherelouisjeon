@@ -6,12 +6,12 @@ import java.io.Serializable;
 
 /**
  * The duck class.
- * 
+ *
  * @author www.gametutorial.net
  */
 
 public class Duck implements Serializable {
-    
+
     /**
      * How much time must pass in order to create a new duck?
      */
@@ -22,7 +22,7 @@ public class Duck implements Serializable {
      * Last time when the duck was created.
      */
     public static long lastDuckTime = 0;
-    
+
     /**
      * kr.jbnu.se.std.Duck lines.
      * Where is starting location for the duck?
@@ -30,17 +30,17 @@ public class Duck implements Serializable {
      * How many points is a duck worth?
      */
     public static int[][] duckLines = {
-                                       {Framework.frameWidth, (int)(Framework.frameHeight * 0.60), -2, 20},
-                                       {Framework.frameWidth, (int)(Framework.frameHeight * 0.65), -3, 30},
-                                       {Framework.frameWidth, (int)(Framework.frameHeight * 0.70), -4, 40},
-                                       {Framework.frameWidth, (int)(Framework.frameHeight * 0.78), -5, 50}
-                                      };
+            {Framework.frameWidth, (int)(Framework.frameHeight * 0.60), -2, 20},
+            {Framework.frameWidth, (int)(Framework.frameHeight * 0.65), -3, 30},
+            {Framework.frameWidth, (int)(Framework.frameHeight * 0.70), -4, 40},
+            {Framework.frameWidth, (int)(Framework.frameHeight * 0.78), -5, 50}
+    };
     /**
      * Indicate which is next duck line.
      */
     public static int nextDuckLines = 0;
-    
-    
+
+
     /**
      * X coordinate of the duck.
      */
@@ -49,28 +49,28 @@ public class Duck implements Serializable {
      * Y coordinate of the duck.
      */
     public int y;
-    
+
     /**
      * How fast the duck should move? And to which direction?
      */
     private int speed;
-    
+
     /**
      * How many points this duck is worth?
      */
     public int score;
-    
+
     /**
      * kr.jbnu.se.std.Duck image.
      */
     private BufferedImage duckImg;
 
     private boolean isAlive;
-    
-    
+
+
     /**
      * Creates new duck.
-     * 
+     *
      * @param x Starting x coordinate.
      * @param y Starting y coordinate.
      * @param speed The speed of this duck.
@@ -81,16 +81,16 @@ public class Duck implements Serializable {
     {
         this.x = x;
         this.y = y;
-        
+
         this.speed = speed;
-        
+
         this.score = score;
-        
+
         this.duckImg = duckImg;
         this.isAlive = true;
     }
-    
-    
+
+
     /**
      * Move the duck.
      */
@@ -98,7 +98,7 @@ public class Duck implements Serializable {
     {
         x += speed;
     }
-    
+
     /**
      * Draw the duck to the screen.
      * @param g2d Graphics2D

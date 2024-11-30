@@ -361,17 +361,6 @@ public class LoginClient extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // 이메일 라벨 및 입력 필드
-        /*JLabel emailLabel = new JLabel("Email:");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        registerPanel.add(emailLabel, gbc);
-
-        JTextField emailField = new JTextField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        registerPanel.add(emailField, gbc);*/
-
         // new ID 라벨 및 입력 필드
         JPanel newidpanel = new JPanel();
         newidpanel.setBackground(new Color(233, 233, 233));
@@ -408,17 +397,6 @@ public class LoginClient extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(5, 15, 5, 15);
         registerPanel.add(newidpanel, gbc);
-
-        // 비밀번호 라벨 및 입력 필드
-        /*JLabel passwordLabel = new JLabel("Password:");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        registerPanel.add(passwordLabel, gbc);
-
-        JPasswordField registerPasswordField = new JPasswordField(15);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        registerPanel.add(registerPasswordField, gbc);*/
 
         // new password 라벨 및 입력 필드
         JPanel newpasswordpanel = new JPanel();
@@ -460,16 +438,6 @@ public class LoginClient extends JFrame {
         gbc.insets = new Insets(5, 15, 5, 15);
 
         registerPanel.add(newpasswordpanel, gbc);
-
-        /*JLabel nicknameLabel = new JLabel("Nickname:");
-        gbc.gridx = 0;
-        gbc.gridy = 3; // 비밀번호 아래에 배치
-        registerPanel.add(nicknameLabel, gbc);
-
-        JTextField nicknameField = new JTextField(15);
-        gbc.gridx = 0;
-        gbc.gridy = 4; // 비밀번호 아래에 배치
-        registerPanel.add(nicknameField, gbc);*/
 
         // Nickname 라벨 및 입력 필드
         JPanel nicknamepanel = new JPanel();
@@ -617,7 +585,4 @@ public class LoginClient extends JFrame {
             }
         });
     }
-
-
-
 }
