@@ -98,7 +98,6 @@ public class Framework extends Canvas {
     private final ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
     @SuppressWarnings("squid:S1948")
     private final ScheduledExecutorService scheduler3 = Executors.newScheduledThreadPool(1);
-    private final Set<String> existingFriends = new HashSet<>(); // 중복 방지를 위한 Set
     private final Set<String> existingFriendsinvite = new HashSet<>(); // 중복 방지를 위한 Set
 
     private long gameTime;
@@ -113,7 +112,6 @@ public class Framework extends Canvas {
     @SuppressWarnings("squid:S1948")
     private Thread gameThread;
     private Window window;
-    private String userid;
     private static final String DATABASE_URL = "https://shootthedock-default-rtdb.firebaseio.com";
     @SuppressWarnings("squid:S1948")
     private OkHttpClient clientInstance;
@@ -126,19 +124,14 @@ public class Framework extends Canvas {
     private FirebaseAuth auth;
     @SuppressWarnings("squid:S1948")
     private DatabaseReference databaseReference;
-    private MainClient MainV2;
+    private MainClient mainV2;
     private AddFriends addFriends;
-    @SuppressWarnings("squid:S1948")
-    private DatabaseReference chatRef;
-    private final Set<String> receivedMessageKeys = new HashSet<>();
-    private final Set<String> receivedMessageKeysF = new HashSet<>(); // 이미 받은 메시지의 키를 저장할 Set
     private ChatwithFriends chatwithFriends;
     private String selectnickname;
     private int money;
     private InviteFriends inviteFriends;
     private ShopWindow shopWindow;
     private InventoryWindow inventoryWindow;
-    private String inventoryimage;
     private String whatgun;
     @SuppressWarnings("squid:S1948")
     public FirebaseClient firebaseClient;
@@ -185,9 +178,9 @@ public class Framework extends Canvas {
         clientInstance = new OkHttpClient();
         loginClient = new LoginClient(this);
         loginClient.setVisible(true);
-        MainV2 = new MainClient(this);
+        mainV2 = new MainClient(this);
         whatgun = "기본권총";
-        MainV2.setVisible(false);
+        mainV2.setVisible(false);
         this.setVisible(false);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseClient = new FirebaseClient(email);
@@ -204,12 +197,7 @@ public class Framework extends Canvas {
         inventoryWindow = new InventoryWindow(this);
         inventoryManager= new InventoryManager(email,idToken,inventoryWindow,money);
         inventoryManager.startReceivingInventory();
-        if(inventoryWindow == null){
-            inventoryManager.stopReceivingInventory();
-        }
-    }
-    public void stopfriendadd(){
-        addFriends = null;
+        inventoryManager.stopReceivingInventory();
     }
 
     public void stopfriends(){
@@ -223,7 +211,7 @@ public class Framework extends Canvas {
         shopWindow = null;
     }
     public void stopmain(){
-        MainV2 = null;
+        mainV2 = null;
     }
 
     public void rankWindow(){
@@ -305,9 +293,9 @@ public class Framework extends Canvas {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                SwingUtilities.invokeLater(() -> {
-                    System.err.println("친구 목록 가져오기 실패: " + e.getMessage());
-                });
+                SwingUtilities.invokeLater(() ->
+                    System.err.println("친구 목록 가져오기 실패: " + e.getMessage())
+                );
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -317,9 +305,9 @@ public class Framework extends Canvas {
                         JSONObject jsonObject = new JSONObject(responseBody);
                         // JSON 객체가 비어있는지 확인
                         if (jsonObject.length() == 0) {
-                            SwingUtilities.invokeLater(() -> {
-                                System.out.println("친구 신청이 없습니다.");
-                            });
+                            SwingUtilities.invokeLater(() ->
+                                System.out.println("친구 신청이 없습니다.")
+                            );
                             return;
                         }
                         // 친구 신청 목록 출력
@@ -329,9 +317,9 @@ public class Framework extends Canvas {
                             // 중복된 친구 신청이 아닌 경우에만 추가
                             if (!existingFriendsinvite.contains(friendNickname)) {
                                 existingFriendsinvite.add(friendNickname); // 새로운 친구 신청 추가
-                                SwingUtilities.invokeLater(() -> {
-                                    inviteFriends.setFriends(friendNickname + "\n"); // 친구 목록에 추가
-                                });
+                                SwingUtilities.invokeLater(() ->
+                                    inviteFriends.setFriends(friendNickname + "\n") // 친구 목록에 추가
+                                );
                             }
                         }
                     } catch (JSONException e) {
@@ -342,9 +330,9 @@ public class Framework extends Canvas {
                         });
                     }
                 } else {
-                    SwingUtilities.invokeLater(() -> {
-                        System.err.println("친구 목록 가져오기 실패: " + response.message());
-                    });
+                    SwingUtilities.invokeLater(() ->
+                        System.err.println("친구 목록 가져오기 실패: " + response.message())
+                    );
                 }
             }
         });
@@ -362,22 +350,22 @@ public class Framework extends Canvas {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                SwingUtilities.invokeLater(() -> {
-                    System.err.println("친구 삭제 실패: " + e.getMessage());
-                });
+                SwingUtilities.invokeLater(() ->
+                    System.err.println("친구 삭제 실패: " + e.getMessage())
+                );
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    SwingUtilities.invokeLater(() -> {
-                        System.out.println("친구 삭제 성공: " + nicknameToDelete);
+                    SwingUtilities.invokeLater(() ->
+                        System.out.println("친구 삭제 성공: " + nicknameToDelete)
                         // 여기서 UI 업데이트 등 추가 작업 가능
-                    });
+                    );
                 } else {
-                    SwingUtilities.invokeLater(() -> {
-                        System.err.println("친구 삭제 실패: " + response.message());
-                    });
+                    SwingUtilities.invokeLater(() ->
+                        System.err.println("친구 삭제 실패: " + response.message())
+                    );
                 }
             }
         });
@@ -458,9 +446,9 @@ public class Framework extends Canvas {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                SwingUtilities.invokeLater(() -> {
-                    System.err.println(ERROR_MESSAGE + e.getMessage());
-                });
+                SwingUtilities.invokeLater(() ->
+                    System.err.println(ERROR_MESSAGE + e.getMessage())
+                );
             }
 
             @Override
@@ -472,14 +460,14 @@ public class Framework extends Canvas {
                     if (jsonResponse.has(MONEY_KEY)) {
                         money = jsonResponse.getInt(MONEY_KEY);
                         System.out.println("money: " + money);
-                        MainV2.setMoney(money);
+                        mainV2.setMoney(money);
                     } else {
                         System.err.println("사용자 정보가 존재하지 않습니다.");
                     }
                 } else {
-                    SwingUtilities.invokeLater(() -> {
-                        System.err.println(ERROR_MESSAGE + response.message());
-                    });
+                    SwingUtilities.invokeLater(() ->
+                        System.err.println(ERROR_MESSAGE + response.message())
+                    );
                 }
             }
         });
@@ -499,7 +487,7 @@ public class Framework extends Canvas {
             return;
         }
 
-        RequestBody userBody = RequestBody.create(MediaType.parse(APPLICATION_JSON), userJson.toString());
+        RequestBody userBody = RequestBody.create(userJson.toString(), MediaType.parse(APPLICATION_JSON));
         Request userRequest = new Request.Builder()
                 .url(FIREBASE_BASE_URL + email + "/userinfo/scores.json?auth=" + idToken)
                 .patch(userBody) // 데이터를 추가할 때는 PATCH를 사용하여 기존 데이터를 유지
@@ -533,7 +521,7 @@ public class Framework extends Canvas {
         JSONObject userJson = new JSONObject();
         userJson.put(MONEY_KEY, money);
 
-        RequestBody userBody = RequestBody.create(MediaType.parse(APPLICATION_JSON), userJson.toString());
+        RequestBody userBody = RequestBody.create(userJson.toString(), MediaType.parse(APPLICATION_JSON));
         Request userRequest = new Request.Builder()
                 .url(FIREBASE_BASE_URL + email + USER_INFO_SUFFIX + idToken)
                 .patch(userBody)
@@ -575,10 +563,10 @@ public class Framework extends Canvas {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
+                    String responseBody = response.body() != null ? response.body().string() : "";
 
                     // 응답이 비어 있거나 유효하지 않은 경우 처리
-                    if (responseBody == null || responseBody.trim().isEmpty()) {
+                    if (responseBody.trim().isEmpty()) {
                         System.err.println("응답이 비어있거나 잘못되었습니다.");
                         return;
                     }
@@ -683,7 +671,7 @@ public class Framework extends Canvas {
         }
 
         // 새로운 점수 추가를 위한 PUT 요청
-        RequestBody body = RequestBody.create(MediaType.parse(APPLICATION_JSON), newEntry.toString());
+        RequestBody body = RequestBody.create(newEntry.toString(), MediaType.parse(APPLICATION_JSON));
         Request updateRequest = new Request.Builder()
                 .url(leaderboardUrl) // 닉네임을 키로 사용해 저장
                 .put(body)
@@ -738,10 +726,10 @@ public class Framework extends Canvas {
                     if (jsonResponse.has(NICKNAME_KEY)) {
                         nickname = jsonResponse.getString(NICKNAME_KEY);
                         System.out.println("Nickname: " + nickname);
-                        MainV2.setNickname(nickname);
+                        mainV2.setNickname(nickname);
                         friendManager = new FriendManager(email,nickname);
                         messageManager = new MessageManager(nickname);
-                        messageReceiver = new MessageReceiver(idToken,MainV2,email);
+                        messageReceiver = new MessageReceiver(idToken,mainV2,email);
                         messageReceiver.startReceivingMessages();
                     } else {
                         System.err.println("사용자 정보가 존재하지 않습니다.");
@@ -765,13 +753,13 @@ public class Framework extends Canvas {
     public void onLoginSuccess() {
         isLoginSuccessful = true;
         loginWithFirebase(realemail, password);
-        MainV2.setVisible(true);
+        mainV2.setVisible(true);
         stoploginClinet();
         playBackgroundMusic("src/main/resources/sounds/backgroundonMain.wav");
     }
 
     public void onGameStart(){
-        MainV2.dispose();
+        mainV2.dispose();
         stopBackgroundMusic();
         window.onLoginSuccess();
         gameState = GameState.VISUALIZING;
