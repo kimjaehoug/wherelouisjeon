@@ -116,7 +116,7 @@ public class Framework extends Canvas {
     private String userid;
     private static final String DATABASE_URL = "https://shootthedock-default-rtdb.firebaseio.com";
     @SuppressWarnings("squid:S1948")
-    private OkHttpClient client;
+    private OkHttpClient clientInstance;
     private String email;
     private String nickname;
     private String idToken;
@@ -167,6 +167,7 @@ public class Framework extends Canvas {
     @SuppressWarnings("squid:S1948")
     public InventoryManager inventoryManager;
 
+    private boolean running = true; // 루프 제어 변수 추가
 
     /**
      * Image for menu.
@@ -181,7 +182,7 @@ public class Framework extends Canvas {
         initializeFirebase();
         this.window = window;
         gameState = GameState.LOGIN;
-        client = new OkHttpClient();
+        clientInstance = new OkHttpClient();
         loginClient = new LoginClient(this);
         loginClient.setVisible(true);
         MainV2 = new MainClient(this);
@@ -859,7 +860,7 @@ public class Framework extends Canvas {
         long visualizingTime = 0, lastVisualizingTime = System.nanoTime();
         // This variables are used for calculating the time that defines for how long we should put threat to sleep to meet the GAME_FPS.
         long beginTime, timeTaken, timeLeft;
-        while(true)
+        while(running)
         {
             beginTime = System.nanoTime();
             switch (gameState)
@@ -885,6 +886,8 @@ public class Framework extends Canvas {
                 case GAMEOVER:
                     gameTime += System.nanoTime() - lastTime;
                     lastTime = System.nanoTime();
+                    running = false;
+                    System.out.println("게임이 종료되었습니다.");
                     break;
                 case LOGIN:
                     if (isLoginSuccessful) {
