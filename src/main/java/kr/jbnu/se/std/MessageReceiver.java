@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 public class MessageReceiver {
     private OkHttpClient client;
@@ -26,6 +27,7 @@ public class MessageReceiver {
     private String nickname;
     private String selectnickname;
     private String email;
+    private static final Logger logger = Logger.getLogger(MessageReceiver.class.getName());
 
 
     public MessageReceiver(String idToken, MainClient MainClient,String email){
@@ -217,7 +219,7 @@ public class MessageReceiver {
                             }
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        logger.warning(e.getMessage());
                         SwingUtilities.invokeLater(() -> {
                             System.err.println("친구 목록 처리 중 오류 발생: " + e.getMessage());
                         });

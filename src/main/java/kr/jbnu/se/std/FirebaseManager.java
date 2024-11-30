@@ -9,12 +9,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class FirebaseManager {
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
     private String idToken;
-
+    private static final Logger logger = Logger.getLogger(FirebaseManager.class.getName());
     public FirebaseManager(String serviceAccountPath, String databaseUrl) {
         try {
             FileInputStream serviceAccount = new FileInputStream(serviceAccountPath);
@@ -27,7 +28,7 @@ public class FirebaseManager {
             this.auth = FirebaseAuth.getInstance();
             this.databaseReference = FirebaseDatabase.getInstance().getReference();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 

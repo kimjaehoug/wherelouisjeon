@@ -8,7 +8,6 @@ import java.io.IOException;
 public class FriendManager {
     private String email;
     private String nickname;
-    private String othernickname;
 
     public FriendManager(String email, String nickname) {
         this.email = email;
@@ -19,6 +18,7 @@ public class FriendManager {
         JSONObject json = new JSONObject();
         OkHttpClient client = new OkHttpClient();
         json.put("nickname", nickname);
+        String othernickname;
         othernickname = nickname;
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
         Request request = new Request.Builder()

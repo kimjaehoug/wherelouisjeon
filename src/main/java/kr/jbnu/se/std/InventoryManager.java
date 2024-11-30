@@ -147,4 +147,7 @@ public class InventoryManager {
     public void stopReceivingInventory(){
         schedulerI.shutdown();
     }
+    public void closeshopwindow(){
+        this.shopWindow.dispose();
+    }
 }

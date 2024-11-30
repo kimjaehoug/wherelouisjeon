@@ -4,10 +4,12 @@ import okhttp3.*;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class MessageManager {
     private String nickname;
     private OkHttpClient client;
+    private static final Logger logger = Logger.getLogger(MessageManager.class.getName());
 
     public MessageManager(String nickname) {
         this.nickname = nickname;
@@ -39,7 +41,7 @@ public class MessageManager {
 
             sendRequest(request, "메시지 저장");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
     }
 

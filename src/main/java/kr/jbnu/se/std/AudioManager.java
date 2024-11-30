@@ -2,9 +2,12 @@ package kr.jbnu.se.std;
 
 import javax.sound.sampled.*;
 import java.io.File;
+import java.util.logging.Logger;
+
 
 public class AudioManager {
     private Clip backgroundClip;
+    private static final Logger logger = Logger.getLogger(AudioManager.class.getName());
 
     public void playBackgroundMusic(String filePath) {
         try {
@@ -13,7 +16,7 @@ public class AudioManager {
             backgroundClip.open(audioStream);
             backgroundClip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warning("배경음악 에러.");
         }
     }
 
@@ -24,7 +27,7 @@ public class AudioManager {
             clip.open(audioStream);
             clip.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warning("효과음 에러.");
         }
     }
 

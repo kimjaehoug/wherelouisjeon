@@ -13,6 +13,7 @@ import okhttp3.*;
 import org.json.JSONObject;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -21,24 +22,23 @@ public class LoginClient extends JFrame {
     private JTextField idField;
     private JPasswordField passwordField;
     private JButton loginButton;
-    private JButton signupButton;
     private Framework framework;
     private String id, password;
-    private FirebaseAuth auth;
-    private String realUserId;
     private String email;
     private String encodeemail1;
     private String encodeemail2;
+    private static final Logger logger = Logger.getLogger(LoginClient.class.getName());
     private static final String FIREBASE_API_KEY = "YOUR_API_KEY_HERE";
 
 
     public LoginClient(Framework framework) {
         this.framework = framework;
         setTitle("Login");
+        JButton signupButton;
         setSize(840, 630);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
         JPanel panel = new JPanel(new GridBagLayout());
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -547,7 +547,7 @@ public class LoginClient extends JFrame {
             System.err.println("이메일 변환성공");
             return URLEncoder.encode(email, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
             System.err.println("이메일변환실패");
             return email; // 인코딩 실패 시 원본 이메일을 그대로 반환
         }
@@ -557,6 +557,7 @@ public class LoginClient extends JFrame {
     private void saveUserNickname(String userId, String nickname) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject(userId);
+        String realUserId;
         realUserId = json.getString("localId");
         encodeemail1 = email.split("@")[0];
         System.err.println(encodeemail1);

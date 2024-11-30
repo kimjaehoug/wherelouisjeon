@@ -8,13 +8,13 @@ import java.awt.event.ActionListener;
 public class ChatwithFriends extends JFrame {
     private JTextArea chatArea3;
     private JTextField inputField;
-    private JButton sendButton;
     private String selectnickname;
     private Framework framework;
 
     public ChatwithFriends(Framework framework) {
         // 프레임 설정
         this.framework = framework;
+        JButton sendButton;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 500);
         setLocationRelativeTo(null); // 화면 중앙에 위치

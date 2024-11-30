@@ -24,7 +24,6 @@ public class ShopWindow extends JFrame {
             "src/main/resources/images/duck.png", "src/main/resources/images/duck.png",
             "src/main/resources/images/duck.png", "src/main/resources/images/duck.png"
     };
-    private String nickname;
     private JLabel nameLabel;
     private Framework framework;
 
@@ -244,7 +243,6 @@ public class ShopWindow extends JFrame {
     }
 
     public void setNickname(String nickname) {
-        this.nickname = nickname;
         nameLabel.setText("이름: " + nickname);
     }
 

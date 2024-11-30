@@ -17,11 +17,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RankWindow extends JFrame {
-    private JTable leaderboardTable;
     private DefaultTableModel tableModel;
 
     public RankWindow() {
         setTitle("리더보드");
+        JTable leaderboardTable;
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);

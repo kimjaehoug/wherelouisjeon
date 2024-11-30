@@ -4,13 +4,14 @@ import okhttp3.*;
 import org.json.JSONObject;
 
 import java.io.IOException;
-
+import java.util.logging.Logger;
 
 
 public class FirebaseClient {
     public String email;
     OkHttpClient client;
     JSONObject json;
+    private static final Logger logger = Logger.getLogger(FirebaseClient.class.getName());
 
     public FirebaseClient(String email) {
         this.email = email;
@@ -83,11 +84,7 @@ public class FirebaseClient {
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warning(e.getMessage());
         }
-    }
-
-    public void receiverDatabase(String DataPath){
-
     }
 }

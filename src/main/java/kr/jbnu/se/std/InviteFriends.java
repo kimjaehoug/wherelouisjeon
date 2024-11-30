@@ -8,10 +8,8 @@ import java.awt.event.ActionListener;
 
 public class InviteFriends extends JFrame {
     private DefaultListModel<String> friendRequestsModel; // 친구 신청 목록을 관리하는 모델
-    private Framework framework;
     private String DataPath;
     public InviteFriends(Framework framework) {
-        this.framework = framework;
         DataPath = "https://shootthedock-default-rtdb.firebaseio.com/users/" + framework.firebaseClient.email + "/"+ "userinfo/friends/";
         setTitle("친구 신청 목록");
         setVisible(true);

@@ -9,7 +9,6 @@ public class InventoryWindow extends JFrame {
     private int currentPage;
     private String[] itemNames;
     private String[] itemImages;
-    private JButton buyButton;
     private String selectedItem = null;
     private JPanel centerPanel;
     private JPanel selectedPanel = null;
@@ -19,7 +18,7 @@ public class InventoryWindow extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         setSize(600, 840);
-
+        JButton buyButton;
         ITEMS_PER_PAGE = 9;
         itemNames = new String[]{};
         itemImages = new String[]{};

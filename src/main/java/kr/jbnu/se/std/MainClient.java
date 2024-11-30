@@ -11,18 +11,16 @@ public class MainClient extends JFrame {
     private String nickname;
     private JTextArea chatArea;
     private JTextField messageField;
-    private Framework framework;
     private JLabel nameLabel;
     private DefaultListModel<String> friendsModel;
-    private int money;
     private JLabel moneyLabel;
+    private int money;
     // 원본 이미지 아이콘 생성
     ImageIcon startIcon = new ImageIcon("src/main/resources/images/start_btn.png");
     ImageIcon pressedStartIcon = new ImageIcon("src/main/resources/images/press_start_btn.png");
 
     public MainClient(Framework framework) {
         // 기본 프레임 설정
-        this.framework = framework;
         setTitle("Shoot the Dock");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 720);

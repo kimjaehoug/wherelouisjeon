@@ -53,7 +53,7 @@ public class boss1 {
     /**
      * How fast the duck should move? And to which direction?
      */
-    private double speed;
+    private final double speed;
 
     /**
      * How many points this duck is worth?
