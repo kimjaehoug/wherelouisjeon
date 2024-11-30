@@ -1065,11 +1065,14 @@ public class Framework extends Canvas {
                     nextRoundGame();
                 }
                 break;
+                //TODO: GAMEOVER하면 restartGame() 수정하기.
             case GAMEOVER:
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     System.exit(0);
-                } else if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    gameState = GameState.MAIN_MENU;  // 게임 오버 시 스페이스바나 엔터를 누르면 메인 메뉴로 돌아감
+                } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    restartGame(); // 게임 재시작
+                } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    gameState = GameState.MAIN_MENU;  // 메인 메뉴로 돌아감
                 }
                 break;
             case PLAYING:
