@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="import java.awt.event.ActionEvent;&#10;import java.awt.event.ActionListener;&#10;//unused라 지움//">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" afterDir="false" />
-    </list>
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="client 필드가 가려져서 clientInstance로 이름 변경////GameLoop()에 running 루프제어변수 true로 넣고 GAMEOVER에 false로 게임 종료." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -219,7 +216,7 @@
       <workItem from="1732691298330" duration="12058000" />
       <workItem from="1732882666038" duration="5975000" />
       <workItem from="1732894076441" duration="48000" />
-      <workItem from="1732949995902" duration="1446000" />
+      <workItem from="1732949995902" duration="1749000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -557,7 +554,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732894093360</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="client 필드가 가려져서 clientInstance로 이름 변경////GameLoop()에 running 루프제어변수 true로 넣고 GAMEOVER에 false로 게임 종료.">
+      <option name="closed" value="true" />
+      <created>1732951750177</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1732951750177</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -597,6 +602,7 @@
     <MESSAGE value="상수 대문자로 바꿈&#10;enum 앞에 static 선언 뺌" />
     <MESSAGE value="switch문에 default문로 디버깅 코드 넣음.&#10;데이터가져오기실패.. 문자열 상수화해버림" />
     <MESSAGE value="import java.awt.event.ActionEvent;&#10;import java.awt.event.ActionListener;&#10;//unused라 지움//" />
-    <option name="LAST_COMMIT_MESSAGE" value="import java.awt.event.ActionEvent;&#10;import java.awt.event.ActionListener;&#10;//unused라 지움//" />
+    <MESSAGE value="client 필드가 가려져서 clientInstance로 이름 변경////GameLoop()에 running 루프제어변수 true로 넣고 GAMEOVER에 false로 게임 종료." />
+    <option name="LAST_COMMIT_MESSAGE" value="client 필드가 가려져서 clientInstance로 이름 변경////GameLoop()에 running 루프제어변수 true로 넣고 GAMEOVER에 false로 게임 종료." />
   </component>
 </project>
