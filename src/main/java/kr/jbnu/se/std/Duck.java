@@ -15,7 +15,7 @@ public class Duck implements Serializable {
     /**
      * How much time must pass in order to create a new duck?
      */
-    public static long timeBetweenDucks = Framework.SECINNANOSEC / 2;
+    public final static long timeBetweenDucks = Framework.SECINNANOSEC / 2;
 
     private static final long serialVersionUID = 1L;
     /**
@@ -37,7 +37,7 @@ public class Duck implements Serializable {
      * Speed of the duck?
      * How many points is a duck worth?
      */
-    public static int[][] duckLines = {
+    public final static int[][] duckLines = {
             {Framework.frameWidth, (int)(Framework.frameHeight * 0.60), -2, 20},
             {Framework.frameWidth, (int)(Framework.frameHeight * 0.65), -3, 30},
             {Framework.frameWidth, (int)(Framework.frameHeight * 0.70), -4, 40},
@@ -68,7 +68,7 @@ public class Duck implements Serializable {
     /**
      * Y coordinate of the duck.
      */
-    public int y;
+    public final int y;
 
     /**
      * How fast the duck should move? And to which direction?
@@ -78,12 +78,12 @@ public class Duck implements Serializable {
     /**
      * How many points this duck is worth?
      */
-    public int score;
+    public final int score;
 
     /**
      * kr.jbnu.se.std.Duck image.
      */
-    private BufferedImage duckImg;
+    private final BufferedImage duckImg;
 
     private boolean isAlive;
 

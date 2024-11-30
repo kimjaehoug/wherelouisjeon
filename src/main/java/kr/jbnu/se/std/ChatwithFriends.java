@@ -6,10 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ChatwithFriends extends JFrame {
-    private JTextArea chatArea3;
-    private JTextField inputField;
+    private final JTextArea chatArea3;
+    private final JTextField inputField;
     private String selectnickname;
-    private Framework framework;
+    private final Framework framework;
 
     public ChatwithFriends(Framework framework) {
         // 프레임 설정

@@ -15,11 +15,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class MessageReceiver {
-    private OkHttpClient client;
-    private String idToken;
-    private Set<String> receivedMessageKeysF;
-    private Set<String> existingFriends;
-    private Set<String> receivedMessageKeysM;
+    private final OkHttpClient client;
+    private final String idToken;
+    private final Set<String> receivedMessageKeysF;
+    private final Set<String> existingFriends;
+    private final Set<String> receivedMessageKeysM;
     private ChatwithFriends chatwithFriends;// 채팅을 표시하는 UI 컴포넌트
     private MainClient mainClient;
     private final ScheduledExecutorService schedulerM = Executors.newScheduledThreadPool(1);
@@ -68,7 +68,7 @@ public class MessageReceiver {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
 
-                    if (jsonResponse.length() == 0) {
+                    if (jsonResponse.isEmpty()) {
                         SwingUtilities.invokeLater(() -> System.out.println("채팅 내역이 존재하지 않습니다."));
                         return;
                     }
@@ -109,7 +109,7 @@ public class MessageReceiver {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
 
-                    if (jsonResponse.length() == 0) {
+                    if (jsonResponse.isEmpty()) {
                         SwingUtilities.invokeLater(() -> System.out.println("채팅 내역이 존재하지 않습니다."));
                         return;
                     }
@@ -150,7 +150,7 @@ public class MessageReceiver {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
 
-                    if (jsonResponse.length() == 0) {
+                    if (jsonResponse.isEmpty()) {
                         SwingUtilities.invokeLater(() -> System.out.println("채팅 내역이 존재하지 않습니다."));
                         return;
                     }
@@ -198,7 +198,7 @@ public class MessageReceiver {
                         JSONObject jsonObject = new JSONObject(responseBody);
 
                         // JSON 객체가 비어있는지 확인
-                        if (jsonObject.length() == 0) {
+                        if (jsonObject.isEmpty()) {
                             SwingUtilities.invokeLater(() -> {
                                 System.out.println("친구가 없습니다.");
                             });

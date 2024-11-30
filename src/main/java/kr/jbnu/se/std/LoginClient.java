@@ -19,10 +19,10 @@ import javax.swing.event.DocumentListener;
 
 public class LoginClient extends JFrame {
 
-    private JTextField idField;
-    private JPasswordField passwordField;
-    private JButton loginButton;
-    private Framework framework;
+    private final JTextField idField;
+    private final JPasswordField passwordField;
+    private final JButton loginButton;
+    private final Framework framework;
     private String id, password;
     private String email;
     private String encodeemail1;
@@ -260,8 +260,8 @@ public class LoginClient extends JFrame {
 
         ImageIcon newIcon;
 
-        if (!"ID".equals(idText) && idText.length() > 0 &&
-                !"Password".equals(passwordText) && passwordText.length() > 0) {
+        if (!"ID".equals(idText) && !idText.isEmpty() &&
+                !"Password".equals(passwordText) && !passwordText.isEmpty()) {
             ImageIcon originalIcon = new ImageIcon("src/main/resources/images/login_btn_press.png");
             Image originalImage = originalIcon.getImage();
             Image scaledImage = originalImage.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
@@ -275,8 +275,8 @@ public class LoginClient extends JFrame {
         loginButton.setIcon(newIcon);
     }
 
-    public class ImagePanel extends JPanel{
-        private Image backgroundImage;
+    public static class ImagePanel extends JPanel{
+        private final Image backgroundImage;
         public ImagePanel(Image backgroundImage) {
             this.backgroundImage = backgroundImage;
         }
@@ -511,7 +511,6 @@ public class LoginClient extends JFrame {
     private void signUpWithFirebase(String email, String password,String nickname,JFrame Frame) {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
-        JFrame frame = Frame;
         json.put("email", email);
         json.put("password", password);
         json.put("returnSecureToken", true);
@@ -534,7 +533,7 @@ public class LoginClient extends JFrame {
                     saveUserNickname(userId, nickname);
                     SwingUtilities.invokeLater(() -> {
                         JOptionPane.showMessageDialog(null, "회원가입 성공!");
-                        frame.dispose();
+                        Frame.dispose();
                     });
                 } else {
                     SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "회원가입 실패: 잘못된 정보"));

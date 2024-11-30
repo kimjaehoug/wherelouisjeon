@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class RankWindow extends JFrame {
-    private DefaultTableModel tableModel;
+    private final DefaultTableModel tableModel;
 
     public RankWindow() {
         setTitle("리더보드");

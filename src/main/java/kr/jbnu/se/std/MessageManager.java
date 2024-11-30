@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class MessageManager {
-    private String nickname;
-    private OkHttpClient client;
+    private final String nickname;
+    private final OkHttpClient client;
     private static final Logger logger = Logger.getLogger(MessageManager.class.getName());
 
     public MessageManager(String nickname) {

@@ -45,25 +45,25 @@ public class Hunter1 {
     /**
      * Y coordinate of the duck.
      */
-    public int y;
+    public final int y;
     public int width;
     public int height;
-    public int maxHealth;
+    public final int maxHealth;
 
     /**
      * How fast the duck should move? And to which direction?
      */
-    private double speed;
+    private final double speed;
 
     /**
      * How many points this duck is worth?
      */
-    public int score;
+    public final int score;
 
     /**
      * kr.jbnu.se.std.Duck image.
      */
-    BufferedImage bossImg;
+    final BufferedImage bossImg;
     public int health;
 
 

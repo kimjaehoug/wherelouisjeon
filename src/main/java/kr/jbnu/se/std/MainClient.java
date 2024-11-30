@@ -9,15 +9,15 @@ import java.awt.event.MouseEvent;
 
 public class MainClient extends JFrame {
     private String nickname;
-    private JTextArea chatArea;
-    private JTextField messageField;
-    private JLabel nameLabel;
-    private DefaultListModel<String> friendsModel;
-    private JLabel moneyLabel;
+    private final JTextArea chatArea;
+    private final JTextField messageField;
+    private final JLabel nameLabel;
+    private final DefaultListModel<String> friendsModel;
+    private final JLabel moneyLabel;
     private int money;
     // 원본 이미지 아이콘 생성
-    ImageIcon startIcon = new ImageIcon("src/main/resources/images/start_btn.png");
-    ImageIcon pressedStartIcon = new ImageIcon("src/main/resources/images/press_start_btn.png");
+    final ImageIcon startIcon = new ImageIcon("src/main/resources/images/start_btn.png");
+    final ImageIcon pressedStartIcon = new ImageIcon("src/main/resources/images/press_start_btn.png");
 
     public MainClient(Framework framework) {
         // 기본 프레임 설정

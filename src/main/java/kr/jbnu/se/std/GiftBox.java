@@ -4,11 +4,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GiftBox {
-    int x, y;
-    int width, height;
-    int fallSpeed;
-    int type; // 선물 상자의 종류 (1, 2, 3)
-    BufferedImage giftBoxImg;
+    final int x, y;
+    final int width, height;
+    final int fallSpeed;
+    final int type; // 선물 상자의 종류 (1, 2, 3)
+    final BufferedImage giftBoxImg;
 
     public GiftBox(int x, int y, int width, int height, int fallSpeed, int type, BufferedImage giftBoxImg) {
         this.x = x;

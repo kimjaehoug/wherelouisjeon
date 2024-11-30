@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 
 public class FirebaseClient {
-    public String email;
+    public final String email;
     OkHttpClient client;
     JSONObject json;
     private static final Logger logger = Logger.getLogger(FirebaseClient.class.getName());

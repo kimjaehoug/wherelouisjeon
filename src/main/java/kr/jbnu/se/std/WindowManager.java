@@ -1,13 +1,13 @@
 package kr.jbnu.se.std;
 
 public class WindowManager {
-    private LoginClient loginClient;
+    private final LoginClient loginClient;
     private MainClient mainClient;
     private InviteFriends inviteFriends;
     private ShopWindow shopWindow;
     private InventoryWindow inventoryWindow;
     private RankWindow rankWindow;
-    private Framework framework;
+    private final Framework framework;
 
     public WindowManager(Framework framework) {
         loginClient = new LoginClient(framework);

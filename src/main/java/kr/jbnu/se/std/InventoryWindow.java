@@ -5,12 +5,12 @@ import java.awt.*;
 import javax.swing.border.LineBorder;
 
 public class InventoryWindow extends JFrame {
-    private int ITEMS_PER_PAGE;
+    private final int ITEMS_PER_PAGE;
     private int currentPage;
     private String[] itemNames;
     private String[] itemImages;
     private String selectedItem = null;
-    private JPanel centerPanel;
+    private final JPanel centerPanel;
     private JPanel selectedPanel = null;
 
     public InventoryWindow(Framework framework) {

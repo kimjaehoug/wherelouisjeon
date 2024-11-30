@@ -12,13 +12,13 @@ import java.util.concurrent.TimeUnit;
 
 public class InventoryManager {
 
-    private OkHttpClient client = new OkHttpClient();
-    private String email;
+    private final OkHttpClient client = new OkHttpClient();
+    private final String email;
     private String inventoryImage;
-    private String idToken;
-    private Set<String> receivedMessageKeysF = new HashSet<>();
+    private final String idToken;
+    private final Set<String> receivedMessageKeysF = new HashSet<>();
     private InventoryWindow inventoryWindow;
-    private int currentMoney;
+    private final int currentMoney;
     private final ScheduledExecutorService schedulerI = Executors.newScheduledThreadPool(1);
 
     private ShopWindow shopWindow;
@@ -111,7 +111,7 @@ public class InventoryManager {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
 
-                    if (jsonResponse.length() == 0) {
+                    if (jsonResponse.isEmpty()) {
                         SwingUtilities.invokeLater(() -> System.out.println("인벤토리 데이터가 없습니다."));
                         return;
                     }

@@ -6,8 +6,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class FriendManager {
-    private String email;
-    private String nickname;
+    private final String email;
+    private final String nickname;
 
     public FriendManager(String email, String nickname) {
         this.email = email;
@@ -33,7 +33,7 @@ public class FriendManager {
         OkHttpClient client = new OkHttpClient();
         JSONObject json = new JSONObject();
         json.put("nickname", nickname);
-        System.out.println("JSON 데이터: " + json.toString());
+        System.out.println("JSON 데이터: " + json);
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
         Request request = new Request.Builder()

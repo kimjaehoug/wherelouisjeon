@@ -45,7 +45,7 @@ public class Buttonbuy {
     /**
      * Y coordinate of the duck.
      */
-    public int y;
+    public final int y;
     public int width;
     public int height;
 
@@ -55,13 +55,9 @@ public class Buttonbuy {
     private double speed;
 
     /**
-     * How many points this duck is worth?
-     */
-
-    /**
      * kr.jbnu.se.std.Duck image.
      */
-    BufferedImage ButtonImg;
+    final BufferedImage ButtonImg;
 
 
     /**

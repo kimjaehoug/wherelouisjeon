@@ -6,15 +6,15 @@ import javax.swing.border.EmptyBorder;
 
 public class ShopWindow extends JFrame {
     private static final int ITEMS_PER_PAGE = 6; // 페이지당 아이템 수
-    private String[] itemNames = {
+    private final String[] itemNames = {
             "더블배럴샷건", "AK-47", "M4A1", "SMG", "스나이퍼", "핸드건", "유탄발사기", "톱",
             "기타1", "기타2", "기타3", "기타4", "기타5", "기타6", "기타7", "기타8"
     };
-    private int[] itemPrices = {
+    private final int[] itemPrices = {
             1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000,
             1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000
     };
-    private String[] itemImages = {
+    private final String[] itemImages = {
             "src/main/resources/images/gun_01.png", "src/main/resources/images/gun_02.png",
             "src/main/resources/images/gun_03.png", "src/main/resources/images/gun_04.png",
             "src/main/resources/images/gun_05.png", "src/main/resources/images/gun_06.png",
@@ -25,7 +25,7 @@ public class ShopWindow extends JFrame {
             "src/main/resources/images/duck.png", "src/main/resources/images/duck.png"
     };
     private JLabel nameLabel;
-    private Framework framework;
+    private final Framework framework;
 
     private int currentPage = 0; // 현재 페이지
     private Image backgroundImage;
@@ -201,7 +201,7 @@ public class ShopWindow extends JFrame {
         setVisible(true);
     }
 
-    private class OuterPanel extends JPanel {
+    private static class OuterPanel extends JPanel {
         public OuterPanel() {
         }
 
@@ -211,7 +211,7 @@ public class ShopWindow extends JFrame {
         }
     }
 
-    private class BackgroundPanel extends JPanel {
+    private static class BackgroundPanel extends JPanel {
         public BackgroundPanel() {
             setBackground(Color.BLUE); // 예: 연한 회색
             setOpaque(true); // 패널을 불투명하게 설정

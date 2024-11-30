@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public enum BossConfig {
-    FIRST(1200, 400, 0, 1000, 200, "/images/boss.png"),
-    SECOND(1200, 400, 0, 1500, 400, "/images/boss_crocs.png"),
-    THIRD(1200, 400, 0, 2000, 2500, "/images/boss_hippo.png"),
-    FOURTH(1200, 400, 0, 3000, 6400, "/images/boss_dugong.png"),
-    FIFTH(1200, 400, 0, 4000, 12000, "/images/duck_boss1.png");
+    FIRST(1200, 405, 0.01, 1000, 200, "/images/boss.png"),
+    SECOND(1210, 410, 0.02, 1500, 400, "/images/boss_crocs.png"),
+    THIRD(1195, 395, 0.03, 2000, 2500, "/images/boss_hippo.png"),
+    FOURTH(1205, 400, 0.04, 3000, 6400, "/images/boss_dugong.png"),
+    FIFTH(1215, 400, 0.05, 4000, 12000, "/images/duck_boss1.png");
     private static final Logger logger = Logger.getLogger(BossConfig.class.getName());
     private final int x;
     private final int y;
