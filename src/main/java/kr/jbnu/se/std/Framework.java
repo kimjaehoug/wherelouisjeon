@@ -197,7 +197,12 @@ public class Framework extends Canvas {
         inventoryWindow = new InventoryWindow(this);
         inventoryManager= new InventoryManager(email,idToken,inventoryWindow,money);
         inventoryManager.startReceivingInventory();
-        inventoryManager.stopReceivingInventory();
+        if(inventoryWindow == null){
+            inventoryManager.stopReceivingInventory();
+        }
+    }
+    public void stopfriendadd(){
+        addFriends = null;
     }
 
     public void stopfriends(){
@@ -213,6 +218,7 @@ public class Framework extends Canvas {
     public void stopmain(){
         mainV2 = null;
     }
+
 
     public void rankWindow(){
         RankWindow rankWindow = new RankWindow();
@@ -1078,15 +1084,14 @@ public class Framework extends Canvas {
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        switch (gameState) {
-            case MAIN_MENU:
-                if (e.getButton() == MouseEvent.BUTTON1)
-                    newGame();
-                break;
-            default:
-                // 다른 상태에서는 특별히 동작하지 않음
-                System.out.println("Unhandled game state: " + gameState);
-                break;
+        if (gameState == GameState.MAIN_MENU) { // 게임 상태가 MAIN_MENU일 때만 처리
+            if (e.getButton() == MouseEvent.BUTTON1) { // 마우스 왼쪽 버튼 클릭인지 확인
+                newGame(); // 새 게임을 시작하는 메서드 호출
+            }
+        } else {
+            // MAIN_MENU가 아닌 상태에서는 특별히 처리할 동작이 없음
+            System.out.println("Unhandled game state: " + gameState);
         }
     }
+
 }
