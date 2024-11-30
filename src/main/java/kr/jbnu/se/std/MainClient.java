@@ -136,7 +136,7 @@ public class MainClient extends JFrame {
 
         // ActionListener에 버튼이 눌렸을 때의 동작만 포함
         inventoryButton.addActionListener(e -> {
-            framework.inventoryWindow();
+            framework.inventory();
         });
 
         inventoryButton.addMouseListener(new MouseAdapter() {

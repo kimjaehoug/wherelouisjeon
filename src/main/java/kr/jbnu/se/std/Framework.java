@@ -1,28 +1,17 @@
 package kr.jbnu.se.std;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.UserRecord;
 import com.google.firebase.database.*;
-import com.google.firebase.database.core.AuthTokenProvider;
-import com.google.gson.JsonObject;
-import jdk.jfr.internal.tool.Main;
 import okhttp3.*;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -52,6 +41,11 @@ public class Framework extends Canvas {
     /**
      * Width of the frame.
      */
+
+    private static final String MONEYKEY = "money";
+    public static final String NICKNAMEKEY = "nickname";
+    private static final String SCOREERROR = "사용자 정보에 점수 저장 실패: ";
+    private static final String MONEYERROR = "재화 저장 실패";
     public static int frameWidth;
     /**
      * Height of the frame.
@@ -93,11 +87,8 @@ public class Framework extends Canvas {
      * Elapsed game time in nanoseconds.
      */
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
     private final ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
-    private final ScheduledExecutorService scheduler3 = Executors.newScheduledThreadPool(1);
-    private final Set<String> existingFriends = new HashSet<>(); // 중복 방지를 위한 Set
     private final Set<String> existingFriendsinvite = new HashSet<>(); // 중복 방지를 위한 Set
 
     private long gameTime;
@@ -108,7 +99,6 @@ public class Framework extends Canvas {
     private Game game;
     private Thread gameThread;
     private Window window;
-    private String userid;
     private static final String DATABASE_URL = "https://shootthedock-default-rtdb.firebaseio.com";
     private OkHttpClient client;
     private String email;
@@ -116,21 +106,16 @@ public class Framework extends Canvas {
     private String idToken;
     private String password;
     private String realemail;
-    private FirebaseAuth auth;
     private DatabaseReference databaseReference;
     private MainClient MainV2;
     private AddFriends addFriends;
-    private DatabaseReference chatRef;
-    private final Set<String> receivedMessageKeys = new HashSet<>();
     private final Set<String> receivedMessageKeysF = new HashSet<>(); // 이미 받은 메시지의 키를 저장할 Set
     private ChatwithFriends chatwithFriends;
     private String selectnickname;
     private int money;
     private InviteFriends inviteFriends;
     private ShopWindow shopWindow;
-    private InventoryWindow inventoryWindow;
     private RankWindow rankWindow;
-    private String inventoryimage;
     private String whatgun;
     public FirebaseClient firebaseClient;
     public FriendManager friendManager;
@@ -158,17 +143,20 @@ public class Framework extends Canvas {
     public Framework (Window window)
     {
         super();
-        initializeFirebase();
-        firebaseManager = new FirebaseManager("shootthedock-firebase-adminsdk-304qc-09167d3967",DATABASE_URL);
+        firebaseManager = FirebaseManager.getInstance(
+                "src/main/shootthedock-firebase-adminsdk-304qc-09167d3967.json",
+                DATABASE_URL
+        );
         this.window = window;
         windowManager = new WindowManager(this);
         audioManager = new AudioManager();
         gameState = GameState.LOGIN;
         client = new OkHttpClient();
+        audioManager = new AudioManager();
         whatgun = "기본권총";
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        firebaseClient = new FirebaseClient(email);
     }
+
     public void Invitewindow(){
             inviteFriends = new InviteFriends(this);
             startRecevingFriendInvite();
@@ -177,34 +165,19 @@ public class Framework extends Canvas {
             }
     }
 
-    public void inventoryWindow(){
-        inventoryWindow = new InventoryWindow(this);
-        inventoryManager= new InventoryManager(email,idToken,inventoryWindow,money);
+    public void inventory(){
+        windowManager.openInventoryWindow();
+        inventoryManager= new InventoryManager(email,idToken,windowManager.getInventoryWindow(),money);
         inventoryManager.startReceivingInventory();
-        if(inventoryWindow == null){
+        if(windowManager.getInventoryWindow() == null){
             inventoryManager.stopReceivingInventory();
         }
     }
-    public void stopfriendadd(){
-        addFriends = null;
-    }
 
-    public void stopfriends(){
-        inviteFriends = null;
-    }
     public void stoploginClinet(){
         loginClient = null;
     }
 
-    public void stopshop(){
-        shopWindow = null;
-    }
-
-    public void stoprank() { rankWindow = null; }
-
-    public void stopmain(){
-        MainV2 = null;
-    }
 
     public void RankWindow(){
         RankWindow rankWindow = new RankWindow();
@@ -228,45 +201,11 @@ public class Framework extends Canvas {
         }
     }
 
-
-    private void playBackgroundMusic(String filePath) {
-        try {
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filePath));
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY); // 무한 반복
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void playActiveSound(String filePath){
-        try{
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filePath));
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.start();
-        }catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void stopBackgroundMusic() {
-        if (clip != null && clip.isRunning()) {
-            clip.stop();
-        }
-    }
-
-
-
     public void frendsAddwindows(){
         addFriends = new AddFriends(this);
     }
 
 
-    public void stopReceivingFriendschat() {
-        scheduler1.shutdownNow();
-    }
 
     public void startRecevingFriendInvite(){
         scheduler2.scheduleAtFixedRate(this::receiveFriendsInvite, 0, 1, TimeUnit.SECONDS);
@@ -305,7 +244,7 @@ public class Framework extends Canvas {
                         // 친구 신청 목록 출력
                         for (String key : jsonObject.keySet()) {
                             JSONObject inviteObject = jsonObject.getJSONObject(key); // 친구 신청 객체
-                            String friendNickname = inviteObject.getString("nickname"); // 친구의 닉네임
+                            String friendNickname = inviteObject.getString(NICKNAMEKEY); // 친구의 닉네임
                             // 중복된 친구 신청이 아닌 경우에만 추가
                             if (!existingFriendsinvite.contains(friendNickname)) {
                                 existingFriendsinvite.add(friendNickname); // 새로운 친구 신청 추가
@@ -428,7 +367,7 @@ public class Framework extends Canvas {
 
     public void getMoney() {
         OkHttpClient client = new OkHttpClient();
-        String url = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo.json?auth=" + idToken;
+        String url = DATABASE_URL+"/users/" + email + "/userinfo.json?auth=" + idToken;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -449,8 +388,8 @@ public class Framework extends Canvas {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
 
-                    if (jsonResponse.has("money")) {
-                        money = jsonResponse.getInt("money");
+                    if (jsonResponse.has(MONEYKEY)) {
+                        money = jsonResponse.getInt(MONEYKEY);
                         System.out.println("money: " + money);
                         windowManager.getMainWindow().setMoney(money);
                     } else {
@@ -474,20 +413,20 @@ public class Framework extends Canvas {
         try {
             userJson.put(uniqueKey, score); // 시간 기반의 고유 키 아래에 점수만 저장
         } catch (JSONException e) {
-            System.err.println("JSON 생성 오류: " + e.getMessage());
+            System.out.println("JSON 생성 오류: " + e.getMessage());
             return;
         }
 
         RequestBody userBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson.toString());
         Request userRequest = new Request.Builder()
-                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/scores.json?auth=" + idToken)
+                .url(DATABASE_URL+"/users/" + email + "/userinfo/scores.json?auth=" + idToken)
                 .patch(userBody) // 데이터를 추가할 때는 PATCH를 사용하여 기존 데이터를 유지
                 .build();
 
         client.newCall(userRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("사용자 정보에 점수 저장 실패: " + e.getMessage());
+                System.out.println(SCOREERROR + e.getMessage());
             }
 
             @Override
@@ -498,7 +437,7 @@ public class Framework extends Canvas {
                     // Step 2: 최고 점수 확인 및 리더보드 업데이트
                     checkAndSaveLeaderboard(score);
                 } else {
-                    System.err.println("사용자 정보에 점수 저장 실패: " + response.code());
+                    System.out.println(SCOREERROR + response.code());
                 }
             }
         });
@@ -510,18 +449,18 @@ public class Framework extends Canvas {
         money = this.money + money;
         // Step 1: 사용자 정보에 점수 저장
         JSONObject userJson = new JSONObject();
-        userJson.put("money", money);
+        userJson.put(MONEYKEY, money);
 
         RequestBody userBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), userJson.toString());
         Request userRequest = new Request.Builder()
-                .url("https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo.json?auth=" + idToken)
+                .url(DATABASE_URL+"/users/" + email + "/userinfo.json?auth=" + idToken)
                 .patch(userBody)
                 .build();
 
         client.newCall(userRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("사용자 정보에 점수 저장 실패: " + e.getMessage());
+                System.out.println(MONEYERROR + e.getMessage());
             }
 
             @Override
@@ -529,7 +468,7 @@ public class Framework extends Canvas {
                 if (response.isSuccessful()) {
                     System.out.println("사용자 정보에 점수 저장 성공");
                 } else {
-                    System.err.println("사용자 정보에 점수 저장 실패: " + response.code());
+                    System.out.println(MONEYERROR + response.code());
                 }
             }
         });
@@ -654,7 +593,7 @@ public class Framework extends Canvas {
         // 리더보드에 저장할 JSON 객체 생성
         JSONObject newEntry = new JSONObject();
         try {
-            newEntry.put("nickname", nickname);
+            newEntry.put(NICKNAMEKEY, nickname);
             newEntry.put("score", highestUserScore);
         } catch (JSONException e) {
             System.err.println("JSON 생성 오류: " + e.getMessage());
@@ -714,8 +653,8 @@ public class Framework extends Canvas {
                     String responseBody = response.body().string();
                     JSONObject jsonResponse = new JSONObject(responseBody);
 
-                    if (jsonResponse.has("nickname")) {
-                        nickname = jsonResponse.getString("nickname");
+                    if (jsonResponse.has(NICKNAMEKEY)) {
+                        nickname = jsonResponse.getString(NICKNAMEKEY);
                         System.out.println("Nickname: " + nickname);
                         windowManager.getMainWindow().setNickname(nickname);
                         friendManager = new FriendManager(email,nickname);
@@ -743,15 +682,16 @@ public class Framework extends Canvas {
 
     public void onLoginSuccess() {
         isLoginSuccessful = true;
+        firebaseClient = new FirebaseClient(realemail,firebaseManager);
         loginWithFirebase(realemail, password);
         windowManager.openMainWindow();
         stoploginClinet();
-        playBackgroundMusic("src/main/resources/sounds/backgroundonMain.wav");
+        audioManager.playBackgroundMusic("src/main/resources/sounds/backgroundonMain.wav");
     }
 
     public void onGameStart(){
         windowManager.getMainWindow().dispose();
-        stopBackgroundMusic();
+        audioManager.stopBackgroundMusic();
         window.onLoginSuccess();
         gameState = GameState.VISUALIZING;
         this.setVisible(true);

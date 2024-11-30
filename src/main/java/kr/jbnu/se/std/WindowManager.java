@@ -55,4 +55,8 @@ public class WindowManager {
     public MainClient getMainWindow() {
         return mainClient;
     }
+
+    public InventoryWindow getInventoryWindow() {
+        return inventoryWindow;
+    }
 }

@@ -9,43 +9,45 @@ import java.io.IOException;
 
 public class FirebaseClient {
     public String email;
-    OkHttpClient client;
-    JSONObject json;
-
-    public FirebaseClient(String email) {
+    private OkHttpClient client;
+    private JSONObject json;
+    private FirebaseManager firebaseManager;
+    public FirebaseClient(String email,FirebaseManager firebaseManager) {
         this.email = email;
+        this.firebaseManager = firebaseManager;
         client = new OkHttpClient();
+
     }
 
-    public void senderDatabase(String Dataname,String DataPath, String Data){
+    public void senderDatabase(String Dataname, String DataPath, String Data) {
         client = new OkHttpClient();
         json = new JSONObject();
         json.put(Dataname, Data);
         // 사용자 ID를 키로 사용하여 닉네임 저장
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toString());
         Request request = new Request.Builder()
-                .url(DataPath+Data+".json")
+                .url(DataPath + Data + ".json")
                 .patch(body)// POST 메소드 사용
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println(Dataname+"저장 실패: " + e.getMessage());
+                System.err.println(Dataname + "저장 실패: " + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    System.err.println(Dataname+"저장 성공: " + response.code());
-                }else{
+                    System.err.println(Dataname + "저장 성공: " + response.code());
+                } else {
                 }
             }
         });
     }
 
     // Firebase에 메시지 전송
-    public void sendMessage(String message, String Data,String nickname) {
+    public void sendMessage(String message, String nickname) {
         try {
             // 메시지를 JSON 형식으로 변환
             JSONObject json = new JSONObject();
@@ -54,7 +56,7 @@ public class FirebaseClient {
             String timestamp = String.valueOf(System.currentTimeMillis());
 
             // Firebase에 저장할 URL
-            String url = "https://shootthedock-default-rtdb.firebaseio.com/chat/"+ timestamp+".json"; // 채팅 메시지를 저장하는 경로
+            String url = "https://shootthedock-default-rtdb.firebaseio.com/chat/" + timestamp + ".json"; // 채팅 메시지를 저장하는 경로
 
             RequestBody body = RequestBody.create(
                     MediaType.parse("application/json; charset=utf-8"),
@@ -87,7 +89,5 @@ public class FirebaseClient {
         }
     }
 
-    public void receiverDatabase(String DataPath){
 
-    }
 }
