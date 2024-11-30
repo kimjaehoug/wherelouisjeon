@@ -384,47 +384,42 @@ public class Game {
         if (playerSelectedDucks != null) {
             return;
         }
-
         // 오리들이 충분히 있을 때 N마리 오리를 무작위로 선택
         if (ducks.size() >= numberOfDucks) {
             playerSelectedDucks = new Duck[numberOfDucks]; // Player 선택된 오리 배열 초기화
-            Random random = new Random();
-
+            Set<Duck> selectedDucksSet = new HashSet<>();
+            selectedDucksSet.addAll(Arrays.asList(hunterSelectedDucks));
             for (int i = 0; i < numberOfDucks; i++) {
                 Duck selectedDuck;
                 int index;
-
                 // 중복되지 않는 오리를 선택
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
-                } while (Arrays.asList(playerSelectedDucks).contains(selectedDuck) ||
-                        (hunterSelectedDucks != null && Arrays.asList(hunterSelectedDucks).contains(selectedDuck))); // hunterSelectedDucks가 null일 경우 중복 방지 생략
-
+                } while (selectedDucksSet.contains(selectedDuck));
                 playerSelectedDucks[i] = selectedDuck;
+                selectedDucksSet.add(selectedDuck);
             }
         }
     }
-
-
 
     // N마리 오리를 선택하는 메소드 (Hunter용)
     private void selectHunterDucks(int numberOfDucks) {
         if (ducks.size() >= numberOfDucks) {
             hunterSelectedDucks = new Duck[numberOfDucks]; // Hunter 선택된 오리 배열 초기화
-            Random random = new Random();
-
+            Set<Duck> selectedDucksSet = new HashSet<>();
             for (int i = 0; i < numberOfDucks; i++) {
                 Duck selectedDuck;
                 int index;
-
                 // 중복되지 않는 오리를 선택
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
-                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || Arrays.asList(playerSelectedDucks).contains(selectedDuck)); // 중복 방지
-
+                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || (playerSelectedDucks != null && Arrays.asList(playerSelectedDucks).contains(selectedDuck)));
+                // 중복 방지
                 hunterSelectedDucks[i] = selectedDuck;
+                selectedDucksSet.add(selectedDuck);
+
             }
         }
     }
@@ -434,21 +429,21 @@ public class Game {
     private void selectFireDucks(int numberOfDucks) {
         if (ducks.size() >= numberOfDucks) {
             FireSelectedDucks = new Duck[numberOfDucks]; // Hunter 선택된 오리 배열 초기화
-            Random random = new Random();
-
+            Set<Duck> selectedDucksSet = new HashSet<>();
             for (int i = 0; i < numberOfDucks; i++) {
                 Duck selectedDuck;
                 int index;
-
                 // 중복되지 않는 오리를 선택
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
-                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || Arrays.asList(playerSelectedDucks).contains(selectedDuck) || Arrays.asList(FireSelectedDucks).contains(selectedDuck)); // 중복 방지
-
+                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) ||
+                        (hunterSelectedDucks != null && Arrays.asList(hunterSelectedDucks).contains(selectedDuck)) ||
+                        (playerSelectedDucks != null && Arrays.asList(playerSelectedDucks).contains(selectedDuck)));
+                // 중복 방지
                 FireSelectedDucks[i] = selectedDuck;
+                selectedDucksSet.add(selectedDuck);
                 System.out.println("Selected Fire Ducks: " + Arrays.toString(FireSelectedDucks));
-
             }
         }
     }
@@ -475,7 +470,6 @@ public class Game {
                         score += duck.score;
                         System.out.println("Hunter가 오리를 죽였습니다: " + duck);
                         break; // 한 마리씩 죽이고 나가도록
-
                     }
                 }
                 updateFireSelectedDucks();
@@ -494,21 +488,21 @@ public class Game {
 
 
     private void updateFireSelectedDucks() {
-        Random random = new Random();
-
         for (int i = 0; i < FireSelectedDucks.length; i++) {
             if (hunterSelectedDucks[i] == null || !ducks.contains(hunterSelectedDucks[i]) || !ducks.contains(playerSelectedDucks[i])) {
                 // 새로운 오리를 선택하여 중복되지 않게 추가
                 Duck selectedDuck;
                 int index;
-
+                Set<Duck> selectedDucksSet = new HashSet<>();
+                selectedDucksSet.addAll(Arrays.asList(hunterSelectedDucks));
+                selectedDucksSet.addAll(Arrays.asList(playerSelectedDucks));
+                selectedDucksSet.addAll(Arrays.asList(FireSelectedDucks));
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
                 } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) ||
                         Arrays.asList(playerSelectedDucks).contains(selectedDuck) ||
                         Arrays.asList(FireSelectedDucks).contains(selectedDuck)); // 중복 방지
-
                 FireSelectedDucks[i] = selectedDuck;
             }
         }
@@ -562,7 +556,9 @@ public class Game {
 
     // 오리들이 죽으면 Hunter 선택된 오리를 null로 설정
     private void updateHunterSelectedDucks() {
-        Random random = new Random();
+        Set<Duck> selectedDucksSet = new HashSet<>();
+        selectedDucksSet.addAll(Arrays.asList(hunterSelectedDucks));
+        selectedDucksSet.addAll(Arrays.asList(playerSelectedDucks));
 
         for (int i = 0; i < hunterSelectedDucks.length; i++) {
             if (hunterSelectedDucks[i] == null || !ducks.contains(hunterSelectedDucks[i])) {
@@ -573,10 +569,11 @@ public class Game {
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
-                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) ||
-                        Arrays.asList(playerSelectedDucks).contains(selectedDuck)); // 중복 방지
-
+                } while (selectedDucksSet.contains(selectedDuck));
+                // 중복 방지
                 hunterSelectedDucks[i] = selectedDuck;
+                selectedDucksSet.add(selectedDuck); // 선택된 오리 추가
+
             }
         }
     }
