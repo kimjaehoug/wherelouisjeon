@@ -177,7 +177,13 @@ public class Game {
     private List<BossAttack> bossAttacks5 = new ArrayList<>();
     private int roundPass;
 
+    private static final String BOSSATTCK_SOUND_PATH = "src/main/resources/sounds/bossattck.wav";
+    private static final String HIT_MESSAGE = "Player hit! Remaining health: ";
+    private static final String HIT_SOUND_PATH = "src/main/resources/sounds/hit.wav";
 
+    private static final String BUY_BUTTON_MESSAGE = "buybutton";
+    private static final String MOUSE_POSITION_MESSAGE = "Mouse Position: ";
+    private static final String BUTTON_POSITION_MESSAGE = "Button Position: ";
 
     public Game(Framework framework) {
         Framework.gameState = Framework.GameState.GAME_CONTENT_LOADING;
@@ -716,7 +722,7 @@ public class Game {
                         bossAttacks.add(new BossAttack(boss.get(i).x, boss.get(i).y, angle, 15));
                         bossAttacks.add(new BossAttack(boss.get(i).x, boss.get(i).y, angle2, 15));
                         bossAttacks.add(new BossAttack(boss.get(i).x, boss.get(i).y, angle3, 15));// 속도 10으로 설정
-                        playActiveSound("src/main/resources/sounds/bossattck.wav");
+                        playActiveSound(BOSSATTCK_SOUND_PATH);
                         lastBossAttackTime = System.nanoTime(); // 마지막 공격 시간 갱신
                     }
                 }
@@ -748,7 +754,7 @@ public class Game {
                         bossAttacks2.add(new BossAttack(boss.get(i).x, boss.get(i).y, vx2, vy2, gravity, deltaTime));
                         bossAttacks2.add(new BossAttack(boss.get(i).x, boss.get(i).y, vx3, vy3, gravity, deltaTime));
                         bossAttacks2.add(new BossAttack(boss.get(i).x, boss.get(i).y, vx4, vy4, gravity, deltaTime));
-                        playActiveSound("src/main/resources/sounds/bossattck.wav");
+                        playActiveSound(BOSSATTCK_SOUND_PATH);
                         // Update the time of the last attack
                         lastBossAttackTime = System.nanoTime();
                     }
@@ -792,7 +798,7 @@ public class Game {
 
                         // 유도탄을 추가
                         bossAttacks3.add(new BossAttack(boss.get(i).x, boss.get(i).y, vxHoming, vyHoming, gravity, deltaTime));
-                        playActiveSound("src/main/resources/sounds/bossattck.wav");
+                        playActiveSound(BOSSATTCK_SOUND_PATH);
 
                         // 마지막 공격 시간 업데이트
                         lastBossAttackTime = System.nanoTime();
@@ -838,7 +844,7 @@ public class Game {
                         // 유도탄을 추가
                         bossAttacks4.add(new BossAttack(boss.get(i).x, boss.get(i).y, vxHoming, vyHoming, gravity, deltaTime));
                         bossAttacks4.add(new BossAttack(boss.get(i).x, boss.get(i).y, vxHoming, vyHoming, gravity, deltaTime));
-                        playActiveSound("src/main/resources/sounds/bossattck.wav");
+                        playActiveSound(BOSSATTCK_SOUND_PATH);
 
                         // 마지막 공격 시간 업데이트
                         lastBossAttackTime = System.nanoTime();
@@ -912,7 +918,7 @@ public class Game {
                         // 유도탄을 추가
                         bossAttacks5.add(new BossAttack(boss.get(i).x, boss.get(i).y, vxHoming, vyHoming, gravity, deltaTime));
                         bossAttacks5.add(new BossAttack(boss.get(i).x, boss.get(i).y, vxHoming, vyHoming, gravity, deltaTime));
-                        playActiveSound("src/main/resources/sounds/bossattck.wav");
+                        playActiveSound(BOSSATTCK_SOUND_PATH);
 
                         // 마지막 공격 시간 업데이트
                         lastBossAttackTime = System.nanoTime();
@@ -960,10 +966,10 @@ public class Game {
 
                     // 피격 범위 확인
                     if (attack.isHit(mousePosition)) {
-                        System.out.println("Player hit! Remaining health: ");
+                        System.out.println(HIT_MESSAGE);
                         bossAttacks.remove(i);// 공격이 맞았으므로 제거
                         PlayerHp -= 10;
-                        playActiveSound("src/main/resources/sounds/hit.wav");
+                        playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
 
@@ -980,10 +986,10 @@ public class Game {
                     attack2.updatewithgravity();
 
                     if (attack2.isHit(mousePosition)) {
-                        System.out.println("Player hit! Remaining health: ");
+                        System.out.println(HIT_MESSAGE);
                         bossAttacks2.remove(i);// 공격이 맞았으므로 제거
                         PlayerHp -= 10;
-                        playActiveSound("src/main/resources/sounds/hit.wav");
+                        playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
 
@@ -999,10 +1005,10 @@ public class Game {
                     attack2.updatewithgravity();
 
                     if (attack2.isHit(mousePosition)) {
-                        System.out.println("Player hit! Remaining health: ");
+                        System.out.println(HIT_MESSAGE);
                         bossAttacks3.remove(i);// 공격이 맞았으므로 제거
                         PlayerHp -= 10;
-                        playActiveSound("src/main/resources/sounds/hit.wav");
+                        playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
 
@@ -1018,10 +1024,10 @@ public class Game {
                     attack2.updatewithgravity();
                     attack2.update();
                     if (attack2.isHit(mousePosition)) {
-                        System.out.println("Player hit! Remaining health: ");
+                        System.out.println(HIT_MESSAGE);
                         bossAttacks4.remove(i);// 공격이 맞았으므로 제거
                         PlayerHp -= 10;
-                        playActiveSound("src/main/resources/sounds/hit.wav");
+                        playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
 
@@ -1037,10 +1043,10 @@ public class Game {
                     attack2.updatewithgravity();
 
                     if (attack2.isHit(mousePosition)) {
-                        System.out.println("Player hit! Remaining health: ");
+                        System.out.println(HIT_MESSAGE);
                         bossAttacks5.remove(i);// 공격이 맞았으므로 제거
                         PlayerHp -= 10;
-                        playActiveSound("src/main/resources/sounds/hit.wav");
+                        playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
 
@@ -1314,12 +1320,12 @@ public class Game {
                 if (money > 200 && Hunters.size() < 1) {
                     Rectangle buttonArea1 = new Rectangle(buttonbuy.get(0).x, buttonbuy.get(0).y, 367, 257);
                     if (buttonArea1.contains(mousePosition) && mouseClicked) {
-                        System.out.println("buybutton");
+                        System.out.println(BUY_BUTTON_MESSAGE);
                         Hunters.add(new Hunter1(220, 290, 0, 100, hunter111Img));
                         Hunter1 = true;
                         money -= 200;
-                        System.out.println("Mouse Position: " + mousePosition);
-                        System.out.println("Button Position: " + buttonbuy.get(0).x + ", " + buttonbuy.get(0).y);
+                        System.out.println(MOUSE_POSITION_MESSAGE + mousePosition);
+                        System.out.println(BUTTON_POSITION_MESSAGE + buttonbuy.get(0).x + ", " + buttonbuy.get(0).y);
                     }
                 }
 
@@ -1327,11 +1333,11 @@ public class Game {
                 if (money > 100) {
                     Rectangle buttonArea2 = new Rectangle(buttonbuy.get(1).x, buttonbuy.get(1).y, 367, 257);
                     if (buttonArea2.contains(mousePosition)&& mouseClicked) {
-                        System.out.println("buybutton");
+                        System.out.println(BUY_BUTTON_MESSAGE);
                         damage += 10;
                         money -= 100;
-                        System.out.println("Mouse Position: " + mousePosition);
-                        System.out.println("Button Position: " + buttonbuy.get(1).x + ", " + buttonbuy.get(1).y);
+                        System.out.println(MOUSE_POSITION_MESSAGE + mousePosition);
+                        System.out.println(BUTTON_POSITION_MESSAGE + buttonbuy.get(1).x + ", " + buttonbuy.get(1).y);
                     }
                 }
 
@@ -1339,11 +1345,11 @@ public class Game {
                 if (money > 100) {
                     Rectangle buttonArea3 = new Rectangle(buttonbuy.get(2).x, buttonbuy.get(2).y, 367, 257);
                     if (buttonArea3.contains(mousePosition) && mouseClicked) {
-                        System.out.println("buybutton");
+                        System.out.println(BUY_BUTTON_MESSAGE);
                         maxAmmo += 2;
                         money -= 100;
-                        System.out.println("Mouse Position: " + mousePosition);
-                        System.out.println("Button Position: " + buttonbuy.get(2).x + ", " + buttonbuy.get(2).y);
+                        System.out.println(MOUSE_POSITION_MESSAGE + mousePosition);
+                        System.out.println(BUTTON_POSITION_MESSAGE + buttonbuy.get(2).x + ", " + buttonbuy.get(2).y);
                     }
                 }
             }
