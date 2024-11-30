@@ -36,6 +36,7 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import com.google.firebase.database.FirebaseDatabase;
+import org.slf4j.LoggerFactory;
 
 /**
  * kr.jbnu.se.std.Framework that controls the game (kr.jbnu.se.std.Game.java) that created it, update it and draw it on the screen.
@@ -45,6 +46,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Framework extends Canvas {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Framework.class);
     private boolean isLoginSuccessful = false; // 로그인 성공 여부를 관리
     private LoginClient loginClient;
     /**
@@ -148,6 +150,8 @@ public class Framework extends Canvas {
     private static final String MONEY_KEY = "money";
     private static final String SCORE_SAVE_FAILURE_MESSAGE = "사용자 정보에 점수 저장 실패: ";
     private static final String ERROR_MESSAGE = "데이터 가져오기 실패...";
+
+    private static final Logger logger = Logger.getLogger(Framework.class.getName());
 
 
     private static Framework instance;
@@ -300,7 +304,7 @@ public class Framework extends Canvas {
             @Override
             public void onFailure(Call call, IOException e) {
                 SwingUtilities.invokeLater(() ->
-                    System.err.println("친구 목록 가져오기 실패: " + e.getMessage())
+                    logger.warning("친구 목록 가져오기 실패: " + e.getMessage())
                 );
             }
             @Override
@@ -312,7 +316,7 @@ public class Framework extends Canvas {
                         // JSON 객체가 비어있는지 확인
                         if (jsonObject.length() == 0) {
                             SwingUtilities.invokeLater(() ->
-                                System.out.println("친구 신청이 없습니다.")
+                                logger.warning("친구 신청이 없습니다.")
                             );
                             return;
                         }
@@ -331,13 +335,13 @@ public class Framework extends Canvas {
                     } catch (JSONException e) {
                         e.printStackTrace();
                         SwingUtilities.invokeLater(() -> {
-                            System.err.println("친구 신청 목록 처리 중 오류 발생: " + e.getMessage());
+                            logger.warning("친구 신청 목록 처리 중 오류 발생: " + e.getMessage());
                             stopReceivingFriendInvite();
                         });
                     }
                 } else {
                     SwingUtilities.invokeLater(() ->
-                        System.err.println("친구 목록 가져오기 실패: " + response.message())
+                        logger.warning("친구 목록 가져오기 실패: " + response.message())
                     );
                 }
             }
@@ -357,7 +361,7 @@ public class Framework extends Canvas {
             @Override
             public void onFailure(Call call, IOException e) {
                 SwingUtilities.invokeLater(() ->
-                    System.err.println("친구 삭제 실패: " + e.getMessage())
+                    logger.warning("친구 삭제 실패: " + e.getMessage())
                 );
             }
 
@@ -365,12 +369,12 @@ public class Framework extends Canvas {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     SwingUtilities.invokeLater(() ->
-                        System.out.println("친구 삭제 성공: " + nicknameToDelete)
+                        logger.info("친구 삭제 성공: " + nicknameToDelete)
                         // 여기서 UI 업데이트 등 추가 작업 가능
                     );
                 } else {
                     SwingUtilities.invokeLater(() ->
-                        System.err.println("친구 삭제 실패: " + response.message())
+                        logger.warning("친구 삭제 실패: " + response.message())
                     );
                 }
             }
@@ -425,7 +429,7 @@ public class Framework extends Canvas {
                             JSONObject jsonResponse = new JSONObject(responseBody);
                             // ID 토큰 가져오기
                             idToken = jsonResponse.getString("idToken");
-                            System.out.println("ID 토큰: " + idToken);
+                            logger.info("ID 토큰: " + idToken);
                             // 사용자의 닉네임을 가져옵니다.
                             getNickname(idToken);
                             getMoney();
@@ -453,7 +457,7 @@ public class Framework extends Canvas {
             @Override
             public void onFailure(Call call, IOException e) {
                 SwingUtilities.invokeLater(() ->
-                    System.err.println(ERROR_MESSAGE + e.getMessage())
+                    logger.warning(ERROR_MESSAGE + e.getMessage())
                 );
             }
 
@@ -465,14 +469,14 @@ public class Framework extends Canvas {
 
                     if (jsonResponse.has(MONEY_KEY)) {
                         money = jsonResponse.getInt(MONEY_KEY);
-                        System.out.println("money: " + money);
+                        logger.info("money: " + money);
                         mainV2.setMoney(money);
                     } else {
-                        System.err.println("사용자 정보가 존재하지 않습니다.");
+                        logger.warning("사용자 정보가 존재하지 않습니다.");
                     }
                 } else {
                     SwingUtilities.invokeLater(() ->
-                        System.err.println(ERROR_MESSAGE + response.message())
+                        logger.warning(ERROR_MESSAGE + response.message())
                     );
                 }
             }
@@ -489,7 +493,7 @@ public class Framework extends Canvas {
         try {
             userJson.put(uniqueKey, score); // 시간 기반의 고유 키 아래에 점수만 저장
         } catch (JSONException e) {
-            System.err.println("JSON 생성 오류: " + e.getMessage());
+            logger.warning("JSON 생성 오류: " + e.getMessage());
             return;
         }
 
@@ -502,18 +506,18 @@ public class Framework extends Canvas {
         client.newCall(userRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println(SCORE_SAVE_FAILURE_MESSAGE + e.getMessage());
+                logger.warning(SCORE_SAVE_FAILURE_MESSAGE + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    System.out.println("사용자 정보에 점수 저장 성공");
+                    logger.warning("사용자 정보에 점수 저장 성공");
 
                     // Step 2: 최고 점수 확인 및 리더보드 업데이트
                     checkAndSaveLeaderboard(score);
                 } else {
-                    System.err.println(SCORE_SAVE_FAILURE_MESSAGE + response.code());
+                    logger.warning(SCORE_SAVE_FAILURE_MESSAGE + response.code());
                 }
             }
         });
@@ -536,15 +540,15 @@ public class Framework extends Canvas {
         client.newCall(userRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println(SCORE_SAVE_FAILURE_MESSAGE + e.getMessage());
+                logger.warning(SCORE_SAVE_FAILURE_MESSAGE + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    System.out.println("사용자 정보에 점수 저장 성공");
+                    logger.info("사용자 정보에 점수 저장 성공");
                 } else {
-                    System.err.println(SCORE_SAVE_FAILURE_MESSAGE + response.code());
+                    logger.warning(SCORE_SAVE_FAILURE_MESSAGE + response.code());
                 }
             }
         });
@@ -563,7 +567,7 @@ public class Framework extends Canvas {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("점수 목록 가져오기 실패: " + e.getMessage());
+                logger.warning("점수 목록 가져오기 실패: " + e.getMessage());
             }
 
             @Override
@@ -573,7 +577,7 @@ public class Framework extends Canvas {
 
                     // 응답이 비어 있거나 유효하지 않은 경우 처리
                     if (responseBody.trim().isEmpty()) {
-                        System.err.println("응답이 비어있거나 잘못되었습니다.");
+                        logger.warning("응답이 비어있거나 잘못되었습니다.");
                         return;
                     }
 
@@ -597,10 +601,10 @@ public class Framework extends Canvas {
                         saveToLeaderboardIfHighest(highestScore);
 
                     } catch (JSONException e) {
-                        System.err.println("JSON 파싱 오류: " + e.getMessage());
+                        logger.warning("JSON 파싱 오류: " + e.getMessage());
                     }
                 } else {
-                    System.err.println("점수 목록 가져오기 실패: " + response.code());
+                    logger.warning("점수 목록 가져오기 실패: " + response.code());
                 }
             }
         });
@@ -624,7 +628,7 @@ public class Framework extends Canvas {
         client.newCall(getLeaderboardRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("리더보드 점수 가져오기 실패: " + e.getMessage());
+                logger.warning("리더보드 점수 가져오기 실패: " + e.getMessage());
             }
 
             @Override
@@ -651,10 +655,10 @@ public class Framework extends Canvas {
                             addToLeaderboard(highestUserScore);
                         }
                     } catch (JSONException e) {
-                        System.err.println("JSON 파싱 오류: " + e.getMessage());
+                        logger.warning("JSON 파싱 오류: " + e.getMessage());
                     }
                 } else {
-                    System.err.println("리더보드 점수 가져오기 실패: " + response.code());
+                    logger.warning("리더보드 점수 가져오기 실패: " + response.code());
                 }
             }
         });
@@ -672,7 +676,7 @@ public class Framework extends Canvas {
             newEntry.put(NICKNAME_KEY, nickname);
             newEntry.put("score", highestUserScore);
         } catch (JSONException e) {
-            System.err.println("JSON 생성 오류: " + e.getMessage());
+            logger.warning("JSON 생성 오류: " + e.getMessage());
             return;
         }
 
@@ -686,15 +690,15 @@ public class Framework extends Canvas {
         client.newCall(updateRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.err.println("리더보드 업데이트 실패: " + e.getMessage());
+                logger.warning("리더보드 업데이트 실패: " + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    System.out.println("리더보드 업데이트 성공: 최고 점수 " + highestUserScore);
+                    logger.warning("리더보드 업데이트 성공: 최고 점수 " + highestUserScore);
                 } else {
-                    System.err.println("리더보드 업데이트 실패: " + response.code());
+                    logger.warning("리더보드 업데이트 실패: " + response.code());
                 }
             }
         });
@@ -719,7 +723,7 @@ public class Framework extends Canvas {
             @Override
             public void onFailure(Call call, IOException e) {
                 SwingUtilities.invokeLater(() -> {
-                    System.err.println(ERROR_MESSAGE + e.getMessage());
+                    logger.warning(ERROR_MESSAGE + e.getMessage());
                 });
             }
 
@@ -731,18 +735,18 @@ public class Framework extends Canvas {
 
                     if (jsonResponse.has(NICKNAME_KEY)) {
                         nickname = jsonResponse.getString(NICKNAME_KEY);
-                        System.out.println("Nickname: " + nickname);
+                        logger.info("Nickname: " + nickname);
                         mainV2.setNickname(nickname);
                         friendManager = new FriendManager(email,nickname);
                         messageManager = new MessageManager(nickname);
                         messageReceiver = new MessageReceiver(idToken,mainV2,email);
                         messageReceiver.startReceivingMessages();
                     } else {
-                        System.err.println("사용자 정보가 존재하지 않습니다.");
+                        logger.warning("사용자 정보가 존재하지 않습니다.");
                     }
                 } else {
                     SwingUtilities.invokeLater(() -> {
-                        System.err.println(ERROR_MESSAGE + response.message());
+                        logger.warning(ERROR_MESSAGE + response.message());
                     });
                 }
             }
@@ -881,7 +885,7 @@ public class Framework extends Canvas {
                     gameTime += System.nanoTime() - lastTime;
                     lastTime = System.nanoTime();
                     running = false;
-                    System.out.println("게임이 종료되었습니다.");
+                    logger.info("게임이 종료되었습니다.");
                     break;
                 case LOGIN:
                     if (isLoginSuccessful) {
@@ -925,7 +929,7 @@ public class Framework extends Canvas {
                     }
                     break;
                 default:
-                    System.out.println("Unhandled GameState: " + gameState);
+                    logger.info("Unhandled GameState: " + gameState);
                     break;
             }
 
@@ -974,7 +978,7 @@ public class Framework extends Canvas {
                     g2d.drawString("GAME is LOADING", frameWidth / 2 - 50, frameHeight / 2);
                     break;
                 default:
-                    System.out.println("Unhandled GameState: " + gameState);
+                    logger.info("Unhandled GameState: " + gameState);
                     break;
             }
     }
@@ -1090,7 +1094,7 @@ public class Framework extends Canvas {
             }
         } else {
             // MAIN_MENU가 아닌 상태에서는 특별히 처리할 동작이 없음
-            System.out.println("Unhandled game state: " + gameState);
+            logger.info("Unhandled game state: " + gameState);
         }
     }
 

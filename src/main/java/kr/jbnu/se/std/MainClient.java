@@ -14,7 +14,6 @@ public class MainClient extends JFrame {
     private Framework framework;
     private JLabel nameLabel;
     private DefaultListModel<String> friendsModel;
-    private int money;
     private JLabel moneyLabel;
     // 원본 이미지 아이콘 생성
     ImageIcon startIcon = new ImageIcon("src/main/resources/images/start_btn.png");
@@ -542,7 +541,6 @@ public class MainClient extends JFrame {
     }
 
     public void setMoney(int money) {
-        this.money = money;
         moneyLabel.setText("DP: " + money);
     }
 }
