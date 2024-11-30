@@ -23,6 +23,14 @@ public class Duck implements Serializable {
      */
     public static long lastDuckTime = 0;
 
+    public synchronized static void setLastDuckTime(long time) {
+        lastDuckTime = time;
+    }
+
+    public synchronized static long getLastDuckTime() {
+        return lastDuckTime;
+    }
+
     /**
      * kr.jbnu.se.std.Duck lines.
      * Where is starting location for the duck?
@@ -39,6 +47,18 @@ public class Duck implements Serializable {
      * Indicate which is next duck line.
      */
     public static int nextDuckLines = 0;
+
+    public synchronized static void incrementNextDuckLines() {
+        nextDuckLines++;
+    }
+
+    public synchronized static void resetNextDuckLines() {
+        nextDuckLines = 0;
+    }
+
+    public synchronized static int getNextDuckLines() {
+        return nextDuckLines;
+    }
 
 
     /**
@@ -66,6 +86,8 @@ public class Duck implements Serializable {
     private BufferedImage duckImg;
 
     private boolean isAlive;
+
+
 
 
     /**

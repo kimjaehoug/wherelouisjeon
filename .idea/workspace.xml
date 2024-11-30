@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="selectPlayerDucks, selectHunterDucks,selectFireDucks, updateFireSelectedDucks, updateHunterSelectedDucks 메소드&#10;&#10;랜덤 객체 재사용 권장 =&gt; HashSet 사용하여 효율적인 중복 방지">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="문자열 리터럴 중복 =&gt; 상수로 대체">
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Duck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Duck.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -195,7 +195,7 @@
       <workItem from="1727875707906" duration="28902000" />
       <workItem from="1728066880239" duration="8135000" />
       <workItem from="1732689810339" duration="4764000" />
-      <workItem from="1732722999734" duration="23103000" />
+      <workItem from="1732722999734" duration="23489000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -341,7 +341,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732938907105</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="문자열 리터럴 중복 =&gt; 상수로 대체">
+      <option name="closed" value="true" />
+      <created>1732939841280</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1732939841280</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -364,6 +372,7 @@
     <MESSAGE value="yw" />
     <MESSAGE value="draw 메소드&#10;높은 인지 복잡성 문제 -&gt; 메소드 쪼개기" />
     <MESSAGE value="selectPlayerDucks, selectHunterDucks,selectFireDucks, updateFireSelectedDucks, updateHunterSelectedDucks 메소드&#10;&#10;랜덤 객체 재사용 권장 =&gt; HashSet 사용하여 효율적인 중복 방지" />
-    <option name="LAST_COMMIT_MESSAGE" value="selectPlayerDucks, selectHunterDucks,selectFireDucks, updateFireSelectedDucks, updateHunterSelectedDucks 메소드&#10;&#10;랜덤 객체 재사용 권장 =&gt; HashSet 사용하여 효율적인 중복 방지" />
+    <MESSAGE value="문자열 리터럴 중복 =&gt; 상수로 대체" />
+    <option name="LAST_COMMIT_MESSAGE" value="문자열 리터럴 중복 =&gt; 상수로 대체" />
   </component>
 </project>

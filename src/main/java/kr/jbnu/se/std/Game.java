@@ -1,7 +1,6 @@
 package kr.jbnu.se.std;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,8 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
-import javax.swing.*;
-import javax.swing.Timer;
+import java.util.Random;
+import java.util.Arrays;
 
 /**
  * Actual game.
@@ -30,7 +29,7 @@ public class Game {
     /**
      * We use this to generate a random number.
      */
-    private Random random;
+    private Random random = new Random();
     List<GiftBox> giftBoxes = new ArrayList<>();
     long lastGiftBoxTime = 0;
     int minInterval = 9000; // 최소 간격 3초
@@ -177,13 +176,15 @@ public class Game {
     private List<BossAttack> bossAttacks5 = new ArrayList<>();
     private int roundPass;
 
-    private static final String BOSSATTCK_SOUND_PATH = "src/main/resources/sounds/bossattck.wav";
-    private static final String HIT_MESSAGE = "Player hit! Remaining health: ";
     private static final String HIT_SOUND_PATH = "src/main/resources/sounds/hit.wav";
+    private static final String HIT_MESSAGE = "Player hit! Remaining health: ";
+    private static final String BOSSATTCK_SOUND_PATH = "src/main/resources/sounds/bossattck.wav";
 
     private static final String BUY_BUTTON_MESSAGE = "buybutton";
     private static final String MOUSE_POSITION_MESSAGE = "Mouse Position: ";
     private static final String BUTTON_POSITION_MESSAGE = "Button Position: ";
+
+
 
     public Game(Framework framework) {
         Framework.gameState = Framework.GameState.GAME_CONTENT_LOADING;
@@ -198,11 +199,17 @@ public class Game {
 
                 playBackgroundMusic("src/main/resources/sounds/MoonlightShadow.wav");
 
-                Framework.gameState = Framework.GameState.PLAYING;
+                updateGameState(Framework.GameState.PLAYING);
             }
         };
         threadForInitGame.start();
     }
+
+    // 게임 상태를 안전하게 업데이트하는 동기화된 메서드
+    private synchronized void updateGameState(Framework.GameState newState) {
+        Framework.gameState = newState;
+    }
+
     // 랜덤한 시간 간격 생성 메서드
     public int getRandomInterval(int min, int max) {
         return min + (int) (Math.random() * (max - min));
@@ -244,144 +251,73 @@ public class Game {
      */
     private void LoadContent() {
         try {
-            for (int i = 0; i < 12; i++) { // 0부터 11까지 반복
-                try {
-                    // 이미지 경로를 생성
-                    URL hpUrl = this.getClass().getResource("/images/hp_" + i + ".png");
+            loadImages("/images/hp_", 12, hpImages);
+            loadImages("/images/shop", 3, shopImages);
+            loadImages("/images/ending_", 3, endingImages);
 
-                    // URL이 null이 아닐 경우에만 이미지 읽기
-                    if (hpUrl != null) {
-                        hpImages[i] = ImageIO.read(hpUrl);
-                    } else {
-                        System.out.println("Image not found: /images/hp_" + i + ".png");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace(); // IOException 처리
-                }
-            }
+            hunter111Img = loadImage("/images/hunterrrrr.png");
+            gameoverImg = loadImage("/images/diegame.png");
+            buttonImg = loadImage("/images/btn_buy.png");
 
-            for (int i = 0; i < 3; i++) { // 0부터 11까지 반복
-                try {
-                    // 이미지 경로를 생성
-                    URL hpUrl = this.getClass().getResource("/images/shop" + i + ".png");
+            boss2Img = loadImage("/images/boss_crocs.png");
+            boss3Img = loadImage("/images/boss_hippo.png");
+            boss4Img = loadImage("/images/boss_dugong.png");
+            boss5Img = loadImage("/images/duck_boss1.png");
 
-                    // URL이 null이 아닐 경우에만 이미지 읽기
-                    if (hpUrl != null) {
-                        shopImages[i] = ImageIO.read(hpUrl);
-                    } else {
-                        System.out.println("Image not found: /images/shop" + i + ".png");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace(); // IOException 처리
-                }
-            }
+            backgroundImg = loadImage("/images/background.png");
+            backgroundImg3 = loadImage("/images/background_SAFARI.png");
+            backgroundImg4 = loadImage("/images/bossbackground4.png");
+            backgroundImg5 = loadImage("/images/boss_lv5.png");
+            backgroundImg2 = loadImage("/images/background_mud.png");
 
-            for (int i = 1; i < 4; i++) { // 0부터 11까지 반복
-                try {
-                    // 이미지 경로를 생성
-                    URL ending = this.getClass().getResource("/images/ending_" + i + ".png");
+            warningImg = loadImage("/images/warning.png");
+            bossImg = loadImage("/images/boss.png");
+            grassImg = loadImage("/images/grass.png");
+            sightImg_hunter = loadImage("/images/sight_hunter.png");
+            duckImg = loadImage("/images/duck.png");
+            gameoverfImg = loadImage("/images/duck.png");
+            sightImg = loadImage("/images/sight.png");
 
-                    // URL이 null이 아닐 경우에만 이미지 읽기
-                    if (ending != null) {
-                        endingImages[i] = ImageIO.read(ending);
-                    } else {
-                        System.out.println("Image not found: /images/shop" + i + ".png");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace(); // IOException 처리
-                }
-            }
-
-
-            URL hunterimg = this.getClass().getResource("/images/hunterrrrr.png");
-            hunter111Img = ImageIO.read(hunterimg);
-
-            URL gameoverimg = this.getClass().getResource("/images/diegame.png");
-            gameoverImg = ImageIO.read(gameoverimg);
-
-
-            URL Buttonimg = this.getClass().getResource("/images/btn_buy.png");
-            buttonImg = ImageIO.read(Buttonimg);
-
-            URL Bossimg2 = this.getClass().getResource("/images/boss_crocs.png");
-            boss2Img = ImageIO.read(Bossimg2);
-
-            URL Bossimg3 = this.getClass().getResource("/images/boss_hippo.png");
-            boss3Img = ImageIO.read(Bossimg3);
-
-            URL Bossimg4 = this.getClass().getResource("/images/boss_dugong.png");
-            boss4Img = ImageIO.read(Bossimg4);
-
-            URL Bossimg5 = this.getClass().getResource("/images/duck_boss1.png");
-            boss5Img = ImageIO.read(Bossimg5);
-
-            URL backgroundImgUrl = this.getClass().getResource("/images/background.png");
-            backgroundImg = ImageIO.read(backgroundImgUrl);
-
-            URL backgroundImgUrl3 = this.getClass().getResource("/images/background_SAFARI.png");
-            backgroundImg3 = ImageIO.read(backgroundImgUrl3);
-
-            URL backgroundImgUrl4 = this.getClass().getResource("/images/bossbackground4.png");
-            backgroundImg4 = ImageIO.read(backgroundImgUrl4);
-
-            URL backgroundImgUrl5 = this.getClass().getResource("/images/boss_lv5.png");
-            backgroundImg5 = ImageIO.read(backgroundImgUrl5);
-
-            URL backgroundImgUrl2 = this.getClass().getResource("/images/background_mud.png");
-            backgroundImg2 = ImageIO.read(backgroundImgUrl2);
-
-            URL WarningURL = this.getClass().getResource("/images/warning.png");
-            warningImg = ImageIO.read(WarningURL);
-
-            URL bossImgUrl = this.getClass().getResource("/images/boss.png");
-            bossImg = ImageIO.read(bossImgUrl);
-
-            URL grassImgUrl = this.getClass().getResource("/images/grass.png");
-            grassImg = ImageIO.read(grassImgUrl);
-
-            URL sight_hunterURL = this.getClass().getResource("/images/sight_hunter.png");
-            sightImg_hunter = ImageIO.read(sight_hunterURL);
-
-            URL duckImgUrl = this.getClass().getResource("/images/duck.png");
-            duckImg = ImageIO.read(duckImgUrl);
-
-            URL gameoverfImgUrl = this.getClass().getResource("/images/duck.png");
-            gameoverfImg = ImageIO.read(gameoverfImgUrl);
-
-            URL sightImgUrl = this.getClass().getResource("/images/sight.png");
-            sightImg = ImageIO.read(sightImgUrl);
             sightImgMiddleWidth = sightImg.getWidth() / 2;
             sightImgMiddleHeight = sightImg.getHeight() / 2;
 
-            URL bossAttackImage2 = this.getClass().getResource("/images/crocs_mud.png");
-            bossAttack2 = ImageIO.read(bossAttackImage2);
+            bossAttack2 = loadImage("/images/crocs_mud.png");
+            bossAttack3 = loadImage("/images/crocs_mud.png");
+            bossAttack4 = loadImage("/images/waterball.png");
+            bossAttack5 = loadImage("/images/skull.png");
+            bossAttack = loadImage("/images/attack1.png");
 
-            URL bossAttackImage3 = this.getClass().getResource("/images/crocs_mud.png");
-            bossAttack3 = ImageIO.read(bossAttackImage3);
+            // giftBoxImages 배열에 이미지 로드
+            for (int i = 0; i < giftBoxImages.length; i++) {
+                giftBoxImages[i] = loadImage("/images/giftbox.png");
+            }
 
-            URL bossAttackImage4 = this.getClass().getResource("/images/waterball.png");
-            bossAttack4 = ImageIO.read(bossAttackImage4);
+            sightImg_Fire = loadImage("/images/fire.png");
+        } catch (IOException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-            URL bossAttackImage5 = this.getClass().getResource("/images/skull.png");
-            bossAttack5 = ImageIO.read(bossAttackImage5);
+    // 이미지 로드를 위한 공통 메서드
+    private BufferedImage loadImage(String path) throws IOException {
+        URL imgUrl = this.getClass().getResource(path);
+        if (imgUrl != null) {
+            return ImageIO.read(imgUrl);
+        } else {
+            System.out.println("Image not found: " + path);
+            return null;
+        }
+    }
 
-            URL bossAttackImage = this.getClass().getResource("/images/attack1.png");
-            bossAttack = ImageIO.read(bossAttackImage);
-
+    // 여러 이미지를 로드할 수 있는 메서드
+    private void loadImages(String basePath, int count, BufferedImage[] imageArray) {
+        for (int i = 0; i < count; i++) {
+            String path = basePath + i + ".png";
             try {
-                // giftBoxImages 배열에 이미지 로드
-                for (int i = 0; i < giftBoxImages.length; i++) {
-                    URL giftImage = this.getClass().getResource("/images/giftbox.png");
-                    giftBoxImages[i] = ImageIO.read(giftImage);
-                }
+                imageArray[i] = loadImage(path);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            URL Fire1 = this.getClass().getResource("/images/fire.png");
-            sightImg_Fire = ImageIO.read(Fire1);
-        } catch (IOException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -390,42 +326,49 @@ public class Game {
         if (playerSelectedDucks != null) {
             return;
         }
+
         // 오리들이 충분히 있을 때 N마리 오리를 무작위로 선택
         if (ducks.size() >= numberOfDucks) {
             playerSelectedDucks = new Duck[numberOfDucks]; // Player 선택된 오리 배열 초기화
+
             Set<Duck> selectedDucksSet = new HashSet<>();
             selectedDucksSet.addAll(Arrays.asList(hunterSelectedDucks));
+
             for (int i = 0; i < numberOfDucks; i++) {
                 Duck selectedDuck;
                 int index;
+
                 // 중복되지 않는 오리를 선택
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
                 } while (selectedDucksSet.contains(selectedDuck));
+
                 playerSelectedDucks[i] = selectedDuck;
                 selectedDucksSet.add(selectedDuck);
             }
         }
     }
 
+
     // N마리 오리를 선택하는 메소드 (Hunter용)
     private void selectHunterDucks(int numberOfDucks) {
         if (ducks.size() >= numberOfDucks) {
             hunterSelectedDucks = new Duck[numberOfDucks]; // Hunter 선택된 오리 배열 초기화
             Set<Duck> selectedDucksSet = new HashSet<>();
+
             for (int i = 0; i < numberOfDucks; i++) {
                 Duck selectedDuck;
                 int index;
+
                 // 중복되지 않는 오리를 선택
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
-                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || (playerSelectedDucks != null && Arrays.asList(playerSelectedDucks).contains(selectedDuck)));
-                // 중복 방지
+                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || (playerSelectedDucks != null && Arrays.asList(playerSelectedDucks).contains(selectedDuck))); // 중복 방지
+
                 hunterSelectedDucks[i] = selectedDuck;
                 selectedDucksSet.add(selectedDuck);
-
             }
         }
     }
@@ -436,20 +379,24 @@ public class Game {
         if (ducks.size() >= numberOfDucks) {
             FireSelectedDucks = new Duck[numberOfDucks]; // Hunter 선택된 오리 배열 초기화
             Set<Duck> selectedDucksSet = new HashSet<>();
+
             for (int i = 0; i < numberOfDucks; i++) {
                 Duck selectedDuck;
                 int index;
+
                 // 중복되지 않는 오리를 선택
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
                 } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) ||
                         (hunterSelectedDucks != null && Arrays.asList(hunterSelectedDucks).contains(selectedDuck)) ||
-                        (playerSelectedDucks != null && Arrays.asList(playerSelectedDucks).contains(selectedDuck)));
-                // 중복 방지
+                        (playerSelectedDucks != null && Arrays.asList(playerSelectedDucks).contains(selectedDuck))); // 중복 방지
+
                 FireSelectedDucks[i] = selectedDuck;
                 selectedDucksSet.add(selectedDuck);
+
                 System.out.println("Selected Fire Ducks: " + Arrays.toString(FireSelectedDucks));
+
             }
         }
     }
@@ -476,6 +423,7 @@ public class Game {
                         score += duck.score;
                         System.out.println("Hunter가 오리를 죽였습니다: " + duck);
                         break; // 한 마리씩 죽이고 나가도록
+
                     }
                 }
                 updateFireSelectedDucks();
@@ -499,16 +447,19 @@ public class Game {
                 // 새로운 오리를 선택하여 중복되지 않게 추가
                 Duck selectedDuck;
                 int index;
+
                 Set<Duck> selectedDucksSet = new HashSet<>();
                 selectedDucksSet.addAll(Arrays.asList(hunterSelectedDucks));
                 selectedDucksSet.addAll(Arrays.asList(playerSelectedDucks));
                 selectedDucksSet.addAll(Arrays.asList(FireSelectedDucks));
+
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
                 } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) ||
                         Arrays.asList(playerSelectedDucks).contains(selectedDuck) ||
                         Arrays.asList(FireSelectedDucks).contains(selectedDuck)); // 중복 방지
+
                 FireSelectedDucks[i] = selectedDuck;
             }
         }
@@ -575,11 +526,10 @@ public class Game {
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
-                } while (selectedDucksSet.contains(selectedDuck));
-                // 중복 방지
-                hunterSelectedDucks[i] = selectedDuck;
-                selectedDucksSet.add(selectedDuck); // 선택된 오리 추가
+                } while (selectedDucksSet.contains(selectedDuck)); // 중복 방지
 
+                hunterSelectedDucks[i] = selectedDuck;
+                selectedDucksSet.add(selectedDuck);  // 선택된 오리 추가
             }
         }
     }
@@ -596,6 +546,8 @@ public class Game {
             return;
         }
     }
+
+
 
     // 더블배럴샷건 모드에서 Hunter 선택된 오리들에게 sightImg를 그리기
     private void drawSightOnHunterSelectedDucks(Graphics2D g2d) {
@@ -631,7 +583,7 @@ public class Game {
         ducks.clear();
 
         // We set last duckt time to zero.
-        Duck.lastDuckTime = 0;
+        Duck.setLastDuckTime(0);
 
         runawayDucks = 0;
         killedDucks = 0;
@@ -641,21 +593,23 @@ public class Game {
         lastTimeShoot = 0;
     }
 
-
     public void Pause() {
         ducks.clear();
         isPause = true;
         System.out.println("buttonbuyadd");
-        Framework.gameState = Framework.GameState.PAUSE;
+        Framework.setGameState(Framework.GameState.PAUSE);
         stopBackgroundMusic();
     }
 
+    public enum GameState {
+        PAUSE, PLAYING, GAME_OVER, MAIN_MENU;
+    }
 
     public void NextRound() {
         stopBackgroundMusic();
         isPause = false;
-        Framework.gameState = Framework.GameState.PLAYING;
-        Duck.lastDuckTime = 0; // 오리 타이머 초기화
+        Framework.setGameState(Framework.GameState.PLAYING);
+        //Duck.lastDuckTime = 0; // 오리 타이머 초기화
         killedDucks = 0; // 죽인 오리 수 초기화
         runawayDucks = 0; // 도망간 오리 수 초기화
         Round += 1;
@@ -1175,9 +1129,9 @@ public class Game {
                 ducks.add(new Duck(Duck.duckLines[Duck.nextDuckLines][0] + random.nextInt(200), Duck.duckLines[Duck.nextDuckLines][1], Duck.duckLines[Duck.nextDuckLines][2], Duck.duckLines[Duck.nextDuckLines][3],duckImg));
 
                 // Here we increase nextDuckLines so that next duck will be created in next line.
-                Duck.nextDuckLines++;
+                Duck.incrementNextDuckLines();
                 if (Duck.nextDuckLines >= Duck.duckLines.length)
-                    Duck.nextDuckLines = 0;
+                    Duck.resetNextDuckLines();
 
                 if (killedDucks >= roundPass && !isBossAlive) {
                     // 보스 생성
@@ -1190,7 +1144,7 @@ public class Game {
                     endingStartTime = System.nanoTime();
                     ducks.clear();
                 }
-                Duck.lastDuckTime = System.nanoTime();
+                Duck.setLastDuckTime(System.nanoTime());
             }
 
             if(!isBossAlive) {
@@ -1273,7 +1227,7 @@ public class Game {
                                         score += boss.get(i).score; // Boss-specific score
                                         boss.remove(i);
                                         if (Round == 5) {
-                                            Framework.gameState = Framework.GameState.ENDING;
+                                            Framework.GameState currentState = Framework.getGameState();
                                             stopBackgroundMusic();
                                             endingStartTime = System.currentTimeMillis();
                                             framework.saveScore(score);
@@ -1296,7 +1250,7 @@ public class Game {
 
             // When 200 ducks runaway, the game ends.
             if (runawayDucks >= 10 || PlayerHp < 0 )
-                Framework.gameState = Framework.GameState.GAMEOVER;
+                Framework.setGameState(Framework.GameState.GAMEOVER);
             if (Framework.gameState == Framework.GameState.GAMEOVER && !leaderboardSaved) {
                 framework.saveScore(score);
                 framework.saveMoney(score);
@@ -1404,6 +1358,7 @@ public class Game {
      * @param g2d Graphics2D
      * @param mousePosition current mouse position.
      */
+
     public void Draw(Graphics2D g2d, Point mousePosition) {
         drawBackground(g2d);
         drawDucks(g2d);
@@ -1427,10 +1382,8 @@ public class Game {
     }
 
     // 모든 오리 그리기
-    private void drawDucks(Graphics2D g2d)
-    {
-        for (int i = 0; i < ducks.size();
-             i++) {
+    private void drawDucks(Graphics2D g2d) {
+        for (int i = 0; i < ducks.size(); i++) {
             ducks.get(i).Draw(g2d);
         }
     }
@@ -1438,16 +1391,14 @@ public class Game {
     // 보스 공격 경고 그리기
     private void drawBossWarning(Graphics2D g2d) {
         if (Bosswith3delay) {
-            g2d.drawImage(warningImg, Framework.frameWidth / 2 - 275, Framework.frameHeight / 2 - 250,
-                    null);
+            g2d.drawImage(warningImg, Framework.frameWidth / 2 - 275, Framework.frameHeight / 2 - 250, null);
         }
     }
 
     // 헌터1 그리기 및 관련 처리
     private void drawHunter1(Graphics2D g2d) {
         if (Hunter1) {
-            g2d.drawImage(hunter111Img, Hunters.get(0).x, Hunters.get(0).y,
-                    null);
+            g2d.drawImage(hunter111Img, Hunters.get(0).x, Hunters.get(0).y, null);
             drawSightOnHunterSelectedDucks(g2d);
         }
     }
@@ -1463,8 +1414,7 @@ public class Game {
 
             if (currentList.size() > 0) {
                 for (BossAttack attack : currentList) {
-                    g2d.drawImage(currentImage, attack.x, attack.y, 100, 100,
-                            null);
+                    g2d.drawImage(currentImage, attack.x, attack.y, 100, 100, null);
                 }
             }
         }
@@ -1476,8 +1426,7 @@ public class Game {
             for (int i = 0; i < boss.size(); i++) {
                 BufferedImage bossImage = getBossImageForRound();
                 if (bossImage != null) {
-                    g2d.drawImage(bossImage,
-                            boss.get(i).x - 90, boss.get(i).y - 20, 378, 268, null);
+                    g2d.drawImage(bossImage, boss.get(i).x - 90, boss.get(i).y - 20, 378, 268, null);
                 }
 
                 drawBossHealthBar(g2d, i);
@@ -1497,19 +1446,13 @@ public class Game {
     }
 
     private void drawBossHealthBar(Graphics2D g2d, int i) {
-
         int currentHealth = boss.get(i).health;
         int maxHealth = boss.get(i).maxHealth;
-
         int hpIndex = (int) ((currentHealth / (double) maxHealth) * 11);
-
         hpIndex = Math.max(0, Math.min(11, hpIndex));
 
-
         int hpBarWidth = hpImages[hpIndex].getWidth(null) / 8;
-
         int hpBarHeight = hpImages[hpIndex].getHeight(null) / 8;
-
         g2d.drawImage(hpImages[hpIndex], boss.get(i).x - 20, boss.get(i).y - 60, hpBarWidth, hpBarHeight, null);
     }
 
@@ -1530,9 +1473,7 @@ public class Game {
     // 선물 상자 그리기
     private void drawGiftBoxes(Graphics2D g2d) {
         if (giftBoxes != null) {
-
             for (GiftBox giftBox : giftBoxes) {
-
                 BufferedImage selectedImg = getGiftBoxImage(giftBox.type);
                 if (selectedImg != null) {
                     g2d.drawImage(selectedImg, giftBox.x, giftBox.y, giftBox.width, giftBox.height, null);
@@ -1543,8 +1484,7 @@ public class Game {
 
     private BufferedImage getGiftBoxImage(int type) {
         switch (type) {
-            case 1: return
-                    giftBoxImg1;
+            case 1: return giftBoxImg1;
             case 2: return giftBoxImg2;
             case 3: return giftBoxImg3;
             default:
@@ -1563,7 +1503,6 @@ public class Game {
             reloadDuration = 3000000000L;
             timeBetweenShots = 100_000_000L;
         }
-
     }
 
     // 총기 조준선과 리로드 상태 그리기
@@ -1575,13 +1514,11 @@ public class Game {
             g2d.drawString("Reloading", Framework.frameWidth / 2, Framework.frameHeight / 2);
         }
 
-        g2d.drawImage(sightImg, mousePosition.x - sightImgMiddleWidth, mousePosition.y - sightImgMiddleHeight,
-                null);
+        g2d.drawImage(sightImg, mousePosition.x - sightImgMiddleWidth, mousePosition.y - sightImgMiddleHeight, null);
     }
 
     // HUD (Heads-Up Display) 그리기
     private void drawHUD(Graphics2D g2d) {
-
         g2d.setFont(font);
         g2d.setColor(Color.darkGray);
 
@@ -1592,10 +1529,8 @@ public class Game {
         g2d.drawString("SCORE: " + score, 440, 21);
         g2d.drawString("Round: " + Round, 570, 21);
         g2d.drawString("Money: " + money, 700, 21);
-
         g2d.drawString("PlayerHP: " + PlayerHp, 10, 80);
     }
-
 
     /**
      * Draw the game over screen.
