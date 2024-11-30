@@ -4,7 +4,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GiftBox {
-    final int x, y;
+    final int x;
+    int y;
     final int width, height;
     final int fallSpeed;
     final int type; // 선물 상자의 종류 (1, 2, 3)
