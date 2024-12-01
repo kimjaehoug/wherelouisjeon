@@ -4,13 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="배경음악 호출하는 거.. 파라미터제거하고 약간 하드코딩해둠.">
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="no usage 지움.// throw IO 안 쓰이는 거 다 지움 //">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$12.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$8.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,15 +232,7 @@
       <workItem from="1732691298330" duration="12058000" />
       <workItem from="1732882666038" duration="5975000" />
       <workItem from="1732894076441" duration="48000" />
-      <workItem from="1732949995902" duration="14678000" />
-    </task>
-    <task id="LOCAL-00005" summary="loginfunction">
-      <option name="closed" value="true" />
-      <created>1727860170579</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1727860170580</updated>
+      <workItem from="1732949995902" duration="15947000" />
     </task>
     <task id="LOCAL-00006" summary="131313">
       <option name="closed" value="true" />
@@ -617,7 +618,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733060509937</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="no usage 지움.// throw IO 안 쓰이는 거 다 지움 //">
+      <option name="closed" value="true" />
+      <created>1733060880319</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1733060880319</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -667,6 +676,7 @@
     <MESSAGE value="Builder() -&gt; builder()" />
     <MESSAGE value="jsonObject.length() == 0 -&gt; jsonObject.isEmpty()" />
     <MESSAGE value="배경음악 호출하는 거.. 파라미터제거하고 약간 하드코딩해둠." />
-    <option name="LAST_COMMIT_MESSAGE" value="배경음악 호출하는 거.. 파라미터제거하고 약간 하드코딩해둠." />
+    <MESSAGE value="no usage 지움.// throw IO 안 쓰이는 거 다 지움 //" />
+    <option name="LAST_COMMIT_MESSAGE" value="no usage 지움.// throw IO 안 쓰이는 거 다 지움 //" />
   </component>
 </project>

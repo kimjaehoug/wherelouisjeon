@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
-import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * kr.jbnu.se.std.Framework that controls the game (kr.jbnu.se.std.Game.java) that created it, update it and draw it on the screen.
@@ -84,9 +83,13 @@ public class Framework extends Canvas {
      * Elapsed game time in nanoseconds.
      */
     @SuppressWarnings("squid:S1948")
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    @SuppressWarnings("squid:S1948")
     private final ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
     @SuppressWarnings("squid:S1948")
     private final ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
+    @SuppressWarnings("squid:S1948")
+    private final ScheduledExecutorService scheduler3 = Executors.newScheduledThreadPool(1);
     private final Set<String> existingFriendsinvite = new HashSet<>(); // 중복 방지를 위한 Set
 
     private long gameTime;
@@ -186,10 +189,10 @@ public class Framework extends Canvas {
             inventoryManager.stopReceivingInventory();
         }
     }
-
     public void stoploginClinet(){
         loginClient = null;
     }
+
 
     public void rankWindow(){
         RankWindow rankWindow = new RankWindow();
@@ -236,6 +239,11 @@ public class Framework extends Canvas {
 
     public void frendsAddwindows(){
         addFriends = new AddFriends(this);
+    }
+
+
+    public void stopReceivingFriendschat() {
+        scheduler1.shutdownNow();
     }
 
     public void startRecevingFriendInvite(){
@@ -719,12 +727,9 @@ public class Framework extends Canvas {
         window.onLoginSuccess();
         gameState = GameState.VISUALIZING;
         this.setVisible(true);
-        Thread gameThread = new Thread() {
-            @Override
-            public void run(){
-                GameLoop();
-            }
-        };
+        Thread gameThread = new Thread(() -> {
+            GameLoop();
+        });
         gameThread.start();
     }
     /**
@@ -890,7 +895,10 @@ public class Framework extends Canvas {
             try {
                 //Provides the necessary delay and also yields control so that other thread can do work.
                 Thread.sleep(timeLeft);
-            } catch (InterruptedException ex) { }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // 인터럽트 상태 복원
+                logger.warning("Thread interrupted: " + e.getMessage());
+            }
         }
     }
 
