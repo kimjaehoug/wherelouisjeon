@@ -103,7 +103,7 @@ public class Framework extends Canvas {
     @SuppressWarnings("squid:S1948")
     private Game game;
     @SuppressWarnings("squid:S1948")
-    private Window window;
+    private final Window window;
     private static final String DATABASE_URL = "https://shootthedock-default-rtdb.firebaseio.com";
     @SuppressWarnings("squid:S1948")
     private String email;
@@ -299,7 +299,7 @@ public class Framework extends Canvas {
                     try {
                         JSONObject jsonObject = new JSONObject(responseBody);
                         // JSON 객체가 비어있는지 확인
-                        if (jsonObject.length() == 0) {
+                        if (jsonObject.isEmpty()) {
                             SwingUtilities.invokeLater(() ->
                                 logger.warning("친구 신청이 없습니다.")
                             );
@@ -375,7 +375,7 @@ public class Framework extends Canvas {
         try {
             FileInputStream serviceAccount = new FileInputStream("src/main/shootthedock-firebase-adminsdk-304qc-09167d3967.json");
 
-            FirebaseOptions options = new FirebaseOptions.Builder()
+            FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setDatabaseUrl(DATABASE_URL)
                     .build();
