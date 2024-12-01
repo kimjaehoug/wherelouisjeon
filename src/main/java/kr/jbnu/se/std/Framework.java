@@ -103,11 +103,9 @@ public class Framework extends Canvas {
     @SuppressWarnings("squid:S1948")
     private Game game;
     @SuppressWarnings("squid:S1948")
-    private Thread gameThread;
     private Window window;
     private static final String DATABASE_URL = "https://shootthedock-default-rtdb.firebaseio.com";
     @SuppressWarnings("squid:S1948")
-    private OkHttpClient clientInstance;
     private String email;
     private String nickname;
     private String idToken;
@@ -116,15 +114,11 @@ public class Framework extends Canvas {
     @SuppressWarnings("squid:S1948")
     private FirebaseAuth auth;
     @SuppressWarnings("squid:S1948")
-    private DatabaseReference databaseReference;
     private MainClient mainV2;
     private AddFriends addFriends;
-    private ChatwithFriends chatwithFriends;
-    private String selectnickname;
     private int money;
     private InviteFriends inviteFriends;
     private ShopWindow shopWindow;
-    private InventoryWindow inventoryWindow;
     private String whatgun;
     @SuppressWarnings("squid:S1948")
     public FirebaseClient firebaseClient;
@@ -170,14 +164,14 @@ public class Framework extends Canvas {
         initializeFirebase();
         this.window = window;
         gameState = GameState.LOGIN;
-        clientInstance = new OkHttpClient();
+        OkHttpClient clientInstance = new OkHttpClient();
         loginClient = new LoginClient(this);
         loginClient.setVisible(true);
         mainV2 = new MainClient(this);
         whatgun = "기본권총";
         mainV2.setVisible(false);
         this.setVisible(false);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseClient = new FirebaseClient(email);
     }
     public void Invitewindow(){
@@ -189,7 +183,7 @@ public class Framework extends Canvas {
     }
 
     public void inventoryWindow(){
-        inventoryWindow = new InventoryWindow(this);
+        InventoryWindow inventoryWindow = new InventoryWindow(this);
         inventoryManager= new InventoryManager(email,idToken,inventoryWindow,money);
         inventoryManager.startReceivingInventory();
         if(inventoryWindow == null){
@@ -226,9 +220,9 @@ public class Framework extends Canvas {
 
     }
     public void ChatFriendswindow(String nickname){
-        chatwithFriends = new ChatwithFriends(this);
+        ChatwithFriends chatwithFriends = new ChatwithFriends(this);
         chatwithFriends.setFriends(nickname);
-        selectnickname = chatwithFriends.getFriends();
+        String selectnickname = chatwithFriends.getFriends();
         friendmessageReceiver = new MessageReceiver(idToken,chatwithFriends,this.nickname,selectnickname);
         friendmessageReceiver.startReceivingFriendMessages();
 
@@ -245,7 +239,7 @@ public class Framework extends Canvas {
             clip.open(audioStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY); // 무한 반복
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "An error occurred: ", e); //스택트레이스도 함께 기록
         }
     }
 
@@ -256,7 +250,7 @@ public class Framework extends Canvas {
             clip.open(audioStream);
             clip.start();
         }catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "An error occurred: ", e); //스택스레이스도 함께 기록
         }
     }
 
@@ -324,7 +318,7 @@ public class Framework extends Canvas {
                             }
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        logger.log(Level.WARNING, "An error occurred: ", e); //스택트레이스도 함께 기록
                         SwingUtilities.invokeLater(() -> {
                             logger.warning("친구 신청 목록 처리 중 오류 발생: " + e.getMessage());
                             stopReceivingFriendInvite();
@@ -388,7 +382,7 @@ public class Framework extends Canvas {
 
             FirebaseApp.initializeApp(options);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "An error occurred: ", e); //스택트레이스도 함께 기록
             JOptionPane.showMessageDialog(this, "Firebase 초기화 실패: " + e.getMessage());
         }
     }
@@ -713,7 +707,7 @@ public class Framework extends Canvas {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                SwingUtilities.invokeLater(() ->
+                SwingUtilities.invokeLater(() -> 
                     logger.warning(ERROR_MESSAGE + e.getMessage())
                 );
             }
@@ -765,7 +759,7 @@ public class Framework extends Canvas {
         window.onLoginSuccess();
         gameState = GameState.VISUALIZING;
         this.setVisible(true);
-        gameThread = new Thread() {
+        Thread gameThread = new Thread() {
             @Override
             public void run(){
                 GameLoop();
