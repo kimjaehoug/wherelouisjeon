@@ -103,6 +103,7 @@ public class Framework extends Canvas {
     @SuppressWarnings("squid:S1948")
     private Game game;
     @SuppressWarnings("squid:S1948")
+    //TODO: 자꾸 final을 달았는데도 버그가 안 없어짐. 개빡침.
     private final Window window;
     private static final String DATABASE_URL = "https://shootthedock-default-rtdb.firebaseio.com";
     @SuppressWarnings("squid:S1948")
@@ -121,7 +122,8 @@ public class Framework extends Canvas {
     private ShopWindow shopWindow;
     private String whatgun;
     @SuppressWarnings("squid:S1948")
-    public FirebaseClient firebaseClient;
+    //TODO: 자꾸 final을 달았는데도 버그가 안 없어짐. 개빡침.
+    public final FirebaseClient firebaseClient;
     public transient FriendManager friendManager;
     private transient Clip clip;
     private static final String NICKNAME_KEY = "nickname";
@@ -232,8 +234,9 @@ public class Framework extends Canvas {
     }
 
 
-    private void playBackgroundMusic(String filePath) {
+    private void playBackgroundMusic() {
         try {
+            String filePath = "src/main/resources/sounds/backgroundonMain.wav"; // 파일 경로 하드코딩
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filePath));
             clip = AudioSystem.getClip();
             clip.open(audioStream);
@@ -750,7 +753,7 @@ public class Framework extends Canvas {
         loginWithFirebase(realemail, password);
         mainV2.setVisible(true);
         stoploginClinet();
-        playBackgroundMusic("src/main/resources/sounds/backgroundonMain.wav");
+        playBackgroundMusic();
     }
 
     public void onGameStart(){
