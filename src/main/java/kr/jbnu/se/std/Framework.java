@@ -3,7 +3,6 @@ package kr.jbnu.se.std;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 import okhttp3.*;
 import org.json.JSONException;
@@ -112,11 +111,9 @@ public class Framework extends Canvas {
     private String password;
     private String realemail;
     @SuppressWarnings("squid:S1948")
-    private MainClient mainV2;
-    private AddFriends addFriends;
+    private final MainClient mainV2;
     private int money;
     private InviteFriends inviteFriends;
-    private ShopWindow shopWindow;
     private String whatgun;
     @SuppressWarnings("squid:S1948")
     //TODO: 자꾸 final을 달았는데도 버그가 안 없어짐. 개빡침.
@@ -200,7 +197,7 @@ public class Framework extends Canvas {
     }
 
     public void Shopwindowopen(){
-        shopWindow = new ShopWindow(this);
+        ShopWindow shopWindow = new ShopWindow(this);
         inventoryManager= new InventoryManager(email,idToken,shopWindow,money);
 
     }
@@ -238,7 +235,7 @@ public class Framework extends Canvas {
 
 
     public void frendsAddwindows(){
-        addFriends = new AddFriends(this);
+        AddFriends addFriends  = new AddFriends(this);
     }
 
 
@@ -727,10 +724,9 @@ public class Framework extends Canvas {
         window.onLoginSuccess();
         gameState = GameState.VISUALIZING;
         this.setVisible(true);
-        Thread gameThread = new Thread(() -> {
-            GameLoop();
-        });
+        Thread gameThread = new Thread(this::GameLoop); // 메서드 참조
         gameThread.start();
+
     }
     /**
      * Set variables and objects.
