@@ -1,18 +1,11 @@
 package kr.jbnu.se.std;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.UserRecord;
 import com.google.firebase.database.*;
-import com.google.firebase.database.core.AuthTokenProvider;
-import com.google.gson.JsonObject;
-import jdk.jfr.internal.tool.Main;
 import okhttp3.*;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,7 +29,6 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import com.google.firebase.database.FirebaseDatabase;
-import org.slf4j.LoggerFactory;
 
 /**
  * kr.jbnu.se.std.Framework that controls the game (kr.jbnu.se.std.Game.java) that created it, update it and draw it on the screen.
@@ -46,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 public class Framework extends Canvas {
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Framework.class);
     private boolean isLoginSuccessful = false; // 로그인 성공 여부를 관리
     private LoginClient loginClient;
     /**
@@ -407,7 +398,7 @@ public class Framework extends Canvas {
         json.put("email", email);
         json.put("password", password);
         json.put("returnSecureToken", true);
-        RequestBody body = RequestBody.create(MediaType.parse(APPLICATION_JSON), json.toString());
+        RequestBody body = RequestBody.create(json.toString(), MediaType.parse(APPLICATION_JSON));
         Request request = new Request.Builder()
                 .url(FIREBASE_SIGNIN_URL + FIREBASE_API_KEY)
                 .post(body)
@@ -722,9 +713,9 @@ public class Framework extends Canvas {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                SwingUtilities.invokeLater(() -> {
-                    logger.warning(ERROR_MESSAGE + e.getMessage());
-                });
+                SwingUtilities.invokeLater(() ->
+                    logger.warning(ERROR_MESSAGE + e.getMessage())
+                );
             }
 
             @Override
@@ -745,9 +736,9 @@ public class Framework extends Canvas {
                         logger.warning("사용자 정보가 존재하지 않습니다.");
                     }
                 } else {
-                    SwingUtilities.invokeLater(() -> {
-                        logger.warning(ERROR_MESSAGE + response.message());
-                    });
+                    SwingUtilities.invokeLater(() ->
+                        logger.warning(ERROR_MESSAGE + response.message())
+                    );
                 }
             }
         });
