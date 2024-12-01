@@ -84,13 +84,9 @@ public class Framework extends Canvas {
      * Elapsed game time in nanoseconds.
      */
     @SuppressWarnings("squid:S1948")
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    @SuppressWarnings("squid:S1948")
     private final ScheduledExecutorService scheduler1 = Executors.newScheduledThreadPool(1);
     @SuppressWarnings("squid:S1948")
     private final ScheduledExecutorService scheduler2 = Executors.newScheduledThreadPool(1);
-    @SuppressWarnings("squid:S1948")
-    private final ScheduledExecutorService scheduler3 = Executors.newScheduledThreadPool(1);
     private final Set<String> existingFriendsinvite = new HashSet<>(); // 중복 방지를 위한 Set
 
     private long gameTime;
@@ -112,8 +108,6 @@ public class Framework extends Canvas {
     private String idToken;
     private String password;
     private String realemail;
-    @SuppressWarnings("squid:S1948")
-    private FirebaseAuth auth;
     @SuppressWarnings("squid:S1948")
     private MainClient mainV2;
     private AddFriends addFriends;
@@ -192,24 +186,10 @@ public class Framework extends Canvas {
             inventoryManager.stopReceivingInventory();
         }
     }
-    public void stopfriendadd(){
-        addFriends = null;
-    }
 
-    public void stopfriends(){
-        inviteFriends = null;
-    }
     public void stoploginClinet(){
         loginClient = null;
     }
-
-    public void stopshop(){
-        shopWindow = null;
-    }
-    public void stopmain(){
-        mainV2 = null;
-    }
-
 
     public void rankWindow(){
         RankWindow rankWindow = new RankWindow();
@@ -246,17 +226,6 @@ public class Framework extends Canvas {
         }
     }
 
-    public void playActiveSound(String filePath){
-        try{
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filePath));
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.start();
-        }catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            logger.log(Level.WARNING, "An error occurred: ", e); //스택스레이스도 함께 기록
-        }
-    }
-
     public void stopBackgroundMusic() {
         if (clip != null && clip.isRunning()) {
             clip.stop();
@@ -267,11 +236,6 @@ public class Framework extends Canvas {
 
     public void frendsAddwindows(){
         addFriends = new AddFriends(this);
-    }
-
-
-    public void stopReceivingFriendschat() {
-        scheduler1.shutdownNow();
     }
 
     public void startRecevingFriendInvite(){
@@ -354,7 +318,7 @@ public class Framework extends Canvas {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response){
                 if (response.isSuccessful()) {
                     SwingUtilities.invokeLater(() ->
                         logger.info("친구 삭제 성공: " + nicknameToDelete)
@@ -408,7 +372,7 @@ public class Framework extends Canvas {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
                     SwingUtilities.invokeLater(() -> {
                         String responseBody;
@@ -498,7 +462,7 @@ public class Framework extends Canvas {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
                     logger.warning("사용자 정보에 점수 저장 성공");
 
@@ -532,7 +496,7 @@ public class Framework extends Canvas {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
                     logger.info("사용자 정보에 점수 저장 성공");
                 } else {
@@ -682,7 +646,7 @@ public class Framework extends Canvas {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
                     logger.warning("리더보드 업데이트 성공: 최고 점수 " + highestUserScore);
                 } else {
@@ -739,13 +703,6 @@ public class Framework extends Canvas {
                 }
             }
         });
-    }
-
-    public static Framework getInstance() {
-        if (instance == null) {
-            instance = new Framework(new Window());
-        }
-        return instance;
     }
 
     public void onLoginSuccess() {
