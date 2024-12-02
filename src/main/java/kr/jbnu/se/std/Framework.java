@@ -38,6 +38,7 @@ public class Framework extends Canvas {
 
     private boolean isLoginSuccessful = false; // 로그인 성공 여부를 관리
     private LoginClient loginClient;
+    private MusicManager musicManager;
     /**
      * Width of the frame.
      */
@@ -110,6 +111,7 @@ public class Framework extends Canvas {
     //TODO: 자꾸 final을 달았는데도 버그가 안 없어짐. 개빡침.
     private final Window window;
     private static final String DATABASE_URL = "https://shootthedock-default-rtdb.firebaseio.com";
+    private static final String backgroundpath = "src/main/resources/sounds/backgroundonMain.wav";
     @SuppressWarnings("squid:S1948")
     private String email;
     private String nickname;
@@ -165,6 +167,7 @@ public class Framework extends Canvas {
         super();
         initializeFirebase();
         this.window = window;
+        musicManager = new MusicManager(backgroundpath);
         gameState = GameState.LOGIN;
         OkHttpClient clientInstance = new OkHttpClient();
         loginClient = new LoginClient(this);
@@ -216,25 +219,6 @@ public class Framework extends Canvas {
 
         if(chatwithFriends == null){
             friendmessageReceiver.stopReceivingFriendMessages();
-        }
-    }
-
-
-    private void playBackgroundMusic() {
-        try {
-            String filePath = "src/main/resources/sounds/backgroundonMain.wav"; // 파일 경로 하드코딩
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filePath));
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY); // 무한 반복
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            logger.log(Level.WARNING, "An error occurred: ", e); //스택트레이스도 함께 기록
-        }
-    }
-
-    public void stopBackgroundMusic() {
-        if (clip != null && clip.isRunning()) {
-            clip.stop();
         }
     }
 
@@ -767,12 +751,12 @@ public class Framework extends Canvas {
         loginWithFirebase(realemail, password);
         mainV2.setVisible(true);
         stoploginClinet();
-        playBackgroundMusic();
+        musicManager.playBackgroundMusic();
     }
 
     public void onGameStart(){
         mainV2.dispose();
-        stopBackgroundMusic();
+        musicManager.stopBackgroundMusic();
         window.onLoginSuccess();
         gameState = GameState.VISUALIZING;
         this.setVisible(true);
