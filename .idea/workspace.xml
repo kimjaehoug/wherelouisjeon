@@ -8,12 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="문자열 리터럴 중복 =&gt; 상수로 대체">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game$GameState.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game$GameState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +69,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "SONARLINT_PRECOMMIT_ANALYSIS": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "backup__gu",
+    "git-widget-placeholder": "refectoring__finish",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/jae/Downloads/shoottheduck",
     "node.js.detected.package.eslint": "true",
@@ -100,7 +96,7 @@
       <recent name="$PROJECT_DIR$/src/main/resources/images" />
     </key>
   </component>
-  <component name="RunManager" selected="애플리케이션.Window">
+  <component name="RunManager" selected="Application.MainClient">
     <configuration name="MainClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="kr.jbnu.se.std.MainClient" />
       <module name="shoottheduck" />
@@ -161,21 +157,12 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="애플리케이션.MainClient" />
-      <item itemvalue="애플리케이션.MainV2" />
-      <item itemvalue="애플리케이션.ShopWindow" />
-      <item itemvalue="애플리케이션.Window" />
-      <item itemvalue="애플리케이션.Window2222" />
+      <item itemvalue="Application.MainClient" />
+      <item itemvalue="Application.MainV2" />
+      <item itemvalue="Application.ShopWindow" />
+      <item itemvalue="Application.Window" />
+      <item itemvalue="Application.Window2222" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="애플리케이션.Window" />
-        <item itemvalue="애플리케이션.Window2222" />
-        <item itemvalue="애플리케이션.ShopWindow" />
-        <item itemvalue="애플리케이션.MainV2" />
-        <item itemvalue="애플리케이션.MainClient" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
