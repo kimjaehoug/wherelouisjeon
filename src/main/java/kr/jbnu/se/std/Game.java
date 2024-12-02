@@ -15,8 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
-import java.util.Random;
-import java.util.Arrays;
+
 
 /**
  * Actual game.
@@ -24,6 +23,7 @@ import java.util.Arrays;
  * @author www.gametutorial.net
  */
 
+@SuppressWarnings("ALL")
 public class Game {
 
     /**
@@ -35,30 +35,25 @@ public class Game {
     int minInterval = 9000; // 최소 간격 3초
     int maxInterval = 30000; // 최대 간격 10초
     int giftBoxInterval = getRandomInterval(minInterval, maxInterval); // 랜덤 간격
-    private Clip clip;
     private Clip clipbg;
     public int ed = 0;
     private boolean isPause = false;
-    private int Round;
+    private int round;
     private boolean isBossAlive;
     private Duck[] hunterSelectedDucks;
-    private Duck[] FireSelectedDucks;
+    private Duck[] fireSelectedDucks;
     private Duck[] playerSelectedDucks;
     private int ammo;// 현재 사용 가능한 총알
-    boolean ending = true;
     private int maxAmmo;       // 한 번에 장전할 수 있는 최대 탄약 수
     private BufferedImage gameoverfImg;
     private boolean isReloading; // 장전 중인지 여부
     private long reloadStartTime; // 장전이 시작된 시간
     private long reloadDuration;  // 장전 시간 (예: 2초)
-    private URL hpUrl;
-    private long endingStartTime = -1; // 엔딩이 시작된 시간을 저장하는 변수
-    private int selectduck;
     private ScheduledExecutorService hunterExecutor;
-    private ScheduledExecutorService FireExecutor;
-    private int PlayerHp;
-    private BufferedImage sightImg_Fire;
-    private BufferedImage[] giftBoxImages = new BufferedImage[3];
+    private ScheduledExecutorService fireExecutor;
+    private int playerHp;
+    private BufferedImage sightImgFire;
+    private final BufferedImage[] giftBoxImages = new BufferedImage[3];
 
     /**
      * Font that we will use to write statistic to the screen.
@@ -67,8 +62,8 @@ public class Game {
     private BufferedImage gameoverImg;
     boolean hunterTrigger = true;
     private int damage;
-    private long lastClickTime = 0; // 마지막으로 클릭한 시간
-    private final long clickDelay = 1000; // 클릭 사이의 최소 간격 (밀리초)
+    //private long lastClickTime = 0; // 마지막으로 클릭한 시간
+    //private final long clickDelay = 1000; // 클릭 사이의 최소 간격 (밀리초)
     private BufferedImage bossImg;
     private BufferedImage boss2Img;
     private BufferedImage boss3Img;
@@ -81,10 +76,9 @@ public class Game {
     private BufferedImage bossAttack4;
     private BufferedImage bossAttack5;
     private BufferedImage warningImg;
-    private BufferedImage[] hpImages = new BufferedImage[12];
-    private BufferedImage[] shopImages = new BufferedImage[4];// HP 이미지를 저장할 배열
-    private BufferedImage[] endingImages = new BufferedImage[4];
-    private int duckspeed;
+    private final BufferedImage[] hpImages = new BufferedImage[12];
+    private final BufferedImage[] shopImages = new BufferedImage[4];// HP 이미지를 저장할 배열
+    private final BufferedImage[] endingImages = new BufferedImage[4];
 
     /**
      * Array list of the ducks.
@@ -93,17 +87,16 @@ public class Game {
     private ArrayList<boss1> boss;
     private ArrayList<Buttonbuy> buttonbuy;
     private long lastBossAttackTime = 0;  // 마지막 공격 시간
-    private final long bossAttackInterval = 3000;
     long lastBottomAttackTime = 0;
     long bottomAttackInterval = 4000; // 공격 간격 (3초)
-    private ArrayList<Hunter1> Hunters;
-    private boolean Bosswith3delay;
+    private ArrayList<Hunter1> hunters;
+    private boolean bosswith3delay;
 
     /**
      * How many ducks leave the screen alive?
      */
     private int runawayDucks;
-    private Framework framework;
+    private final Framework framework;
 
     /**
      * How many ducks the player killed?
@@ -142,12 +135,7 @@ public class Game {
     private BufferedImage backgroundImg4;
     private BufferedImage backgroundImg5;
     private BufferedImage buttonImg;
-    private BufferedImage sightImg_hunter;
-
-    /**
-     * Bottom grass.
-     */
-    private BufferedImage grassImg;
+    private BufferedImage sightImgHunter;
 
     /**
      * kr.jbnu.se.std.Duck image.
@@ -168,12 +156,11 @@ public class Game {
      * Middle height of the sight image.
      */
     private int sightImgMiddleHeight;
-    private String gun;
-    private List<BossAttack> bossAttacks = new ArrayList<>();
-    private List<BossAttack> bossAttacks2 = new ArrayList<>();
-    private List<BossAttack> bossAttacks3 = new ArrayList<>();
-    private List<BossAttack> bossAttacks4 = new ArrayList<>();
-    private List<BossAttack> bossAttacks5 = new ArrayList<>();
+    private final List<BossAttack> bossAttacks = new ArrayList<>();
+    private final List<BossAttack> bossAttacks2 = new ArrayList<>();
+    private final List<BossAttack> bossAttacks3 = new ArrayList<>();
+    private final List<BossAttack> bossAttacks4 = new ArrayList<>();
+    private final List<BossAttack> bossAttacks5 = new ArrayList<>();
     private int roundPass;
 
     private static final String HIT_SOUND_PATH = "src/main/resources/sounds/hit.wav";
@@ -193,21 +180,21 @@ public class Game {
             @Override
             public void run() {
                 // Sets variables and objects for the game.
-                Initialize();
+                initialize();
                 // Load game files (images, sounds, ...)
-                LoadContent();
+                loadContent();
 
                 playBackgroundMusic("src/main/resources/sounds/MoonlightShadow.wav");
 
-                updateGameState(Framework.GameState.PLAYING);
+                updateGameState();
             }
         };
         threadForInitGame.start();
     }
 
     // 게임 상태를 안전하게 업데이트하는 동기화된 메서드
-    private synchronized void updateGameState(Framework.GameState newState) {
-        Framework.gameState = newState;
+    private synchronized void updateGameState() {
+        Framework.gameState = Framework.GameState.PLAYING;
     }
 
     // 랜덤한 시간 간격 생성 메서드
@@ -218,22 +205,22 @@ public class Game {
     /**
      * Set variables and objects for the game.
      */
-    private void Initialize() {
+    private void initialize() {
         random = new Random();
         font = new Font("monospaced", Font.BOLD, 18);
 
         ducks = new ArrayList<Duck>();
         boss = new ArrayList<boss1>();
         buttonbuy = new ArrayList<Buttonbuy>();
-        Hunters = new ArrayList<Hunter1>();
+        hunters = new ArrayList<Hunter1>();
         money = 0;
         runawayDucks = 0;
         killedDucks = 0;
         score = 0;
         roundPass = 60;
         shoots = 0;
-        PlayerHp = 100;
-        Round = 1;
+        playerHp = 100;
+        round = 1;
         damage = 20;
         isBossAlive = false;
         Hunter1 = false;
@@ -249,7 +236,7 @@ public class Game {
     /**
      * Load game files - images, sounds, ...
      */
-    private void LoadContent() {
+    private void loadContent() {
         try {
             loadImages("/images/hp_", 12, hpImages);
             loadImages("/images/shop", 3, shopImages);
@@ -272,8 +259,9 @@ public class Game {
 
             warningImg = loadImage("/images/warning.png");
             bossImg = loadImage("/images/boss.png");
-            grassImg = loadImage("/images/grass.png");
-            sightImg_hunter = loadImage("/images/sight_hunter.png");
+
+            BufferedImage grassImg = loadImage("/images/grass.png");
+            sightImgHunter = loadImage("/images/sight_hunter.png");
             duckImg = loadImage("/images/duck.png");
             gameoverfImg = loadImage("/images/duck.png");
             sightImg = loadImage("/images/sight.png");
@@ -292,7 +280,7 @@ public class Game {
                 giftBoxImages[i] = loadImage("/images/giftbox.png");
             }
 
-            sightImg_Fire = loadImage("/images/fire.png");
+            sightImgFire = loadImage("/images/fire.png");
         } catch (IOException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -331,8 +319,7 @@ public class Game {
         if (ducks.size() >= numberOfDucks) {
             playerSelectedDucks = new Duck[numberOfDucks]; // Player 선택된 오리 배열 초기화
 
-            Set<Duck> selectedDucksSet = new HashSet<>();
-            selectedDucksSet.addAll(Arrays.asList(hunterSelectedDucks));
+            Set<Duck> selectedDucksSet = new HashSet<>(Arrays.asList(hunterSelectedDucks));
 
             for (int i = 0; i < numberOfDucks; i++) {
                 Duck selectedDuck;
@@ -377,10 +364,10 @@ public class Game {
     // N마리 오리를 선택하는 메소드 (Hunter용)
     private void selectFireDucks(int numberOfDucks) {
         if (ducks.size() >= numberOfDucks) {
-            FireSelectedDucks = new Duck[numberOfDucks]; // Hunter 선택된 오리 배열 초기화
+            fireSelectedDucks = new Duck[numberOfDucks]; // Hunter 선택된 오리 배열 초기화
             Set<Duck> selectedDucksSet = new HashSet<>();
 
-            for (int i = 0; i < numberOfDucks; i++) {
+            for (int i = 0; i < 1; i++) {
                 Duck selectedDuck;
                 int index;
 
@@ -388,31 +375,29 @@ public class Game {
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
-                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) ||
-                        (hunterSelectedDucks != null && Arrays.asList(hunterSelectedDucks).contains(selectedDuck)) ||
-                        (playerSelectedDucks != null && Arrays.asList(playerSelectedDucks).contains(selectedDuck))); // 중복 방지
+                } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || Arrays.asList(hunterSelectedDucks).contains(selectedDuck) || playerSelectedDucks != null && Arrays.asList(playerSelectedDucks).contains(selectedDuck)); // 중복 방지
 
-                FireSelectedDucks[i] = selectedDuck;
+                fireSelectedDucks[i] = selectedDuck;
                 selectedDucksSet.add(selectedDuck);
 
-                System.out.println("Selected Fire Ducks: " + Arrays.toString(FireSelectedDucks));
+                System.out.println("Selected Fire Ducks: " + Arrays.toString(fireSelectedDucks));
 
             }
         }
     }
 
     // Hunter가 자동으로 오리를 제거하는 메소드
-    private void startFireAutoKill(int interval) {
-        if (FireExecutor == null || FireExecutor.isShutdown()) {
-            FireExecutor = Executors.newScheduledThreadPool(1); // 새로 생성
+    private void startFireAutoKill() {
+        if (fireExecutor == null || fireExecutor.isShutdown()) {
+            fireExecutor = Executors.newScheduledThreadPool(1); // 새로 생성
         }
-        FireExecutor.scheduleAtFixedRate(() -> {
-            if (FireSelectedDucks == null || Arrays.stream(FireSelectedDucks).allMatch(Objects::isNull)) {
+        fireExecutor.scheduleAtFixedRate(() -> {
+            if (fireSelectedDucks == null || Arrays.stream(fireSelectedDucks).allMatch(Objects::isNull)) {
                 // Hunter가 선택한 오리가 없으면 새롭게 선택
                 selectFireDucks(1);
             }
-            if (FireSelectedDucks != null) {
-                for (Duck duck : FireSelectedDucks) {
+            if (fireSelectedDucks != null) {
+                for (Duck duck : fireSelectedDucks) {
                     if (duck != null
                             && !Arrays.asList(playerSelectedDucks).contains(duck)
                             && !Arrays.asList(hunterSelectedDucks).contains(duck)) {
@@ -428,21 +413,20 @@ public class Game {
                 }
                 updateFireSelectedDucks();
             }
-        }, 0, interval, TimeUnit.MILLISECONDS); // interval 시간마다 실행
+        }, 0, 1500, TimeUnit.MILLISECONDS); // interval 시간마다 실행
     }
-
 
 
     // 게임이 끝나면 Hunter의 자동조준 타이머를 중지하는 코드
     private void stopFireAutoKill() {
-        if (FireExecutor != null && !FireExecutor.isShutdown()) {
-            FireExecutor.shutdown(); // Hunter의 자동 조준 종료
+        if (fireExecutor != null && !fireExecutor.isShutdown()) {
+            fireExecutor.shutdown(); // Hunter의 자동 조준 종료
         }
     }
 
 
     private void updateFireSelectedDucks() {
-        for (int i = 0; i < FireSelectedDucks.length; i++) {
+        for (int i = 0; i < fireSelectedDucks.length; i++) {
             if (hunterSelectedDucks[i] == null || !ducks.contains(hunterSelectedDucks[i]) || !ducks.contains(playerSelectedDucks[i])) {
                 // 새로운 오리를 선택하여 중복되지 않게 추가
                 Duck selectedDuck;
@@ -451,16 +435,16 @@ public class Game {
                 Set<Duck> selectedDucksSet = new HashSet<>();
                 selectedDucksSet.addAll(Arrays.asList(hunterSelectedDucks));
                 selectedDucksSet.addAll(Arrays.asList(playerSelectedDucks));
-                selectedDucksSet.addAll(Arrays.asList(FireSelectedDucks));
+                selectedDucksSet.addAll(Arrays.asList(fireSelectedDucks));
 
                 do {
                     index = random.nextInt(ducks.size());
                     selectedDuck = ducks.get(index);
                 } while (Arrays.asList(hunterSelectedDucks).contains(selectedDuck) ||
                         Arrays.asList(playerSelectedDucks).contains(selectedDuck) ||
-                        Arrays.asList(FireSelectedDucks).contains(selectedDuck)); // 중복 방지
+                        Arrays.asList(fireSelectedDucks).contains(selectedDuck)); // 중복 방지
 
-                FireSelectedDucks[i] = selectedDuck;
+                fireSelectedDucks[i] = selectedDuck;
             }
         }
     }
@@ -491,7 +475,7 @@ public class Game {
                 }
                 updateHunterSelectedDucks();
             }
-        }, 0, interval, TimeUnit.MILLISECONDS); // interval 시간마다 실행
+        }, 0, 2500, TimeUnit.MILLISECONDS); // interval 시간마다 실행
     }
 
 
@@ -554,7 +538,7 @@ public class Game {
         if (hunterSelectedDucks != null) {
             for (Duck duck : hunterSelectedDucks) {
                 if (duck != null) {
-                    g2d.drawImage(sightImg_hunter, duck.x, duck.y,28,28,null);
+                    g2d.drawImage(sightImgHunter, duck.x, duck.y,28,28,null);
                 }else{
                     return;
                 }
@@ -564,10 +548,10 @@ public class Game {
 
     // 더블배럴샷건 모드에서 Hunter 선택된 오리들에게 sightImg를 그리기
     private void drawSightOnFireSelectedDucks(Graphics2D g2d) {
-        if (FireSelectedDucks != null) {
-            for (Duck duck : FireSelectedDucks) {
+        if (fireSelectedDucks != null) {
+            for (Duck duck : fireSelectedDucks) {
                 if (duck != null) {
-                    g2d.drawImage(sightImg_Fire, duck.x, duck.y,100,100,null);
+                    g2d.drawImage(sightImgFire, duck.x, duck.y,100,100,null);
                 }else{
                     return;
                 }
@@ -578,7 +562,7 @@ public class Game {
     /**
      * Restart game - reset some variables.
      */
-    public void RestartGame() {
+    public void restartGame() {
         // Removes all of the ducks from this list.
         ducks.clear();
 
@@ -601,10 +585,6 @@ public class Game {
         stopBackgroundMusic();
     }
 
-    public enum GameState {
-        PAUSE, PLAYING, GAME_OVER, MAIN_MENU;
-    }
-
     public void NextRound() {
         stopBackgroundMusic();
         isPause = false;
@@ -612,16 +592,16 @@ public class Game {
         //Duck.lastDuckTime = 0; // 오리 타이머 초기화
         killedDucks = 0; // 죽인 오리 수 초기화
         runawayDucks = 0; // 도망간 오리 수 초기화
-        Round += 1;
+        round += 1;
         isBossAlive = false;
         roundPass += 30;
-        if(Round == 2){
+        if(round == 2){
             playBackgroundMusic("src/main/resources/sounds/JungleBook.wav");
-        }else if(Round == 3){
+        }else if(round == 3){
             playBackgroundMusic("src/main/resources/sounds/FantasticThemePark.wav");
-        }else if(Round == 4){
+        }else if(round == 4){
             playBackgroundMusic("src/main/resources/sounds/WhaleBelly.wav");
-        }else if(Round == 5){
+        }else if(round == 5){
             playBackgroundMusic("src/main/resources/sounds/TempleOfDarkness.wav");
         }
 
@@ -630,7 +610,7 @@ public class Game {
     public void playActiveSound(String filePath){
         try{
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(filePath));
-            clip = AudioSystem.getClip();
+            Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
             clip.start();
         }catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
@@ -667,7 +647,8 @@ public class Game {
         if (isBossAlive) {
             for (int i = 0; i < boss.size(); i++) {
                 boss.get(i).update(); // 보스 위치 업데이트
-                if (Round == 1) {
+                long bossAttackInterval = 3000;
+                if (round == 1) {
                     // 일정 시간마다 공격 발사 (보스 공격 간격 체크)
                     if (System.nanoTime() - lastBossAttackTime >= bossAttackInterval * 1_000_000) {
                         double angle = 150 + Math.random() * 70;
@@ -681,7 +662,7 @@ public class Game {
                     }
                 }
 
-                if (Round == 2) {
+                if (round == 2) {
                     if (System.nanoTime() - lastBossAttackTime >= bossAttackInterval * 900_000) {
                         double angle1 = Math.toRadians(150 + Math.random() * 70);
                         double angle2 = Math.toRadians(150 + Math.random() * 70);
@@ -713,7 +694,7 @@ public class Game {
                         lastBossAttackTime = System.nanoTime();
                     }
                 }
-                if (Round == 3) {
+                if (round == 3) {
                     if (System.nanoTime() - lastBossAttackTime >= bossAttackInterval * 900_000) {
                         double angle1 = Math.toRadians(150 + Math.random() * 70);
                         double angle2 = Math.toRadians(150 + Math.random() * 70);
@@ -757,7 +738,7 @@ public class Game {
                         // 마지막 공격 시간 업데이트
                         lastBossAttackTime = System.nanoTime();
                     }
-                }if (Round == 4) {
+                }if (round == 4) {
                     // 일반 유도탄 공격 처리
                     if (System.nanoTime() - lastBossAttackTime >= bossAttackInterval * 900_000) {
                         double angle1 = Math.toRadians(150 + Math.random() * 70);
@@ -831,7 +812,7 @@ public class Game {
                         // 마지막 밑에서 올라오는 공격 시간 업데이트
                         lastBottomAttackTime = System.nanoTime();
                     }
-                }if (Round == 5) {
+                }if (round == 5) {
                     // 일반 유도탄 공격 처리
                     if (System.nanoTime() - lastBossAttackTime >= bossAttackInterval * 900_000) {
                         double angle1 = Math.toRadians(150 + Math.random() * 70);
@@ -889,7 +870,6 @@ public class Game {
                         double screenBottomX2 = framework.getWidth() * (0.11 + Math.random() * (0.33 - 0.11)); // 왼쪽에서 나오는 탄환
                         double screenBottomX3 = framework.getWidth() * (0.11 + Math.random() * (0.33 - 0.11)); // 오른쪽에서 나오는 탄환
                         double screenBottomY = framework.getHeight(); // 화면의 아래 Y 좌표
-                        double screenTopY = 0;
 
                         // 위쪽으로 일정한 각도로 발사되는 일반 탄환
                         double upwardAngle = Math.toRadians(80 + Math.random()*(90 - 80)); // 정확히 위쪽으로
@@ -903,8 +883,8 @@ public class Game {
                         bossAttacks5.add(new BossAttack((int)screenBottomX1, (int)screenBottomY, vxUp1, vyUp1, gravity, deltaTime));
                         bossAttacks5.add(new BossAttack((int)screenBottomX2, (int)screenBottomY, vxUp1, vyUp1, gravity, deltaTime));
                         bossAttacks5.add(new BossAttack((int)screenBottomX3, (int)screenBottomY, vxUp1, vyUp1, gravity, deltaTime));
-                        bossAttacks5.add(new BossAttack((int)screenBottomX3, (int)screenTopY, vxUp1, vyDown1, gravity, deltaTime));
-                        bossAttacks5.add(new BossAttack((int)screenBottomX2, (int)screenTopY, vxUp1, vyDown1, gravity, deltaTime));
+                        bossAttacks5.add(new BossAttack((int)screenBottomX3, 0, vxUp1, vyDown1, gravity, deltaTime));
+                        bossAttacks5.add(new BossAttack((int)screenBottomX2, 0, vxUp1, vyDown1, gravity, deltaTime));
 
                         // 마지막 밑에서 올라오는 공격 시간 업데이트
                         lastBottomAttackTime = System.nanoTime();
@@ -914,7 +894,7 @@ public class Game {
 
             // 보스 공격 업데이트 및 피격 체크
             for (int i = 0; i < bossAttacks.size(); i++) {
-                if (Round == 1) {
+                if (round == 1) {
                     BossAttack attack = bossAttacks.get(i);
                     attack.update(); // 공격 위치 업데이트
 
@@ -922,7 +902,7 @@ public class Game {
                     if (attack.isHit(mousePosition)) {
                         System.out.println(HIT_MESSAGE);
                         bossAttacks.remove(i);// 공격이 맞았으므로 제거
-                        PlayerHp -= 10;
+                        playerHp -= 10;
                         playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
@@ -935,14 +915,14 @@ public class Game {
                 }
             }
             for(int i = 0; i < bossAttacks2.size(); i++){
-                if(Round==2){
+                if(round==2){
                     BossAttack attack2 = bossAttacks2.get(i);
                     attack2.updatewithgravity();
 
                     if (attack2.isHit(mousePosition)) {
                         System.out.println(HIT_MESSAGE);
                         bossAttacks2.remove(i);// 공격이 맞았으므로 제거
-                        PlayerHp -= 10;
+                        playerHp -= 10;
                         playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
@@ -954,14 +934,14 @@ public class Game {
                     }
                 }
             }  for(int i = 0; i < bossAttacks3.size(); i++){
-                if(Round==3){
+                if(round==3){
                     BossAttack attack2 = bossAttacks3.get(i);
                     attack2.updatewithgravity();
 
                     if (attack2.isHit(mousePosition)) {
                         System.out.println(HIT_MESSAGE);
                         bossAttacks3.remove(i);// 공격이 맞았으므로 제거
-                        PlayerHp -= 10;
+                        playerHp -= 10;
                         playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
@@ -973,14 +953,14 @@ public class Game {
                     }
                 }
             }for(int i = 0; i < bossAttacks4.size(); i++){
-                if(Round==4){
+                if(round==4){
                     BossAttack attack2 = bossAttacks4.get(i);
                     attack2.updatewithgravity();
                     attack2.update();
                     if (attack2.isHit(mousePosition)) {
                         System.out.println(HIT_MESSAGE);
                         bossAttacks4.remove(i);// 공격이 맞았으므로 제거
-                        PlayerHp -= 10;
+                        playerHp -= 10;
                         playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
@@ -992,14 +972,14 @@ public class Game {
                     }
                 }
             }for(int i = 0; i < bossAttacks5.size(); i++){
-                if(Round==5){
+                if(round==5){
                     BossAttack attack2 = bossAttacks5.get(i);
                     attack2.updatewithgravity();
 
                     if (attack2.isHit(mousePosition)) {
                         System.out.println(HIT_MESSAGE);
                         bossAttacks5.remove(i);// 공격이 맞았으므로 제거
-                        PlayerHp -= 10;
+                        playerHp -= 10;
                         playActiveSound(HIT_SOUND_PATH);
                         i--; // 인덱스 조정
                     }
@@ -1017,16 +997,14 @@ public class Game {
         if(Hunter1&& hunterTrigger && !isPause){
             startHunterAutoKill(2500);
             hunterTrigger = false;
-        }else if(!Hunter1){
-        }else if(!hunterTrigger){
-
         }
+
         if(!isPause) {
             int maxGiftBoxes = 1;
             int Random = 1+(int)(Math.random()*1000);
             // Creates a new duck, if it's the time, and add it to the array list.
             // 랜덤한 간격으로 선물 상자를 생성
-            if (System.nanoTime() - lastGiftBoxTime >= giftBoxInterval * 1_000_000) {
+            if (System.nanoTime() - lastGiftBoxTime >= giftBoxInterval * 1_000_000L) {
                 if ((giftBoxes.size() < maxGiftBoxes) && Random == 50) {
                     int randomX = (int) (Math.random() * (framework.getWidth() - 50)); // 랜덤 X 좌표 (상자 크기를 고려)
                     int fallSpeed = 5 + (int) (Math.random() * 5); // 5~10 사이의 낙하 속도
@@ -1062,7 +1040,7 @@ public class Game {
 
                     // 선물 상자의 타입에 따라 다른 보상 제공
                     if (giftBoxes.get(i).type == 1) {
-                        startFireAutoKill(1500);
+                        startFireAutoKill();
                         System.out.println("Fire");
                         fire = true;
                         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -1090,7 +1068,7 @@ public class Game {
                             }
                         }, 3, TimeUnit.SECONDS);// 3초 후 실행
                     } else if (giftBoxes.get(i).type == 3) {
-                        PlayerHp += 10; // 3번 상자: 체력 증가
+                        playerHp += 10; // 3번 상자: 체력 증가
                     }
 
                     // 충돌한 상자는 제거
@@ -1099,7 +1077,7 @@ public class Game {
                 }
 
                 // 화면 밖으로 벗어난 상자 제거
-                if(giftBoxes.size() > 0) {
+                if(!giftBoxes.isEmpty()) {
                     if (giftBoxes.get(i).y > framework.getHeight()) {
                         giftBoxes.remove(i);
                         i--; // 인덱스 조정
@@ -1107,149 +1085,151 @@ public class Game {
                 }
             }
 
+            // 엔딩이 시작된 시간을 저장하는 변수
+            long endingStartTime = -1;
             if (System.nanoTime() - Duck.lastDuckTime >= Duck.timeBetweenDucks) {
 
-                if (isReloading) {
-                    if (System.nanoTime() - reloadStartTime >= reloadDuration) {
-                        ammo = maxAmmo;   // 탄약을 최대치로 채움
-                        isReloading = false; // 장전 상태 해제
-                    }
+            if (isReloading) {
+                if (System.nanoTime() - reloadStartTime >= reloadDuration) {
+                    ammo = maxAmmo;   // 탄약을 최대치로 채움
+                    isReloading = false; // 장전 상태 해제
                 }
-                if(ammo<=0 && !isReloading){
-                    Reload();
-                }
-
-                if (framework.getGun().equals("더블배럴샷건")) {
-                    selectPlayerDucks(1);
-                    // 선택된 오리들이 죽었는지 확인하고, 죽으면 다시 선택
-                }else if(framework.getGun().equals("기본권총")){
-
-                }
-                // Here we create new duck and add it to the array list.
-                ducks.add(new Duck(Duck.duckLines[Duck.nextDuckLines][0] + random.nextInt(200), Duck.duckLines[Duck.nextDuckLines][1], Duck.duckLines[Duck.nextDuckLines][2], Duck.duckLines[Duck.nextDuckLines][3],duckImg));
-
-                // Here we increase nextDuckLines so that next duck will be created in next line.
-                Duck.incrementNextDuckLines();
-                if (Duck.nextDuckLines >= Duck.duckLines.length)
-                    Duck.resetNextDuckLines();
-
-                if (killedDucks >= roundPass && !isBossAlive) {
-                    // 보스 생성
-                    stopBackgroundMusic();
-                    playBackgroundMusic("src/main/resources/sounds/warning.wav");
-                    spawnBossWithDelay();
-                    Bosswith3delay = true;
-                    isBossAlive = true; // 보스가 등장했음을 표시
-                    System.out.println("boss activity");
-                    endingStartTime = System.nanoTime();
-                    ducks.clear();
-                }
-                Duck.setLastDuckTime(System.nanoTime());
+            }
+            if(ammo<=0 && !isReloading){
+                Reload();
             }
 
-            if(!isBossAlive) {
-                // Update all of the ducks.
-                for (int i = 0; i < ducks.size(); i++) {
-                    // Move the duck.
-                    ducks.get(i).Update();
+            if (framework.getGun().equals("더블배럴샷건")) {
+                selectPlayerDucks(1);
+                // 선택된 오리들이 죽었는지 확인하고, 죽으면 다시 선택
+            }else if(framework.getGun().equals("기본권총")){
 
-                    // Checks if the duck leaves the screen and remove it if it does.
-                    if (ducks.get(i).x < 0 - duckImg.getWidth()) {
-                        ducks.remove(i);
-                        runawayDucks++;
-                    }
+            }
+            // Here we create new duck and add it to the array list.
+            ducks.add(new Duck(Duck.duckLines[Duck.nextDuckLines][0] + random.nextInt(200), Duck.duckLines[Duck.nextDuckLines][1], Duck.duckLines[Duck.nextDuckLines][2], Duck.duckLines[Duck.nextDuckLines][3],duckImg));
+
+            // Here we increase nextDuckLines so that next duck will be created in next line.
+            Duck.incrementNextDuckLines();
+            if (Duck.nextDuckLines >= Duck.duckLines.length)
+                Duck.resetNextDuckLines();
+
+            if (killedDucks >= roundPass && !isBossAlive) {
+                // 보스 생성
+                stopBackgroundMusic();
+                playBackgroundMusic("src/main/resources/sounds/warning.wav");
+                spawnBossWithDelay();
+                bosswith3delay = true;
+                isBossAlive = true; // 보스가 등장했음을 표시
+                System.out.println("boss activity");
+                endingStartTime = System.nanoTime();
+                ducks.clear();
+            }
+            Duck.setLastDuckTime(System.nanoTime());
+        }
+
+        if(!isBossAlive) {
+            // Update all of the ducks.
+            for (int i = 0; i < ducks.size(); i++) {
+                // Move the duck.
+                ducks.get(i).Update();
+
+                // Checks if the duck leaves the screen and remove it if it does.
+                if (ducks.get(i).x < 0 - duckImg.getWidth()) {
+                    ducks.remove(i);
+                    runawayDucks++;
                 }
-                // Does player shoots?
-                if (Canvas.mouseButtonState(MouseEvent.BUTTON1) && !isReloading) {
-                    if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
-                        shoots++;
-                        playActiveSound("src/main/resources/sounds/gun.wav");
-                        ammo--;
-                        if (playerSelectedDucks != null) {
-                            for (int i = 0; i < playerSelectedDucks.length; i++) {
-                                if (playerSelectedDucks[i] != null) {
-                                    playActiveSound("src/main/resources/sounds/quack.wav");
-                                    killedDucks++; // 죽인 오리 수 증가
-                                    money += 10; // 돈 증가
-                                    score += playerSelectedDucks[i].score; // 점수 증가
-                                    // 오리 리스트에서 제거
-                                    ducks.remove(playerSelectedDucks[i]);
-
-                                    // 선택된 오리를 null로 설정하여 초기화
-                                    playerSelectedDucks[i] = null;
-                                    updateAndReselectPlayerDucks(1);
-                                }
-                            }
-                        }
-                        // We go over all the ducks and we look if any of them was shoot.
-                        for (int i = 0; i < ducks.size(); i++) {
-                            // We check, if the mouse was over ducks head or body, when player has shot.
-                            if (new Rectangle(ducks.get(i).x + 18, ducks.get(i).y, 27, 30).contains(mousePosition) ||
-                                    new Rectangle(ducks.get(i).x + 30, ducks.get(i).y + 30, 88, 25).contains(mousePosition)) {
-                                killedDucks++;
-                                money += 10;
-                                score += ducks.get(i).score;
+            }
+            // Does player shoots?
+            if (Canvas.mouseButtonState(MouseEvent.BUTTON1) && !isReloading) {
+                if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
+                    shoots++;
+                    playActiveSound("src/main/resources/sounds/gun.wav");
+                    ammo--;
+                    if (playerSelectedDucks != null) {
+                        for (int i = 0; i < playerSelectedDucks.length; i++) {
+                            if (playerSelectedDucks[i] != null) {
                                 playActiveSound("src/main/resources/sounds/quack.wav");
+                                killedDucks++; // 죽인 오리 수 증가
+                                money += 10; // 돈 증가
+                                score += playerSelectedDucks[i].score; // 점수 증가
+                                // 오리 리스트에서 제거
+                                ducks.remove(playerSelectedDucks[i]);
 
-                                // Remove the duck from the array list.
-                                ducks.remove(i);
-
-                                // We found the duck that player shoot so we can leave the for loop.
-                                break;
-                            }
-                        }
-                        // We go over all the bosses and we look if any of them was shoot.
-                        // We go over all the bosses and we look if any of them was shoot.
-
-
-                        lastTimeShoot = System.nanoTime();
-                    }
-                }
-            }else {
-
-                if (Canvas.mouseButtonState(MouseEvent.BUTTON1) && !isReloading) {
-                    if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
-                        shoots++;
-                        ammo--;
-                        if (isBossAlive) {
-                            for (int i = 0; i < boss.size(); i++) {
-                                // Define the boss hitbox (for exampl, a larger area for the boss).
-                                // 보스가 랜덤 각도로 공격 발사
-                                if (new Rectangle(boss.get(i).x, boss.get(i).y, 378, 268).contains(mousePosition)) {
-                                    // Reduce boss health
-                                    playActiveSound("src/main/resources/sounds/gun.wav");
-                                    boss.get(i).health -= damage; // Reduce boss health by 20 on each hit.
-                                    System.out.println("attack boss");
-                                    System.out.println(boss.get(i).health);
-                                    // If the boss is dead, update score, money, etc.
-                                    if (boss.get(i).health <= 0) {
-                                        money += 100; // Bosses give more money
-                                        score += boss.get(i).score; // Boss-specific score
-                                        boss.remove(i);
-                                        if (Round == 5) {
-                                            Framework.GameState currentState = Framework.getGameState();
-                                            stopBackgroundMusic();
-                                            endingStartTime = System.currentTimeMillis();
-                                            framework.saveScore(score);
-                                            framework.saveScore(score);
-                                            leaderboardSaved = true;
-                                            playBackgroundMusic("src/main/resources/sounds/NewBeginningNotTheEnd.wav"); // 엔딩 테마곡 재생
-                                        } else {
-                                            Pause(); // 다른 라운드의 경우 일시 정지 상태로 전환
-                                        }
-                                    }
-                                    break;
-                                    // Since a boss was hit, we can leave the loop.
-                                }
+                                // 선택된 오리를 null로 설정하여 초기화
+                                playerSelectedDucks[i] = null;
+                                updateAndReselectPlayerDucks(1);
                             }
                         }
                     }
+                    // We go over all the ducks and we look if any of them was shoot.
+                    for (int i = 0; i < ducks.size(); i++) {
+                        // We check, if the mouse was over ducks head or body, when player has shot.
+                        if (new Rectangle(ducks.get(i).x + 18, ducks.get(i).y, 27, 30).contains(mousePosition) ||
+                                new Rectangle(ducks.get(i).x + 30, ducks.get(i).y + 30, 88, 25).contains(mousePosition)) {
+                            killedDucks++;
+                            money += 10;
+                            score += ducks.get(i).score;
+                            playActiveSound("src/main/resources/sounds/quack.wav");
+
+                            // Remove the duck from the array list.
+                            ducks.remove(i);
+
+                            // We found the duck that player shoot so we can leave the for loop.
+                            break;
+                        }
+                    }
+                    // We go over all the bosses and we look if any of them was shoot.
+                    // We go over all the bosses and we look if any of them was shoot.
+
+
                     lastTimeShoot = System.nanoTime();
                 }
             }
+        }else {
 
-            // When 200 ducks runaway, the game ends.
-            if (runawayDucks >= 10 || PlayerHp < 0 )
+            if (Canvas.mouseButtonState(MouseEvent.BUTTON1) && !isReloading) {
+                if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
+                    shoots++;
+                    ammo--;
+                    if (isBossAlive) {
+                        for (int i = 0; i < boss.size(); i++) {
+                            // Define the boss hitbox (for exampl, a larger area for the boss).
+                            // 보스가 랜덤 각도로 공격 발사
+                            if (new Rectangle(boss.get(i).x, boss.get(i).y, 378, 268).contains(mousePosition)) {
+                                // Reduce boss health
+                                playActiveSound("src/main/resources/sounds/gun.wav");
+                                boss.get(i).health -= damage; // Reduce boss health by 20 on each hit.
+                                System.out.println("attack boss");
+                                System.out.println(boss.get(i).health);
+                                // If the boss is dead, update score, money, etc.
+                                if (boss.get(i).health <= 0) {
+                                    money += 100; // Bosses give more money
+                                    score += boss.get(i).score; // Boss-specific score
+                                    boss.remove(i);
+                                    if (round == 5) {
+                                        Framework.GameState currentState = Framework.getGameState();
+                                        stopBackgroundMusic();
+                                        endingStartTime = System.currentTimeMillis();
+                                        framework.saveScore(score);
+                                        framework.saveScore(score);
+                                        leaderboardSaved = true;
+                                        playBackgroundMusic("src/main/resources/sounds/NewBeginningNotTheEnd.wav"); // 엔딩 테마곡 재생
+                                    } else {
+                                        Pause(); // 다른 라운드의 경우 일시 정지 상태로 전환
+                                    }
+                                }
+                                break;
+                                // Since a boss was hit, we can leave the loop.
+                            }
+                        }
+                    }
+                }
+                lastTimeShoot = System.nanoTime();
+            }
+        }
+
+        // When 200 ducks runaway, the game ends.
+            if (runawayDucks >= 10 || playerHp < 0 )
                 Framework.setGameState(Framework.GameState.GAMEOVER);
             if (Framework.gameState == Framework.GameState.GAMEOVER && !leaderboardSaved) {
                 framework.saveScore(score);
@@ -1271,11 +1251,11 @@ public class Game {
                     mouseClicked = false;
                 }
                 // 버튼 1 (헌터 구매)
-                if (money > 200 && Hunters.size() < 1) {
+                if (money > 200 && hunters.isEmpty()) {
                     Rectangle buttonArea1 = new Rectangle(buttonbuy.get(0).x, buttonbuy.get(0).y, 367, 257);
                     if (buttonArea1.contains(mousePosition) && mouseClicked) {
                         System.out.println(BUY_BUTTON_MESSAGE);
-                        Hunters.add(new Hunter1(220, 290, 0, 100, hunter111Img));
+                        hunters.add(new Hunter1(220, 290, 0, 100, hunter111Img));
                         Hunter1 = true;
                         money -= 200;
                         System.out.println(MOUSE_POSITION_MESSAGE + mousePosition);
@@ -1308,47 +1288,42 @@ public class Game {
                 }
             }
         }
-        if(Hunters.size() > 0) {
+        if(!hunters.isEmpty()) {
             Hunter1 = true;
         }
     }
 
-    public void drawBossAttack(Graphics2D g2d){
-        for(int i = 0; i < bossAttacks.size(); i++) {
-            g2d.drawImage(bossAttack, bossAttacks.get(i).x,bossAttacks.get(i).y, null );
-        }
-    }
     private void spawnBossWithDelay() {
         // 3초 후 보스 생성
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.schedule(() -> {
-            if(Round == 1){
+            if(round == 1){
                 boss.add(new boss1(1200, 400, 0, 1000,200,bossImg));
-            }else if(Round == 2){
+            }else if(round == 2){
                 boss.add(new boss1(1200,400,0,1500, 400,boss2Img));
-            }else if(Round == 3){
+            }else if(round == 3){
                 boss.add(new boss1(1200,400, 0, 2000, 2500,boss3Img));
-            }else if(Round == 4){
+            }else if(round == 4){
                 boss.add(new boss1(1200,400,0,3000, 6400, boss4Img));
-            }else if(Round == 5){
+            }else if(round == 5){
                 boss.add(new boss1(1200,400,0,4000, 12000, boss5Img));
             }
             stopBackgroundMusic();
-            if(Round == 1) {
+            if(round == 1) {
                 playBackgroundMusic("src/main/resources/sounds/AquaCave.wav");
-            }else if(Round == 2){
+            }else if(round == 2){
                 playBackgroundMusic("src/main/resources/sounds/RuinCastle.wav");
-            }else if(Round == 3){
+            }else if(round == 3){
                 playBackgroundMusic("src/main/resources/sounds/ArabPirate.wav");
-            }else if(Round == 4){
+            }else if(round == 4){
                 playBackgroundMusic("src/main/resources/sounds/SinkingThings.wav");
-            }else if(Round == 5){
+            }else if(round == 5){
                 playBackgroundMusic("src/main/resources/sounds/WorldHorizon.wav");
             }
             isBossAlive = true; // 보스가 등장했음을 표시
             System.out.println("Boss activity");
             ducks.clear();
-            Bosswith3delay = false;
+            bosswith3delay = false;
         }, 3, TimeUnit.SECONDS); // 3초 후 실행
     }
 
@@ -1376,8 +1351,8 @@ public class Game {
     // 배경 그리기
     private void drawBackground(Graphics2D g2d) {
         Image[] backgrounds = { backgroundImg, backgroundImg2, backgroundImg3, backgroundImg4, backgroundImg5 };
-        if (Round >= 1 && Round <= 5) {
-            g2d.drawImage(backgrounds[Round - 1], 0, 0, Framework.frameWidth, Framework.frameHeight, null);
+        if (round >= 1 && round <= 5) {
+            g2d.drawImage(backgrounds[round - 1], 0, 0, Framework.frameWidth, Framework.frameHeight, null);
         }
     }
 
@@ -1390,7 +1365,7 @@ public class Game {
 
     // 보스 공격 경고 그리기
     private void drawBossWarning(Graphics2D g2d) {
-        if (Bosswith3delay) {
+        if (bosswith3delay) {
             g2d.drawImage(warningImg, Framework.frameWidth / 2 - 275, Framework.frameHeight / 2 - 250, null);
         }
     }
@@ -1398,7 +1373,7 @@ public class Game {
     // 헌터1 그리기 및 관련 처리
     private void drawHunter1(Graphics2D g2d) {
         if (Hunter1) {
-            g2d.drawImage(hunter111Img, Hunters.get(0).x, Hunters.get(0).y, null);
+            g2d.drawImage(hunter111Img, hunters.get(0).x, hunters.get(0).y, null);
             drawSightOnHunterSelectedDucks(g2d);
         }
     }
@@ -1412,7 +1387,7 @@ public class Game {
             List<BossAttack> currentList = bossAttackLists.get(i);
             Image currentImage = bossAttackImages.get(i);
 
-            if (currentList.size() > 0) {
+            if (!currentList.isEmpty()) {
                 for (BossAttack attack : currentList) {
                     g2d.drawImage(currentImage, attack.x, attack.y, 100, 100, null);
                 }
@@ -1435,13 +1410,13 @@ public class Game {
     }
 
     private BufferedImage getBossImageForRound() {
-        switch (Round) {
+        switch (round) {
             case 1: return bossImg;
             case 2: return boss2Img;
             case 3: return boss3Img;
             case 4: return boss4Img;
             case 5: return boss5Img;
-            default: System.err.println("Warning: Unexpected gift box type: " + Round); return null;
+            default: System.err.println("Warning: Unexpected gift box type: " + round); return null;
         }
     }
 
@@ -1527,9 +1502,9 @@ public class Game {
         g2d.drawString("KILLS: " + killedDucks, 160, 21);
         g2d.drawString("SHOOTS: " + shoots, 299, 21);
         g2d.drawString("SCORE: " + score, 440, 21);
-        g2d.drawString("Round: " + Round, 570, 21);
+        g2d.drawString("round: " + round, 570, 21);
         g2d.drawString("Money: " + money, 700, 21);
-        g2d.drawString("PlayerHP: " + PlayerHp, 10, 80);
+        g2d.drawString("PlayerHP: " + playerHp, 10, 80);
     }
 
     /**
@@ -1538,26 +1513,15 @@ public class Game {
      * @param g2d Graphics2D
      * @param mousePosition Current mouse position.
      */
-    public void DrawGameOver(Graphics2D g2d, Point mousePosition)
+    public void drawGameOver(Graphics2D g2d, Point mousePosition)
     {
         Draw(g2d, mousePosition);
         g2d.drawImage(gameoverImg, 0,0,Framework.frameWidth,Framework.frameHeight, null);
         g2d.drawImage(gameoverfImg, Framework.frameWidth/2,Framework.frameHeight/2,400,400, null);
     }
-    public void DrawEnding(Graphics2D g2d, Point mousePosition, long gameTime) {
+    public void drawEnding(Graphics2D g2d, Point mousePosition, long gameTime) {
         // 배경화면 설정 (엔딩 전용 배경 이미지)
         g2d.drawImage(endingImages[ed], 0, 0, Framework.frameWidth-50, Framework.frameHeight-50, null);
-    }
-    public void NextEnding(){
-        ed++;
-    }
-
-    public int getScore(){
-        return score;
-    }
-
-    public void setgun(String gun){
-        this.gun = gun;
     }
 
     private void Reload() {
