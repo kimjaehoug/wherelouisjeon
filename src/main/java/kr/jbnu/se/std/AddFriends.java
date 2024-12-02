@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 public class AddFriends extends JFrame {
     private final JTextField nicknameField;
 
-    public AddFriends(Framework framework) {
+    public AddFriends(FriendManager friendManager) {
         JButton addFriendButton;
         // 기본 프레임 설정
         setTitle("친구 추가");
@@ -33,8 +33,8 @@ public class AddFriends extends JFrame {
                 String nickname = nicknameField.getText();
                 // 여기서 닉네임 처리 로직 추가 가능
                 //framework.friendsAdder(nickname)
-                framework.friendManager.addFriend(nickname);
-                framework.friendManager.addFriendToOther(nickname);
+                friendManager.addFriend(nickname);
+                friendManager.addFriendToOther(nickname);
                 System.out.println("추가할 친구: " + nickname);
             }
         });

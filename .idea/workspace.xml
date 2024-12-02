@@ -7,27 +7,47 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="131313">
+    <list default="true" id="e255d515-7351-4cf8-8843-af8a77729b48" name="Changes" comment="metrix">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/24__11__20___7_28_________Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/24__11__27___3_36_________Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/BossConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/BossConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Buttonbuy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Buttonbuy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ChatwithFriends.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ChatwithFriends.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Duck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Duck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/FirebaseClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/FirebaseClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/FriendManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/FriendManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/GiftBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/GiftBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Hunter1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Hunter1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InventoryWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InviteFriends.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/InviteFriends.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/LoginClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/LoginClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MainClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MessageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MessageManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MessageReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/MessageReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/RankWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/RankWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/ShopWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/WindowManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/WindowManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/boss1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/boss1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/AddFriends.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/AddFriends.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Framework.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kr/jbnu/se/std/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/AddFriends$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/AddFriends$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/AddFriends.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/AddFriends.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/BossConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/BossConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Buttonbuy.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Buttonbuy.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ChatwithFriends.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ChatwithFriends.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Duck.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Duck.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/FirebaseClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/FirebaseClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Framework.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/FriendManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/FriendManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game$GameState.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game$GameState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Game.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/GiftBox.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/GiftBox.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Hunter1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/Hunter1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InventoryWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InviteFriends.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/InviteFriends.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$ImagePanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient$ImagePanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/LoginClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MainClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/MessageReceiver.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/RankWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/RankWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$BackgroundPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$BackgroundPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$OuterPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow$OuterPanel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/ShopWindow.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/WindowManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/WindowManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/boss1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/kr/jbnu/se/std/boss1.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,12 +79,12 @@
     &quot;assignee&quot;: &quot;kimjaehoug&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/kimjaehoug/wherelouisjeon.git&quot;,
-    &quot;accountId&quot;: &quot;c6ecef48-6dfd-4d4c-97ed-658986e97146&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/kimjaehoug/wherelouisjeon.git",
+    "accountId": "a44d6209-844a-4745-82f7-f6385177c124"
   }
-}</component>
+}]]></component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -200,8 +220,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
       </set>
     </attachedChunks>
   </component>
@@ -239,6 +259,7 @@
       <workItem from="1732686034806" duration="80000" />
       <workItem from="1732691298330" duration="12058000" />
       <workItem from="1732882666038" duration="5975000" />
+      <workItem from="1733055782595" duration="11388000" />
     </task>
     <task id="LOCAL-00001" summary="loginfunction">
       <option name="closed" value="true" />
@@ -584,7 +605,23 @@
       <option name="project" value="LOCAL" />
       <updated>1732953769748</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="metrix">
+      <option name="closed" value="true" />
+      <created>1732955318446</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1732955318446</updated>
+    </task>
+    <task id="LOCAL-00045" summary="metrix">
+      <option name="closed" value="true" />
+      <created>1732955357565</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1732955357566</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -601,7 +638,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/yewon_refactoring" />
+                        <option value="origin/backup_gu" />
                       </list>
                     </value>
                   </entry>
@@ -624,6 +661,7 @@
     <MESSAGE value="switch문에 default문로 디버깅 코드 넣음.&#10;데이터가져오기실패.. 문자열 상수화해버림" />
     <MESSAGE value="import java.awt.event.ActionEvent;&#10;import java.awt.event.ActionListener;&#10;//unused라 지움//" />
     <MESSAGE value="131313" />
-    <option name="LAST_COMMIT_MESSAGE" value="131313" />
+    <MESSAGE value="metrix" />
+    <option name="LAST_COMMIT_MESSAGE" value="metrix" />
   </component>
 </project>

@@ -285,7 +285,7 @@ public class Framework extends Canvas {
 
 
     public void frendsAddwindows(){
-        addFriends = new AddFriends(this);
+        addFriends = new AddFriends(friendManager);
     }
 
 
