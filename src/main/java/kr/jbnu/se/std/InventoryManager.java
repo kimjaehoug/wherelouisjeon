@@ -1,6 +1,7 @@
 package kr.jbnu.se.std;
 
 import okhttp3.*;
+import org.json.JSONException;
 import org.json.JSONObject;
 import javax.swing.*;
 import java.io.IOException;
@@ -92,7 +93,10 @@ public class InventoryManager {
     }
 
     public void retrieveInventory() {
-        String url = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/inventory/Gun.json?auth=" + idToken;
+        String url = String.format(
+                "https://shootthedock-default-rtdb.firebaseio.com/users/%s/userinfo/inventory/Gun.json?auth=%s",
+                email, idToken
+        );
 
         Request request = new Request.Builder()
                 .url(url)
@@ -108,37 +112,53 @@ public class InventoryManager {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
-                    JSONObject jsonResponse = new JSONObject(responseBody);
-
-                    if (jsonResponse.isEmpty()) {
-                        SwingUtilities.invokeLater(() -> System.out.println("인벤토리 데이터가 없습니다."));
-                        return;
-                    }
-
-                    for (String key : jsonResponse.keySet()) {
-                        JSONObject inventoryData = jsonResponse.getJSONObject(key);
-                        String inventory = inventoryData.getString("item");
-
-                        if ("더블배럴샷건".equals(inventory)) {
-                            inventoryImage = "src/main/resources/images/gun_01.png";
-                        }else if("AK-47".equals(inventory)) {
-                            inventoryImage = "src/main/resources/images/gun_02.png";
-                        }else if("핸드건".equals(inventory)) {
-                            inventoryImage = "src/main/resources/images/gun_03.png";
-                        }
-
-                        if (!receivedMessageKeysF.contains(key)) {
-                            receivedMessageKeysF.add(key);
-                            SwingUtilities.invokeLater(() -> inventoryWindow.addPanel(inventory, inventoryImage));
-                        }
-                    }
+                    handleInventoryResponse(response.body().string());
                 } else {
                     SwingUtilities.invokeLater(() -> System.err.println("인벤토리 가져오기 실패: " + response.message()));
                 }
             }
         });
     }
+
+    // 인벤토리 응답 처리 함수
+    private void handleInventoryResponse(String responseBody) {
+        try {
+            JSONObject jsonResponse = new JSONObject(responseBody);
+
+            if (jsonResponse.isEmpty()) {
+                SwingUtilities.invokeLater(() -> System.out.println("인벤토리 데이터가 없습니다."));
+                return;
+            }
+
+            for (String key : jsonResponse.keySet()) {
+                JSONObject inventoryData = jsonResponse.getJSONObject(key);
+                String inventory = inventoryData.getString("item");
+                String inventoryImage = getInventoryImage(inventory);
+
+                if (!receivedMessageKeysF.contains(key)) {
+                    receivedMessageKeysF.add(key);
+                    SwingUtilities.invokeLater(() -> inventoryWindow.addPanel(inventory, inventoryImage));
+                }
+            }
+        } catch (JSONException e) {
+            SwingUtilities.invokeLater(() -> System.err.println("JSON 파싱 오류: " + e.getMessage()));
+        }
+    }
+
+    // 인벤토리 이미지 경로 반환 함수
+    private String getInventoryImage(String inventory) {
+        switch (inventory) {
+            case "더블배럴샷건":
+                return "src/main/resources/images/gun_01.png";
+            case "AK-47":
+                return "src/main/resources/images/gun_02.png";
+            case "핸드건":
+                return "src/main/resources/images/gun_03.png";
+            default:
+                return "src/main/resources/images/default_gun.png"; // 기본 이미지
+        }
+    }
+
 
     public void startReceivingInventory(){
         schedulerI.scheduleAtFixedRate(this::retrieveInventory, 0, 1, TimeUnit.MINUTES);

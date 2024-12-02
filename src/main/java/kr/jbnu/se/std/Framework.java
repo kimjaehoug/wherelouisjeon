@@ -77,6 +77,12 @@ public class Framework extends Canvas {
      * Current state of the game
      */
     public static GameState gameState;
+    public synchronized static void setGameState(GameState gameState){
+        gameState = gameState;
+    }
+    public synchronized static GameState getGameState(){
+        return gameState;
+    }
 
     /**
      * Elapsed game time in nanoseconds.
@@ -235,7 +241,7 @@ public class Framework extends Canvas {
 
 
     public void frendsAddwindows(){
-        AddFriends addFriends  = new AddFriends(this);
+        AddFriends addFriends  = new AddFriends(friendManager);
     }
 
 
@@ -252,58 +258,84 @@ public class Framework extends Canvas {
     }
     public void receiveFriendsInvite() {
         OkHttpClient client = new OkHttpClient();
-        String url = "https://shootthedock-default-rtdb.firebaseio.com/friend/" + nickname + "/userinfo/friendswant.json?auth=" + idToken;
+        String url = String.format(
+                "https://shootthedock-default-rtdb.firebaseio.com/friend/%s/userinfo/friendswant.json?auth=%s",
+                nickname, idToken
+        );
+
         Request request = new Request.Builder()
                 .url(url)
                 .get()
                 .build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 SwingUtilities.invokeLater(() ->
-                    logger.warning("친구 목록 가져오기 실패: " + e.getMessage())
+                        logger.warning("친구 목록 가져오기 실패: " + e.getMessage())
                 );
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
-                    try {
-                        JSONObject jsonObject = new JSONObject(responseBody);
-                        // JSON 객체가 비어있는지 확인
-                        if (jsonObject.isEmpty()) {
-                            SwingUtilities.invokeLater(() ->
-                                logger.warning("친구 신청이 없습니다.")
-                            );
-                            return;
-                        }
-                        // 친구 신청 목록 출력
-                        for (String key : jsonObject.keySet()) {
-                            JSONObject inviteObject = jsonObject.getJSONObject(key); // 친구 신청 객체
-                            String friendNickname = inviteObject.getString(NICKNAME_KEY); // 친구의 닉네임
-                            // 중복된 친구 신청이 아닌 경우에만 추가
-                            if (!existingFriendsinvite.contains(friendNickname)) {
-                                existingFriendsinvite.add(friendNickname); // 새로운 친구 신청 추가
-                                SwingUtilities.invokeLater(() ->
-                                    inviteFriends.setFriends(friendNickname + "\n") // 친구 목록에 추가
-                                );
-                            }
-                        }
-                    } catch (JSONException e) {
-                        logger.log(Level.WARNING, "An error occurred: ", e); //스택트레이스도 함께 기록
-                        SwingUtilities.invokeLater(() -> {
-                            logger.warning("친구 신청 목록 처리 중 오류 발생: " + e.getMessage());
-                            stopReceivingFriendInvite();
-                        });
-                    }
+                    processFriendInvitesResponse(response.body().string());
                 } else {
                     SwingUtilities.invokeLater(() ->
-                        logger.warning("친구 목록 가져오기 실패: " + response.message())
+                            logger.warning("친구 목록 가져오기 실패: " + response.message())
                     );
                 }
             }
         });
     }
+
+    // 친구 초대 응답 처리
+    private void processFriendInvitesResponse(String responseBody) {
+        try {
+            JSONObject jsonObject = new JSONObject(responseBody);
+
+            if (jsonObject.isEmpty()) {
+                SwingUtilities.invokeLater(() ->
+                        logger.warning("친구 신청이 없습니다.")
+                );
+                return;
+            }
+
+            addNewFriendInvites(jsonObject);
+
+        } catch (JSONException e) {
+            handleFriendInviteError(e);
+        }
+    }
+
+    // 새로운 친구 신청 추가
+    private void addNewFriendInvites(JSONObject jsonObject) {
+        for (String key : jsonObject.keySet()) {
+            try {
+                JSONObject inviteObject = jsonObject.getJSONObject(key);
+                String friendNickname = inviteObject.getString(NICKNAME_KEY);
+
+                if (!existingFriendsinvite.contains(friendNickname)) {
+                    existingFriendsinvite.add(friendNickname);
+                    SwingUtilities.invokeLater(() ->
+                            inviteFriends.setFriends(friendNickname + "\n")
+                    );
+                }
+            } catch (JSONException e) {
+                logger.warning("친구 신청 처리 중 오류 발생: " + e.getMessage());
+            }
+        }
+    }
+
+    // 친구 초대 처리 중 오류
+    private void handleFriendInviteError(JSONException e) {
+        logger.log(Level.WARNING, "An error occurred: ", e); // 스택트레이스도 함께 기록
+        SwingUtilities.invokeLater(() -> {
+            logger.warning("친구 신청 목록 처리 중 오류 발생: " + e.getMessage());
+            stopReceivingFriendInvite();
+        });
+    }
+
     public void deleteFriendInvite(String nicknameToDelete) {
         OkHttpClient client = new OkHttpClient();
         // "nickname" 키를 사용하여 friendswant 밑의 데이터를 삭제하는 URL
@@ -514,10 +546,17 @@ public class Framework extends Canvas {
     private void checkAndSaveLeaderboard(int latestScore) {
         OkHttpClient client = new OkHttpClient();
 
-        // 사용자 정보에서 모든 점수를 가져옴
+        // 사용자 점수 URL
         String userScoresUrl = FIREBASE_BASE_URL + email + "/userinfo/scores.json?auth=" + idToken;
+
+        // 점수 가져오기 요청
+        fetchUserScores(client, userScoresUrl, latestScore);
+    }
+
+    // 사용자 점수 가져오기 함수
+    private void fetchUserScores(OkHttpClient client, String url, int latestScore) {
         Request request = new Request.Builder()
-                .url(userScoresUrl)
+                .url(url)
                 .get()
                 .build();
 
@@ -532,40 +571,45 @@ public class Framework extends Canvas {
                 if (response.isSuccessful()) {
                     String responseBody = response.body() != null ? response.body().string() : "";
 
-                    // 응답이 비어 있거나 유효하지 않은 경우 처리
+                    // 응답 확인 및 처리
                     if (responseBody.trim().isEmpty()) {
                         logger.warning("응답이 비어있거나 잘못되었습니다.");
                         return;
                     }
-
-                    try {
-                        int highestScore = latestScore;
-
-                        // 응답이 JSON 객체인지 확인
-                        JSONObject scoresObject = new JSONObject(responseBody);
-
-                        // 객체에서 모든 점수 탐색 (타임스탬프를 키로 사용)
-                        Iterator<String> keys = scoresObject.keys();
-                        while (keys.hasNext()) {
-                            String key = keys.next();
-                            int score = scoresObject.getInt(key);
-                            if (score > highestScore) {
-                                highestScore = score;
-                            }
-                        }
-
-                        // 리더보드에 최고 점수가 있는지 확인 후 없으면 저장
-                        saveToLeaderboardIfHighest(highestScore);
-
-                    } catch (JSONException e) {
-                        logger.warning("JSON 파싱 오류: " + e.getMessage());
-                    }
+                    processUserScores(responseBody, latestScore);
                 } else {
                     logger.warning("점수 목록 가져오기 실패: " + response.code());
                 }
             }
         });
     }
+
+    // 사용자 점수 처리 함수
+    private void processUserScores(String responseBody, int latestScore) {
+        try {
+            int highestScore = calculateHighestScore(responseBody, latestScore);
+            saveToLeaderboardIfHighest(highestScore); // 최고 점수 리더보드 저장
+        } catch (JSONException e) {
+            logger.warning("JSON 파싱 오류: " + e.getMessage());
+        }
+    }
+
+    // 최고 점수 계산 함수
+    private int calculateHighestScore(String responseBody, int latestScore) throws JSONException {
+        int highestScore = latestScore;
+
+        JSONObject scoresObject = new JSONObject(responseBody);
+        Iterator<String> keys = scoresObject.keys();
+
+        while (keys.hasNext()) {
+            String key = keys.next();
+            int score = scoresObject.getInt(key);
+            highestScore = Math.max(highestScore, score); // 최고 점수 계산
+        }
+
+        return highestScore;
+    }
+
 
 
 
@@ -576,7 +620,7 @@ public class Framework extends Canvas {
         // 리더보드 URL 정의
         String leaderboardUrl = "https://shootthedock-default-rtdb.firebaseio.com/leaderboard.json?auth=" + idToken;
 
-        // 리더보드 정보를 GET 요청으로 가져옴
+        // 리더보드 정보를 가져오는 GET 요청
         Request getLeaderboardRequest = new Request.Builder()
                 .url(leaderboardUrl)
                 .get()
@@ -591,35 +635,43 @@ public class Framework extends Canvas {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
-                    try {
-                        boolean isNewHighScore = true;
-
-                        // 리더보드가 비어 있지 않다면 현재 최고 점수 확인
-                        if (!responseBody.trim().isEmpty() && !responseBody.equals("{}")) {
-                            JSONObject leaderboardObject = new JSONObject(responseBody);
-                            if (leaderboardObject.has(nickname)) {
-                                // 자신의 점수를 찾았으면, 기존 점수와 비교
-                                int existingScore = leaderboardObject.getJSONObject(nickname).getInt("score");
-                                if (existingScore >= highestUserScore) {
-                                    isNewHighScore = false;
-                                }
-                            }
-                        }
-
-                        // 새로운 최고 점수라면 리더보드에 추가 또는 갱신
-                        if (isNewHighScore) {
-                            addToLeaderboard(highestUserScore);
-                        }
-                    } catch (JSONException e) {
-                        logger.warning("JSON 파싱 오류: " + e.getMessage());
-                    }
+                    processLeaderboardResponse(response.body().string(), highestUserScore);
                 } else {
                     logger.warning("리더보드 점수 가져오기 실패: " + response.code());
                 }
             }
         });
     }
+
+    // 리더보드 응답 처리
+    private void processLeaderboardResponse(String responseBody, int highestUserScore) {
+        try {
+            boolean isNewHighScore = isHighestScore(responseBody, highestUserScore);
+
+            // 새로운 최고 점수라면 리더보드에 추가 또는 갱신
+            if (isNewHighScore) {
+                addToLeaderboard(highestUserScore);
+            }
+        } catch (JSONException e) {
+            logger.warning("JSON 파싱 오류: " + e.getMessage());
+        }
+    }
+
+    // 현재 점수가 최고 점수인지 확인
+    private boolean isHighestScore(String responseBody, int highestUserScore) throws JSONException {
+        if (responseBody.trim().isEmpty() || responseBody.equals("{}")) {
+            return true; // 리더보드가 비어 있으면 새 점수는 자동으로 최고 점수
+        }
+
+        JSONObject leaderboardObject = new JSONObject(responseBody);
+        if (leaderboardObject.has(nickname)) {
+            int existingScore = leaderboardObject.getJSONObject(nickname).getInt("score");
+            return highestUserScore > existingScore; // 새로운 점수가 기존 점수보다 높은지 확인
+        }
+
+        return true; // 리더보드에 사용자 정보가 없으면 새로운 점수는 최고 점수
+    }
+
 
     private void addToLeaderboard(int highestUserScore) {
         OkHttpClient client = new OkHttpClient();
@@ -798,98 +850,23 @@ public class Framework extends Canvas {
     /**
      * In specific intervals of time (GAME_UPDATE_PERIOD) the game/logic is updated and then the game is drawn on the screen.
      */
-    private void GameLoop()
-    {
-        // This two variables are used in VISUALIZING state of the game. We used them to wait some time so that we get correct frame/window resolution.
+    private void GameLoop() {
         long visualizingTime = 0, lastVisualizingTime = System.nanoTime();
-        // This variables are used for calculating the time that defines for how long we should put threat to sleep to meet the GAME_FPS.
         long beginTime, timeTaken, timeLeft;
-        while(running)
-        {
+
+        while (running) {
             beginTime = System.nanoTime();
-            switch (gameState)
-            {
-                case ENDING:
-                    gameTime += System.nanoTime() - lastTime;
-                    game.UpdateGame(gameTime, mousePosition());
-                    lastTime = System.nanoTime();
-                    break;
-                case PAUSE:
-                    gameTime += System.nanoTime() - lastTime;
-                    game.UpdateGame(gameTime, mousePosition());
-                    lastTime = System.nanoTime();
-                    break;
-                case MAINPAGE:
-                    gameState = GameState.STARTING;
-                    break;
-                case PLAYING:
-                    gameTime += System.nanoTime() - lastTime;
-                    game.UpdateGame(gameTime, mousePosition());
-                    lastTime = System.nanoTime();
-                    break;
-                case GAMEOVER:
-                    gameTime += System.nanoTime() - lastTime;
-                    lastTime = System.nanoTime();
-                    running = false;
-                    logger.info("게임이 종료되었습니다.");
-                    break;
-                case LOGIN:
-                    if (isLoginSuccessful) {
-                        gameState = GameState.MAINPAGE;
-                    }
-                    break;
-                case MAIN_MENU:
-                    //...
-                    break;
-                case OPTIONS:
-                    //...
-                    break;
-                case GAME_CONTENT_LOADING:
-                    //...
-                    break;
-                case STARTING:
-                    // Sets variables and objects.
-                    Initialize();
-                    // Load files - images, sounds, ...
-                    LoadContent();
-                    // When all things that are called above finished, we change game status to main menu.
-                    gameState = GameState.MAIN_MENU;
-                    break;
-                case VISUALIZING:
-                    // On Ubuntu OS (when I tested on my old computer) this.getWidth() method doesn't return the correct value immediately (eg. for frame that should be 800px width, returns 0 than 790 and at last 798px).
-                    // So we wait one second for the window/frame to be set to its correct size. Just in case we
-                    // also insert 'this.getWidth() > 1' condition in case when the window/frame size wasn't set in time,
-                    // so that we although get approximately size.
-                    if(this.getWidth() > 1 && visualizingTime > SECINNANOSEC)
-                    {
-                        frameWidth = this.getWidth();
-                        frameHeight = this.getHeight();
 
-                        // When we get size of frame we change status.
-                        gameState = GameState.STARTING;
-                    }
-                    else
-                    {
-                        visualizingTime += System.nanoTime() - lastVisualizingTime;
-                        lastVisualizingTime = System.nanoTime();
-                    }
-                    break;
-                default:
-                    logger.info("Unhandled GameState: " + gameState);
-                    break;
-            }
+            // 상태에 따른 처리
+            handleGameState(visualizingTime,lastVisualizingTime);
 
-            // Repaint the screen.
+            // 화면 다시 그리기
             repaint();
 
-            // Here we calculate the time that defines for how long we should put threat to sleep to meet the GAME_FPS.
+            // FPS 조정
             timeTaken = System.nanoTime() - beginTime;
-            timeLeft = (GAME_UPDATE_PERIOD - timeTaken) / MILISECINNANOSEC; // In milliseconds
-            // If the time is less than 10 milliseconds, then we will put thread to sleep for 10 millisecond so that some other thread can do some work.
-            if (timeLeft < 10)
-                timeLeft = 10; //set a minimum
+            timeLeft = Math.max((GAME_UPDATE_PERIOD - timeTaken) / MILISECINNANOSEC, 10); // 최소 10ms 대기
             try {
-                //Provides the necessary delay and also yields control so that other thread can do work.
                 Thread.sleep(timeLeft);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // 인터럽트 상태 복원
@@ -897,6 +874,82 @@ public class Framework extends Canvas {
             }
         }
     }
+
+    // 상태 처리 함수
+    private void handleGameState(long visualizingTime, long lastVisualizingTime) {
+        switch (gameState) {
+            case ENDING:
+            case PAUSE:
+            case PLAYING:
+                updateGame();
+                break;
+            case MAINPAGE:
+                gameState = GameState.STARTING;
+                break;
+            case GAMEOVER:
+                endGame();
+                break;
+            case LOGIN:
+                handleLogin();
+                break;
+            case MAIN_MENU:
+            case OPTIONS:
+            case GAME_CONTENT_LOADING:
+                // 추가적인 상태 처리
+                break;
+            case STARTING:
+                initializeGame();
+                break;
+            case VISUALIZING:
+                handleVisualizingState(visualizingTime,lastVisualizingTime);
+                break;
+            default:
+                logger.info("Unhandled GameState: " + gameState);
+                break;
+        }
+    }
+
+    // 게임 업데이트 처리
+    private void updateGame() {
+        gameTime += System.nanoTime() - lastTime;
+        game.UpdateGame(gameTime, mousePosition());
+        lastTime = System.nanoTime();
+    }
+
+    // 게임 종료 처리
+    private void endGame() {
+        gameTime += System.nanoTime() - lastTime;
+        lastTime = System.nanoTime();
+        running = false;
+        logger.info("게임이 종료되었습니다.");
+    }
+
+    // 로그인 상태 처리
+    private void handleLogin() {
+        if (isLoginSuccessful) {
+            gameState = GameState.MAINPAGE;
+        }
+    }
+
+    // 초기화 및 콘텐츠 로드
+    private void initializeGame() {
+        Initialize();
+        LoadContent();
+        gameState = GameState.MAIN_MENU;
+    }
+
+    // 비주얼라이징 상태 처리
+    private void handleVisualizingState(long visualizingTime,long lastVisualizingTime) {
+        if (this.getWidth() > 1 && visualizingTime > SECINNANOSEC) {
+            frameWidth = this.getWidth();
+            frameHeight = this.getHeight();
+            gameState = GameState.STARTING;
+        } else {
+            visualizingTime += System.nanoTime() - lastVisualizingTime;
+            lastVisualizingTime = System.nanoTime();
+        }
+    }
+
 
     @Override
     public void Draw(Graphics2D g2d) {

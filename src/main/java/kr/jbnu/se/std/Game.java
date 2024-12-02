@@ -676,7 +676,6 @@ public class Game {
             }
             selectPlayerDucks(1);
         }else if(framework.getGun().equals("기본권총")){
-
         }
         if (isBossAlive) {
             for (int i = 0; i < boss.size(); i++) {
@@ -726,62 +725,55 @@ public class Game {
             }
         }
 
-        if(isPause) {
+        if (isPause) {
             hunterTrigger = true;
             stopHunterAutoKill();
-            buttonbuy.add(new Buttonbuy(framework.getWidth()/2 - 350, framework.getHeight()/2+50, buttonImg));
-            buttonbuy.add(new Buttonbuy(framework.getWidth()/2 -50, framework.getHeight()/2+50, buttonImg));
-            buttonbuy.add(new Buttonbuy(framework.getWidth()/2 + 250, framework.getHeight()/2+50, buttonImg));
-            // 마우스 포지션 및 버튼 클릭 상태 확인
-            boolean mouseClicked = false;
-            if (Canvas.mouseButtonState(MouseEvent.BUTTON1) && !mouseClicked) {
-                mouseClicked = true;
-                if(!Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
-                    mouseClicked = false;
-                }
-                // 버튼 1 (헌터 구매)
-                if (money > 200 && Hunters.size() < 1) {
-                    Rectangle buttonArea1 = new Rectangle(buttonbuy.get(0).x, buttonbuy.get(0).y, 367, 257);
-                    if (buttonArea1.contains(mousePosition) && mouseClicked) {
-                        System.out.println(BUY_BUTTON_MESSAGE);
-                        Hunters.add(new Hunter1(220, 290, 0, 100, hunter111Img));
-                        Hunter1 = true;
-                        money -= 200;
-                        System.out.println(MOUSE_POSITION_MESSAGE + mousePosition);
-                        System.out.println(BUTTON_POSITION_MESSAGE + buttonbuy.get(0).x + ", " + buttonbuy.get(0).y);
-                    }
-                }
 
-                // 버튼 2 (데미지 증가)
-                if (money > 100) {
-                    Rectangle buttonArea2 = new Rectangle(buttonbuy.get(1).x, buttonbuy.get(1).y, 367, 257);
-                    if (buttonArea2.contains(mousePosition)&& mouseClicked) {
-                        System.out.println(BUY_BUTTON_MESSAGE);
-                        damage += 10;
-                        money -= 100;
-                        System.out.println(MOUSE_POSITION_MESSAGE + mousePosition);
-                        System.out.println(BUTTON_POSITION_MESSAGE + buttonbuy.get(1).x + ", " + buttonbuy.get(1).y);
-                    }
-                }
+            // 버튼 생성
+            int baseX = framework.getWidth() / 2 - 350;
+            int baseY = framework.getHeight() / 2 + 50;
+            int buttonGap = 300;
 
-                // 버튼 3 (최대 탄약 증가)
-                if (money > 100) {
-                    Rectangle buttonArea3 = new Rectangle(buttonbuy.get(2).x, buttonbuy.get(2).y, 367, 257);
-                    if (buttonArea3.contains(mousePosition) && mouseClicked) {
-                        System.out.println(BUY_BUTTON_MESSAGE);
-                        maxAmmo += 2;
-                        money -= 100;
-                        System.out.println(MOUSE_POSITION_MESSAGE + mousePosition);
-                        System.out.println(BUTTON_POSITION_MESSAGE + buttonbuy.get(2).x + ", " + buttonbuy.get(2).y);
-                    }
-                }
+            for (int i = 0; i < 3; i++) {
+                buttonbuy.add(new Buttonbuy(baseX + buttonGap * i, baseY, buttonImg));
+            }
+
+            // 마우스 클릭 및 버튼 동작 처리
+            if (Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
+                handleButtonClick(mousePosition);
             }
         }
         if(Hunters.size() > 0) {
             Hunter1 = true;
         }
     }
+    // 버튼 클릭 처리 함수
+    private void handleButtonClick(Point mousePosition) {
+        // 헌터 구매
+        if (checkButton(0,mousePosition) && money >= 200 && Hunters.size() < 1) {
+            Hunters.add(new Hunter1(220, 290, 0, 100, hunter111Img));
+            Hunter1 = true;
+            money -= 200;
+        }
 
+        // 데미지 증가
+        if (checkButton(1,mousePosition) && money >= 100) {
+            damage += 10;
+            money -= 100;
+        }
+
+        // 최대 탄약 증가
+        if (checkButton(2,mousePosition) && money >= 100) {
+            maxAmmo += 2;
+            money -= 100;
+        }
+    }
+
+    // 버튼 클릭 여부 확인 함수
+    private boolean checkButton(int index,Point mousePosition) {
+        Rectangle buttonArea = new Rectangle(buttonbuy.get(index).x, buttonbuy.get(index).y, 367, 257);
+        return buttonArea.contains(mousePosition);
+    }
     public void drawBossAttack(Graphics2D g2d){
         for(int i = 0; i < bossAttacks.size(); i++) {
             g2d.drawImage(bossAttack, bossAttacks.get(i).x,bossAttacks.get(i).y, null );
@@ -1004,37 +996,61 @@ public class Game {
     private void processGiftBoxEffect(GiftBox giftBox) {
         System.out.println("Player collected a gift!");
 
-        if (giftBox.type == 1) {
-            fire = true;
-            startFireAutoKill(1500);
-
-            // 9초 후 Fire 효과 중지
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            scheduler.schedule(() -> {
-                stopFireAutoKill();
-                fire = false;
-            }, 9, TimeUnit.SECONDS);
-        } else if (giftBox.type == 2) {
-            // 오리 속도 증가
-            for (Duck duck : ducks) {
-                if (duck.getSpeed() > -3) {
-                    duck.setSpeed(duck.getSpeed() + 1);
-                }
-            }
-
-            // 3초 후 속도 복원
-            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-            scheduler.schedule(() -> {
-                for (Duck duck : ducks) {
-                    if (duck.getSpeed() > -4) {
-                        duck.setSpeed(duck.getSpeed() - 1);
-                    }
-                }
-            }, 3, TimeUnit.SECONDS);
-        } else if (giftBox.type == 3) {
-            PlayerHp += 10; // 체력 증가
+        switch (giftBox.type) {
+            case 1:
+                activateFireEffect();
+                break;
+            case 2:
+                modifyDuckSpeed(1, 3); // 속도 증가 및 복원
+                break;
+            case 3:
+                increasePlayerHp(10); // 체력 증가
+                break;
+            default:
+                System.out.println("Unknown gift box type: " + giftBox.type);
+                break;
         }
     }
+
+    // Fire 효과 활성화
+    private void activateFireEffect() {
+        fire = true;
+        startFireAutoKill(1500);
+
+        scheduleTask(() -> {
+            stopFireAutoKill();
+            fire = false;
+        }, 9, TimeUnit.SECONDS);
+    }
+
+    // 오리 속도 변경
+    private void modifyDuckSpeed(int speedChange, int restoreDelaySeconds) {
+        for (Duck duck : ducks) {
+            if (duck.getSpeed() > -3) {
+                duck.setSpeed(duck.getSpeed() + speedChange);
+            }
+        }
+
+        scheduleTask(() -> {
+            for (Duck duck : ducks) {
+                if (duck.getSpeed() > -4) {
+                    duck.setSpeed(duck.getSpeed() - speedChange);
+                }
+            }
+        }, restoreDelaySeconds, TimeUnit.SECONDS);
+    }
+
+    // 플레이어 체력 증가
+    private void increasePlayerHp(int amount) {
+        PlayerHp += amount;
+    }
+
+    // 스케줄 작업 실행
+    private void scheduleTask(Runnable task, long delay, TimeUnit timeUnit) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.schedule(task, delay, timeUnit);
+    }
+
     private void handleDuckUpdates(Point mousePosition) {
         if (isBossAlive) {
             return;
@@ -1074,67 +1090,69 @@ public class Game {
         }
     }
     private void handlePlayerShooting(Point mousePosition) {
-        if (System.nanoTime() - lastTimeShoot < timeBetweenShots) {
-            return; // 발사 간격이 충족되지 않으면 아무 작업도 하지 않음
-        }
+        if (!isReadyToShoot()) return; // 발사 조건 충족 확인
+
         if (Canvas.mouseButtonState(MouseEvent.BUTTON1)) {
-            // 선택된 오리 처리
-            if (System.nanoTime() - lastTimeShoot > timeBetweenShots && !isReloading) {
+            handleSelectedDucks(); // 선택된 오리 처리
+            if (isReloading) {
+                System.out.println("Reloading... Please wait!");
+                return;
+            }
 
-                if (playerSelectedDucks != null) {
-                    for (int i = 0; i < playerSelectedDucks.length; i++) {
-                        if (playerSelectedDucks[i] != null && ducks.contains(playerSelectedDucks[i])) {
-                            playActiveSound("src/main/resources/sounds/quack.wav");
-                            killedDucks++;
-                            money += 10;
-                            score += playerSelectedDucks[i].score;
+            if (ammo <= 0) {
+                System.out.println("Out of ammo! Reloading...");
+                Reload(); // 재장전
+                return;
+            }
 
-                            // 오리 리스트에서 제거
-                            ducks.remove(playerSelectedDucks[i]);
-                            playerSelectedDucks[i] = null; // 초기화
-                        }
-                    }
-                    updateAndReselectPlayerDucks(1); // 선택된 오리 갱신
+            shootDuck(mousePosition); // 일반 오리와의 충돌 처리
+            lastTimeShoot = System.nanoTime(); // 마지막 발사 시간 갱신
+        }
+    }
+
+    // 발사 조건 충족 확인
+    private boolean isReadyToShoot() {
+        return System.nanoTime() - lastTimeShoot >= timeBetweenShots && !isReloading;
+    }
+
+    // 선택된 오리 처리
+    private void handleSelectedDucks() {
+        if (playerSelectedDucks != null) {
+            for (int i = 0; i < playerSelectedDucks.length; i++) {
+                if (playerSelectedDucks[i] != null && ducks.contains(playerSelectedDucks[i])) {
+                    removeDuck(playerSelectedDucks[i]);
+                    playerSelectedDucks[i] = null; // 초기화
                 }
+            }
+            updateAndReselectPlayerDucks(1); // 선택된 오리 갱신
+        }
+    }
 
-                // 재장전 확인
-                if (isReloading) {
-                    System.out.println("Reloading... Please wait!");
-                    return; // 재장전 중에는 공격 불가
-                }
+    // 일반 오리 처리
+    private void shootDuck(Point mousePosition) {
+        shoots++;
+        playActiveSound("src/main/resources/sounds/gun.wav");
+        ammo--; // 탄약 소모
 
-                // 탄약 확인
-                if (ammo <= 0) {
-                    System.out.println("Out of ammo! Reloading...");
-                    Reload(); // 재장전 시작
-                    return;
-                }
-
-                // 발사 간격 확인
-                if (System.nanoTime() - lastTimeShoot >= timeBetweenShots) {
-                    shoots++;
-                    playActiveSound("src/main/resources/sounds/gun.wav");
-                    ammo--; // 탄약 소모
-
-                    // 일반 오리와 충돌 확인
-                    Iterator<Duck> iterator = ducks.iterator();
-                    while (iterator.hasNext()) {
-                        Duck duck = iterator.next();
-                        if (isDuckHit(duck, mousePosition)) {
-                            playActiveSound("src/main/resources/sounds/quack.wav");
-                            killedDucks++;
-                            money += 10;
-                            score += duck.score;
-                            iterator.remove(); // 안전하게 제거
-                            break; // 한 마리 처리 후 종료
-                        }
-                    }
-
-                    lastTimeShoot = System.nanoTime(); // 마지막 발사 시간 갱신
-                }
+        Iterator<Duck> iterator = ducks.iterator();
+        while (iterator.hasNext()) {
+            Duck duck = iterator.next();
+            if (isDuckHit(duck, mousePosition)) {
+                removeDuck(duck);
+                break; // 한 마리만 처리
             }
         }
     }
+
+    // 오리 제거
+    private void removeDuck(Duck duck) {
+        playActiveSound("src/main/resources/sounds/quack.wav");
+        killedDucks++;
+        money += 10;
+        score += duck.score;
+        ducks.remove(duck); // 리스트에서 제거
+    }
+
 
 
 

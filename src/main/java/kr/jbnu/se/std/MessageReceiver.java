@@ -175,7 +175,10 @@ public class MessageReceiver {
 
     public void receiveFriends() {
         OkHttpClient client = new OkHttpClient();
-        String url = "https://shootthedock-default-rtdb.firebaseio.com/users/" + email + "/userinfo/friends.json?auth=" + idToken;
+        String url = String.format(
+                "https://shootthedock-default-rtdb.firebaseio.com/users/%s/userinfo/friends.json?auth=%s",
+                email, idToken
+        );
 
         Request request = new Request.Builder()
                 .url(url)
@@ -185,53 +188,70 @@ public class MessageReceiver {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                SwingUtilities.invokeLater(() -> {
-                    System.err.println("친구 목록 가져오기 실패: " + e.getMessage());
-                });
+                SwingUtilities.invokeLater(() ->
+                        System.err.println("친구 목록 가져오기 실패: " + e.getMessage())
+                );
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
-                    try {
-                        JSONObject jsonObject = new JSONObject(responseBody);
-
-                        // JSON 객체가 비어있는지 확인
-                        if (jsonObject.isEmpty()) {
-                            SwingUtilities.invokeLater(() -> {
-                                System.out.println("친구가 없습니다.");
-                            });
-                            return;
-                        }
-
-                        // 친구 목록 출력
-                        for (String key : jsonObject.keySet()) {
-                            JSONObject friendObject = jsonObject.getJSONObject(key); // 친구 객체
-                            String nickname = friendObject.getString("nickname"); // 친구의 닉네임
-
-                            // 중복된 친구가 아닌 경우에만 추가
-                            if (!existingFriends.contains(nickname)) {
-                                existingFriends.add(nickname); // 새로운 친구 추가
-                                SwingUtilities.invokeLater(() -> {
-                                    mainClient.setFriends(nickname + "\n"); // 친구 목록에 추가
-                                });
-                            }
-                        }
-                    } catch (JSONException e) {
-                        logger.warning(e.getMessage());
-                        SwingUtilities.invokeLater(() -> {
-                            System.err.println("친구 목록 처리 중 오류 발생: " + e.getMessage());
-                        });
-                    }
+                    processFriendsResponse(response.body().string());
                 } else {
-                    SwingUtilities.invokeLater(() -> {
-                        System.err.println("친구 목록 가져오기 실패: " + response.message());
-                    });
+                    SwingUtilities.invokeLater(() ->
+                            System.err.println("친구 목록 가져오기 실패: " + response.message())
+                    );
                 }
             }
         });
     }
+
+    // 친구 목록 응답 처리
+    private void processFriendsResponse(String responseBody) {
+        try {
+            JSONObject jsonObject = new JSONObject(responseBody);
+
+            if (jsonObject.isEmpty()) {
+                SwingUtilities.invokeLater(() ->
+                        System.out.println("친구가 없습니다.")
+                );
+                return;
+            }
+
+            addNewFriends(jsonObject);
+
+        } catch (JSONException e) {
+            handleFriendsError(e);
+        }
+    }
+
+    // 새로운 친구 추가
+    private void addNewFriends(JSONObject jsonObject) {
+        for (String key : jsonObject.keySet()) {
+            try {
+                JSONObject friendObject = jsonObject.getJSONObject(key);
+                String nickname = friendObject.getString("nickname");
+
+                if (!existingFriends.contains(nickname)) {
+                    existingFriends.add(nickname);
+                    SwingUtilities.invokeLater(() ->
+                            mainClient.setFriends(nickname + "\n")
+                    );
+                }
+            } catch (JSONException e) {
+                logger.warning("친구 처리 중 오류 발생: " + e.getMessage());
+            }
+        }
+    }
+
+    // 친구 목록 처리 중 오류
+    private void handleFriendsError(JSONException e) {
+        logger.warning(e.getMessage());
+        SwingUtilities.invokeLater(() ->
+                System.err.println("친구 목록 처리 중 오류 발생: " + e.getMessage())
+        );
+    }
+
 
     public void startReceivingMessages() {
         // 0초 후에 시작하고, 5초마다 receiveMessages 메소드를 호출
