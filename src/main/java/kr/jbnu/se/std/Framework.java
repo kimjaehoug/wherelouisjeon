@@ -955,7 +955,7 @@ public class Framework extends Canvas {
     public void Draw(Graphics2D g2d) {
             switch (gameState) {
                 case ENDING:
-                    game.DrawEnding(g2d, mousePosition(),gameTime);
+                    game.drawEnding(g2d, mousePosition(),gameTime);
                     break;
                 case PAUSE:
                     game.Draw(g2d, mousePosition());
@@ -964,7 +964,7 @@ public class Framework extends Canvas {
                     game.Draw(g2d, mousePosition());
                     break;
                 case GAMEOVER:
-                    game.DrawGameOver(g2d, mousePosition());
+                    game.drawGameOver(g2d, mousePosition());
                     break;
                 case MAIN_MENU:
                     // 중앙에 이미지를 배치합니다.
@@ -1003,7 +1003,7 @@ public class Framework extends Canvas {
         // We set gameTime to zero and lastTime to current time for later calculations.
         gameTime = 0;
         lastTime = System.nanoTime();
-        game.RestartGame();
+        game.restartGame();
         // We change game status so that the game can start.
         gameState = GameState.PLAYING;
     }
