@@ -1,0 +1,29 @@
+<changelist name="Uncommitted_changes_before_Update_at_2024__12__2__오후_10_09_[Changes]" date="1733144947098" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__12__2__오후_10_09_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 2024. 12. 2. 오후 10:09 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/InventoryManager$3.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/InventoryManager$3.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__12__2__오후_10_09_[Changes]/InventoryManager$3.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/InventoryManager$2.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/InventoryManager$2.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__12__2__오후_10_09_[Changes]/InventoryManager$2.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/InventoryManager.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/InventoryManager.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__12__2__오후_10_09_[Changes]/InventoryManager.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/InventoryManager$1.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/InventoryManager$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__12__2__오후_10_09_[Changes]/InventoryManager$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/kr/jbnu/se/std/Game.class" />
+    <option name="AFTER_PATH" value="target/classes/kr/jbnu/se/std/Game.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024__12__2__오후_10_09_[Changes]/Game.class" />
+  </binary>
+</changelist>
